@@ -15,6 +15,9 @@ namespace VirtualTwin
 
         Vehicle vehicle;
 
+        Wheel frontWheel;
+        Wheel backWheel;
+
         private void Awake()
         {
             vehicle = GetComponentInParent<Vehicle>();
@@ -22,16 +25,21 @@ namespace VirtualTwin
 
         private void Update()
         {
-            Steer();
+            //SimpleSteer();
         }
 
-        public void Steer()
+        public void SimpleSteer()
         {
             dy += steeringSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
             if (Mathf.Abs(dy) > steerLock) dy = steerLock * Mathf.Sign(dy);
 
-            if (dy != 0 && vehicle.Rb.velocity != Vector3.zero)
+            if (dy != 0 && vehicle.Stationary)
                 vehicle.transform.rotation = Quaternion.Euler(0, dy, 90);
+        }
+
+        public void Steer()
+        {
+
         }
     }
 }

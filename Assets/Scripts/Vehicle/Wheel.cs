@@ -32,12 +32,15 @@ namespace VirtualTwin
             radius = 0.5f * GetComponent<BoxCollider>().size.y;
         }
 
-        public void Drive()
+        // Returns direction of travel of wheel
+        public Vector3 Drive()
         {
             if (driving)
             {
 
             }
+
+            return Vector3.zero;
         }
     }
 }

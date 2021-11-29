@@ -6,8 +6,8 @@ namespace VirtualTwin
 {
     public class Accelerator : MonoBehaviour
     {
-        public string accelerate = "f";
-        public string brake = "j";
+        public string accelerateKey = "f";
+        public string brakeKey = "j";
 
         public float acceleration = 0.1f;
 
@@ -21,14 +21,14 @@ namespace VirtualTwin
 
         private void Update()
         {
-            Accelerate();
+            //Accelerate();
 
-            Decelerate();
+            //Decelerate();
         }
 
         public void Accelerate()
         {
-            if (Input.GetKey(accelerate))
+            if (Input.GetKey(accelerateKey))
             {
                 ds = acceleration * vehicle.Forward * Time.deltaTime;
                 vehicle.Rb.velocity += ds;
@@ -40,7 +40,7 @@ namespace VirtualTwin
 
         public void Decelerate()
         {
-            if (Input.GetKey(brake))
+            if (Input.GetKey(brakeKey))
             {
                 ds = -acceleration * vehicle.Forward * Time.deltaTime;
                 vehicle.Rb.velocity += ds;

@@ -22,6 +22,7 @@ namespace VirtualTwin
         public Wheel backWheel;
 
         public Accelerator accel;
+        public Steering steer;
 
         Rigidbody rb;
 
@@ -32,6 +33,8 @@ namespace VirtualTwin
             get => transform.up;
             set => transform.up = value;
         }
+
+        public bool Stationary => rb.velocity.sqrMagnitude <= 0.12f;
 
         private void Awake()
         {
@@ -48,17 +51,34 @@ namespace VirtualTwin
             rb.angularDrag = 0;
         }
 
+        private void Update()
+        {
+            Drive();
+        }
+
         private void FixedUpdate()
         {
-            time += Time.fixedDeltaTime;
-            speed = rb.velocity.magnitude;
-            distance += speed * Time.fixedDeltaTime;
+            LogData();
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
             Gizmos.DrawRay(transform.position, Forward);
+        }
+
+        void Drive()
+        {
+            steer.SimpleSteer();
+            accel.Accelerate();
+            accel.Decelerate();
+        }
+
+        void LogData()
+        {
+            time += Time.fixedDeltaTime;
+            speed = rb.velocity.magnitude;
+            distance += speed * Time.fixedDeltaTime;
         }
     }
 }
