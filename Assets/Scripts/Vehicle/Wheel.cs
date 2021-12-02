@@ -23,6 +23,22 @@ namespace VirtualTwin
 
         Rigidbody rb;
 
+        public Vector3 Forward
+        {
+            get => transform.forward;
+            set => transform.forward = value;
+        }
+
+        // Returns direction of travel of wheel
+        public Vector3 Drive
+        {
+            get
+            {
+                if (driving) return Forward;
+                return vehicle.Forward;
+            }
+        }
+
         private void Awake()
         {
             vehicle = GetComponentInParent<Vehicle>();
@@ -30,17 +46,6 @@ namespace VirtualTwin
             rb = GetComponent<Rigidbody>();
 
             radius = 0.5f * GetComponent<BoxCollider>().size.y;
-        }
-
-        // Returns direction of travel of wheel
-        public Vector3 Drive()
-        {
-            if (driving)
-            {
-
-            }
-
-            return Vector3.zero;
         }
     }
 }

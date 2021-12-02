@@ -19,18 +19,11 @@ namespace VirtualTwin
             vehicle = GetComponentInParent<Vehicle>();
         }
 
-        private void Update()
-        {
-            //Accelerate();
-
-            //Decelerate();
-        }
-
         public void Accelerate()
         {
             if (Input.GetKey(accelerateKey))
             {
-                ds = acceleration * vehicle.Forward * Time.deltaTime;
+                ds = acceleration * vehicle.DriveDir * Time.deltaTime;
                 vehicle.Rb.velocity += ds;
 
                 if (vehicle.Rb.velocity.sqrMagnitude > vehicle.topSpeed * vehicle.topSpeed)
@@ -42,7 +35,7 @@ namespace VirtualTwin
         {
             if (Input.GetKey(brakeKey))
             {
-                ds = -acceleration * vehicle.Forward * Time.deltaTime;
+                ds = -acceleration * vehicle.DriveDir * Time.deltaTime;
                 vehicle.Rb.velocity += ds;
                 if (Vector3.Dot(vehicle.Forward, vehicle.Rb.velocity) < 0)
                     vehicle.Rb.velocity = Vector3.zero;

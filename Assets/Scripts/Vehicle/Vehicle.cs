@@ -34,6 +34,14 @@ namespace VirtualTwin
             set => transform.up = value;
         }
 
+        public Vector3 DriveDir
+        {
+            get
+            {
+                return frontWheel.Drive;
+            }
+        }
+
         public bool Stationary => rb.velocity.sqrMagnitude <= 0.12f;
 
         private void Awake()
@@ -58,6 +66,8 @@ namespace VirtualTwin
 
         private void FixedUpdate()
         {
+            DriveFixed();
+
             LogData();
         }
 
@@ -69,7 +79,12 @@ namespace VirtualTwin
 
         void Drive()
         {
-            steer.SimpleSteer();
+            //steer.SimpleSteer();
+            steer.Steer();
+        }
+
+        void DriveFixed()
+        {
             accel.Accelerate();
             accel.Decelerate();
         }
