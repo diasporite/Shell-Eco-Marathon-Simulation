@@ -790,6 +790,7 @@ GameObject:
   - component: {fileID: 1832064169}
   - component: {fileID: 1832064168}
   - component: {fileID: 1832064167}
+  - component: {fileID: 1832064171}
   - component: {fileID: 1832064166}
   m_Layer: 0
   m_Name: FrontWheel
@@ -908,6 +909,22 @@ Transform:
   m_Father: {fileID: 324139178}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!54 &1832064171
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832064165}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 64
+  m_CollisionDetection: 0
 --- !u!1 &1857987976
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,6 +937,7 @@ GameObject:
   - component: {fileID: 1857987982}
   - component: {fileID: 1857987981}
   - component: {fileID: 1857987980}
+  - component: {fileID: 1857987979}
   - component: {fileID: 1857987978}
   m_Layer: 0
   m_Name: BackWheel
@@ -972,6 +990,22 @@ WheelCollider:
     m_AsymptoteValue: 0.75
     m_Stiffness: 1
   m_Enabled: 1
+--- !u!54 &1857987979
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857987976}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 64
+  m_CollisionDetection: 0
 --- !u!114 &1857987980
 MonoBehaviour:
   m_ObjectHideFlags: 0
