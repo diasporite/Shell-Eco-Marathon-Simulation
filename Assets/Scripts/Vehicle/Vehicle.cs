@@ -66,8 +66,6 @@ namespace VirtualTwin
 
         private void FixedUpdate()
         {
-            DriveFixed();
-
             LogData();
         }
 
@@ -81,12 +79,7 @@ namespace VirtualTwin
         {
             //steer.SimpleSteer();
             steer.Steer();
-        }
-
-        void DriveFixed()
-        {
             accel.Accelerate();
-            accel.Decelerate();
         }
 
         void LogData()
