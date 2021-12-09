@@ -22,6 +22,7 @@ namespace VirtualTwin
         Vehicle vehicle;
 
         Rigidbody rb;
+        WheelCollider wc;
 
         public Vector3 Forward
         {
@@ -43,9 +44,23 @@ namespace VirtualTwin
         {
             vehicle = GetComponentInParent<Vehicle>();
 
+            InitRb();
+            InitWc();
+        }
+
+        void InitRb()
+        {
             rb = GetComponent<Rigidbody>();
 
-            radius = 0.5f * GetComponent<BoxCollider>().size.y;
+            rb.mass = mass;
+        }
+
+        void InitWc()
+        {
+            wc = GetComponent<WheelCollider>();
+
+            wc.mass = mass;
+            wc.radius = radius;
         }
     }
 }
