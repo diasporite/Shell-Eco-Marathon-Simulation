@@ -14,9 +14,13 @@ namespace VirtualTwin
         Vehicle vehicle;
         Vector3 ds;
 
+        Rigidbody rb;
+
         private void Awake()
         {
             vehicle = GetComponentInParent<Vehicle>();
+
+            rb = GetComponent<Rigidbody>();
         }
 
         public void Accelerate()
@@ -24,17 +28,17 @@ namespace VirtualTwin
             if (Input.GetKey(accelerateKey))
             {
                 ds = acceleration * vehicle.DriveDir * Time.deltaTime;
-                vehicle.Rb.velocity += ds;
+                rb.velocity += ds;
 
-                if (vehicle.Rb.velocity.sqrMagnitude > vehicle.topSpeed * vehicle.topSpeed)
-                    vehicle.Rb.velocity = vehicle.Rb.velocity.normalized * vehicle.topSpeed;
+                if (rb.velocity.sqrMagnitude > vehicle.topSpeed * vehicle.topSpeed)
+                    rb.velocity = rb.velocity.normalized * vehicle.topSpeed;
             }
             else if (Input.GetKey(brakeKey))
             {
                 ds = -acceleration * vehicle.DriveDir * Time.deltaTime;
-                vehicle.Rb.velocity += ds;
-                if (Vector3.Dot(vehicle.Forward, vehicle.Rb.velocity) < 0)
-                    vehicle.Rb.velocity = Vector3.zero;
+                rb.velocity += ds;
+                if (Vector3.Dot(vehicle.Forward, rb.velocity) < 0)
+                    rb.velocity = Vector3.zero;
             }
         }
 
@@ -43,17 +47,17 @@ namespace VirtualTwin
             if (Input.GetKey(accelerateKey))
             {
                 ds = acceleration * drive * Time.deltaTime;
-                vehicle.Rb.velocity += ds;
+                rb.velocity += ds;
 
-                if (vehicle.Rb.velocity.sqrMagnitude > vehicle.topSpeed * vehicle.topSpeed)
-                    vehicle.Rb.velocity = vehicle.Rb.velocity.normalized * vehicle.topSpeed;
+                if (rb.velocity.sqrMagnitude > vehicle.topSpeed * vehicle.topSpeed)
+                    rb.velocity = rb.velocity.normalized * vehicle.topSpeed;
             }
             else if (Input.GetKey(brakeKey))
             {
                 ds = -acceleration * drive * Time.deltaTime;
-                vehicle.Rb.velocity += ds;
-                if (Vector3.Dot(vehicle.Forward, vehicle.Rb.velocity) < 0)
-                    vehicle.Rb.velocity = Vector3.zero;
+                rb.velocity += ds;
+                if (Vector3.Dot(vehicle.Forward, rb.velocity) < 0)
+                    rb.velocity = Vector3.zero;
             }
         }
     }

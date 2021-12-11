@@ -16,15 +16,18 @@ namespace VirtualTwin
         public float topSpeed = 10;
 
         public float bodyMass;
+        public float rideHeight;
 
         [Header("Components")]
         public Wheel frontWheel;
         public Wheel backWheel;
 
-        public Accelerator accel;
-        public Steering steer;
+        public Accelerator accelerator;
+        public Steering steering;
 
         Rigidbody rb;
+
+        Vector3 driveDir;
 
         public Rigidbody Rb => rb;
 
@@ -48,7 +51,8 @@ namespace VirtualTwin
         {
             rb = GetComponent<Rigidbody>();
 
-            accel = GetComponentInChildren<Accelerator>();
+            accelerator = GetComponent<Accelerator>();
+            steering = GetComponent<Steering>();
         }
 
         private void Start()
@@ -57,6 +61,8 @@ namespace VirtualTwin
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.angularDrag = 0;
+
+            rb.MovePosition(transform.position + rideHeight * Vector3.up);
         }
 
         private void Update()
@@ -77,9 +83,9 @@ namespace VirtualTwin
 
         void Drive()
         {
-            //steer.SimpleSteer();
-            steer.Steer();
-            accel.Accelerate();
+            //driveDir = steering.SteerDir();
+            steering.Steer();
+            accelerator.Accelerate();
         }
 
         void LogData()

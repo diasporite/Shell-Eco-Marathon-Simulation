@@ -6,7 +6,7 @@ namespace VirtualTwin
 {
     public class DataManager : MonoBehaviour
     {
-        List<DataPoint> data = new List<DataPoint>();
+        [SerializeField] List<DataPoint> data = new List<DataPoint>();
 
         public void LogData(float time, float speed, float distance)
         {
