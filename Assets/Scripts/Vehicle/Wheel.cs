@@ -7,14 +7,19 @@ namespace VirtualTwin
     [RequireComponent(typeof(Rigidbody))]
     public class Wheel : MonoBehaviour
     {
+        public GameObject model;
+
         public bool driving = true;
 
+        [Header("Dimensions")]
         public float mass = 5;
         public float radius = 1;
 
+        [Header("Power")]
         public float torque = 1;
         public float rollingRes = 0.5f;
 
+        [Header("Orientation")]
         // Rotation about axis, in degrees
         public float toe = 0;
         public float camber = 0;
@@ -57,7 +62,7 @@ namespace VirtualTwin
 
         void InitWc()
         {
-            wc = GetComponent<WheelCollider>();
+            wc = GetComponentInChildren<WheelCollider>();
 
             wc.mass = mass;
             wc.radius = radius;
