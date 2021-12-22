@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace VirtualTwin
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class Wheel : MonoBehaviour
     {
         public GameObject model;
@@ -26,22 +25,15 @@ namespace VirtualTwin
 
         Vehicle vehicle;
 
-        Rigidbody rb;
-        WheelCollider wc;
-
-        public Vector3 Forward
-        {
-            get => transform.forward;
-            set => transform.forward = value;
-        }
+        Collider col;
 
         // Returns direction of travel of wheel
         public Vector3 Drive
         {
             get
             {
-                if (driving) return Forward;
-                return vehicle.Forward;
+                if (driving) return transform.forward;
+                return vehicle.transform.forward;
             }
         }
 
@@ -49,23 +41,12 @@ namespace VirtualTwin
         {
             vehicle = GetComponentInParent<Vehicle>();
 
-            InitRb();
-            InitWc();
+            InitCol();
         }
 
-        void InitRb()
+        void InitCol()
         {
-            rb = GetComponent<Rigidbody>();
-
-            rb.mass = mass;
-        }
-
-        void InitWc()
-        {
-            wc = GetComponentInChildren<WheelCollider>();
-
-            wc.mass = mass;
-            wc.radius = radius;
+            col = GetComponentInChildren<Collider>();
         }
     }
 }

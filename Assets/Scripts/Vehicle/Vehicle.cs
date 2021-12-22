@@ -15,15 +15,17 @@ namespace VirtualTwin
         [Header("Constants")]
         public float topSpeed = 10;
 
-        public float bodyMass;
-        public float rideHeight;
+        public float bodyMass = 200;
+        public float rideHeight = 0.25f;
 
-        [Header("Components")]
+        [Header("Wheels")]
         public Wheel frontWheel;
         public Wheel backWheel;
 
+        [Header("Components")]
         public Accelerator accelerator;
         public Steering steering;
+        public BoxCollider undercarriage;
 
         Rigidbody rb;
 
@@ -31,19 +33,7 @@ namespace VirtualTwin
 
         public Rigidbody Rb => rb;
 
-        public Vector3 Forward
-        {
-            get => transform.up;
-            set => transform.up = value;
-        }
-
-        public Vector3 DriveDir
-        {
-            get
-            {
-                return frontWheel.Drive;
-            }
-        }
+        public Vector3 DriveDir => frontWheel.Drive;
 
         public bool Stationary => rb.velocity.sqrMagnitude <= 0.12f;
 
@@ -62,30 +52,27 @@ namespace VirtualTwin
             rb.angularVelocity = Vector3.zero;
             rb.angularDrag = 0;
 
-            rb.MovePosition(transform.position + rideHeight * Vector3.up);
+            undercarriage.size = new Vector3(0.25f, rideHeight, 0.25f);
         }
 
         private void Update()
         {
-            Drive();
+            driveDir = CalcDriveDir();
+
+            //Drive();
         }
 
         private void FixedUpdate()
         {
+            accelerator.Accelerate(driveDir);
+
             LogData();
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawRay(transform.position, Forward);
-        }
-
-        void Drive()
-        {
-            //driveDir = steering.SteerDir();
-            steering.Steer();
-            accelerator.Accelerate();
+            Gizmos.DrawRay(transform.position, transform.forward);
         }
 
         void LogData()
@@ -93,6 +80,11 @@ namespace VirtualTwin
             time += Time.fixedDeltaTime;
             speed = rb.velocity.magnitude;
             distance += speed * Time.fixedDeltaTime;
+        }
+
+        Vector3 CalcDriveDir()
+        {
+            return transform.forward;
         }
     }
 }

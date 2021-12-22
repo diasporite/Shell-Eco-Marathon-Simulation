@@ -6,9 +6,11 @@ namespace VirtualTwin
 {
     public class Accelerator : MonoBehaviour
     {
+        [Header("Input")]
         public string accelerateKey = "f";
         public string brakeKey = "j";
 
+        [Header("Properties")]
         public float acceleration = 0.1f;
 
         Vehicle vehicle;
@@ -37,7 +39,7 @@ namespace VirtualTwin
             {
                 ds = -acceleration * vehicle.DriveDir * Time.deltaTime;
                 rb.velocity += ds;
-                if (Vector3.Dot(vehicle.Forward, rb.velocity) < 0)
+                if (Vector3.Dot(vehicle.transform.forward, rb.velocity) < 0)
                     rb.velocity = Vector3.zero;
             }
         }
@@ -56,7 +58,7 @@ namespace VirtualTwin
             {
                 ds = -acceleration * drive * Time.deltaTime;
                 rb.velocity += ds;
-                if (Vector3.Dot(vehicle.Forward, rb.velocity) < 0)
+                if (Vector3.Dot(vehicle.transform.forward, rb.velocity) < 0)
                     rb.velocity = Vector3.zero;
             }
         }

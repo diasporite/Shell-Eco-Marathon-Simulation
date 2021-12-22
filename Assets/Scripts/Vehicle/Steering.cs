@@ -6,6 +6,7 @@ namespace VirtualTwin
 {
     public class Steering : MonoBehaviour
     {
+        [Header("Properties")]
         public float steeringSpeed = 90;
 
         float steerLock = 360;
