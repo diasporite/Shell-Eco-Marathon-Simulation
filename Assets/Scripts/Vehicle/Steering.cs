@@ -7,19 +7,18 @@ namespace VirtualTwin
     public class Steering : MonoBehaviour
     {
         [Header("Properties")]
-        public float steeringSpeed = 90;
+        public float steeringSpeed = 30;
 
-        float steerLock = 360;
-        float wheelLock = 90;
+        float wheelLock = 45;
 
-        float dx;
+        float thetaY;
 
         Vehicle vehicle;
 
         Wheel frontWheel;
         Wheel backWheel;
 
-        public float Dx => dx;
+        public float ThetaY => thetaY;
 
         private void Awake()
         {
@@ -29,25 +28,16 @@ namespace VirtualTwin
             backWheel = vehicle.backWheel;
         }
 
-        public void Steer()
-        {
-            if (frontWheel.driving)
-            {
-                dx += steeringSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
-                if (Mathf.Abs(dx) > wheelLock) dx = wheelLock * Mathf.Sign(dx);
-
-                //if (dx != 0 && vehicle.Stationary)
-                //    frontWheel.transform.localRotation = Quaternion.Euler(90 + dx, 0, 0);
-            }
-        }
-
+        // Calculate direction of travel of body
         public Vector3 SteerDir()
         {
             if (frontWheel.driving)
             {
-                dx += steeringSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
-                if (Mathf.Abs(dx) > wheelLock) dx = wheelLock * Mathf.Sign(dx);
+                thetaY += steeringSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
+                if (Mathf.Abs(thetaY) > wheelLock) thetaY = wheelLock * Mathf.Sign(thetaY);
 
+                frontWheel.transform.rotation = Quaternion.Euler(0, thetaY, 0);
+                return frontWheel.transform.forward;
                 //if (dx != 0 && vehicle.Stationary)
                 //    frontWheel.transform.localRotation = Quaternion.Euler(90 + dx, 0, 0);
             }

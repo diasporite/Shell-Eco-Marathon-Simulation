@@ -198,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dc158c693828704786b26eea2fc5b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steeringSpeed: 90
+  steeringSpeed: 30
 --- !u!1 &6789180541736634258
 GameObject:
   m_ObjectHideFlags: 0

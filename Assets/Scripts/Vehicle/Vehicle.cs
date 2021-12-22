@@ -84,7 +84,8 @@ namespace VirtualTwin
 
         Vector3 CalcDriveDir()
         {
-            return transform.forward;
+            return steering.SteerDir();
+            //return transform.forward;
         }
     }
 }
