@@ -58,13 +58,13 @@ namespace VirtualTwin
         private void Update()
         {
             driveDir = CalcDriveDir();
-
-            //Drive();
         }
 
         private void FixedUpdate()
         {
             accelerator.Accelerate(driveDir);
+
+            Drive();
 
             LogData();
         }
@@ -73,6 +73,11 @@ namespace VirtualTwin
         {
             Gizmos.color = Color.green;
             Gizmos.DrawRay(transform.position, transform.forward);
+        }
+
+        void Drive()
+        {
+            transform.forward = driveDir;
         }
 
         void LogData()
