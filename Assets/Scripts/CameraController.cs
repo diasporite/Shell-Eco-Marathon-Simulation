@@ -13,7 +13,7 @@ namespace VirtualTwin
         public float camDist = 10f;
 
         float thetaY = 180f;
-        float thetaXz = 0;
+        float thetaXz = 15f;
         Vector3 camPos = new Vector3(0, 0, 0);
 
         private void Start()

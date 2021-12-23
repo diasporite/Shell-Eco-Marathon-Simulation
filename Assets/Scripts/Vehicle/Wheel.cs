@@ -44,6 +44,12 @@ namespace VirtualTwin
             InitCol();
         }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, 1f * transform.forward);
+        }
+
         void InitCol()
         {
             col = GetComponentInChildren<Collider>();

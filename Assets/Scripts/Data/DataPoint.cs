@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace VirtualTwin
 {
+    [System.Serializable]
     public class DataPoint
     {
         [SerializeField] float time;

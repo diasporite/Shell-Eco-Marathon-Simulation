@@ -8,7 +8,6 @@ namespace VirtualTwin
     public class Vehicle : MonoBehaviour
     {
         [Header("Parameters")]
-        [SerializeField] float time;
         [SerializeField] float speed;
         [SerializeField] float distance;
 
@@ -29,7 +28,10 @@ namespace VirtualTwin
 
         Rigidbody rb;
 
-        Vector3 driveDir;
+        Vector3 driveDir = new Vector3(0, 0, 1);
+
+        public float Speed => speed;
+        public float Distance => distance;
 
         public Rigidbody Rb => rb;
 
@@ -52,7 +54,7 @@ namespace VirtualTwin
             rb.angularVelocity = Vector3.zero;
             rb.angularDrag = 0;
 
-            undercarriage.size = new Vector3(0.25f, rideHeight, 0.25f);
+            undercarriage.size = new Vector3(0.1f, rideHeight, 0.1f);
         }
 
         private void Update()
@@ -72,7 +74,10 @@ namespace VirtualTwin
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawRay(transform.position, transform.forward);
+            Gizmos.DrawRay(transform.position, 2f * transform.forward);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawRay(transform.position, 2f * driveDir);
         }
 
         void Drive()
@@ -82,7 +87,6 @@ namespace VirtualTwin
 
         void LogData()
         {
-            time += Time.fixedDeltaTime;
             speed = rb.velocity.magnitude;
             distance += speed * Time.fixedDeltaTime;
         }

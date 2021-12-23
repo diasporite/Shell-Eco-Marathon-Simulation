@@ -160,6 +160,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5472d54e7deba6e499adb5fc39b7c9a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataManager: {fileID: 0}
+  sampleEveryFixedFrame: 3
   time: 0
   speed: 0
   distance: 0
@@ -183,8 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04000c885f45b644d83f60ade6c27c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accelerateKey: f
-  brakeKey: j
+  accelerateKey: j
+  brakeKey: l
   acceleration: 20
 --- !u!114 &221955839966611259
 MonoBehaviour:
@@ -224,7 +226,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6789180541736634258}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5410751854116663077}

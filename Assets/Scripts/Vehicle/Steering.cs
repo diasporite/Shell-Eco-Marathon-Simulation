@@ -9,16 +9,17 @@ namespace VirtualTwin
         [Header("Properties")]
         public float steeringSpeed = 30;
 
-        float wheelLock = 45;
+        float wheelLock = 45f;
+        float steerLock = 75f;
 
-        float thetaY;
+        float frontWheelTurningAngle;
 
         Vehicle vehicle;
 
         Wheel frontWheel;
         Wheel backWheel;
 
-        public float ThetaY => thetaY;
+        public float FrontWheelTurningAngle => frontWheelTurningAngle;
 
         private void Awake()
         {
@@ -33,13 +34,15 @@ namespace VirtualTwin
         {
             if (frontWheel.driving)
             {
-                thetaY += steeringSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
-                if (Mathf.Abs(thetaY) > wheelLock) thetaY = wheelLock * Mathf.Sign(thetaY);
+                frontWheelTurningAngle += steeringSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
+                if (Mathf.Abs(frontWheelTurningAngle) > wheelLock) frontWheelTurningAngle = wheelLock * Mathf.Sign(frontWheelTurningAngle);
 
-                frontWheel.transform.rotation = Quaternion.Euler(0, thetaY, 0);
-                return frontWheel.transform.forward;
-                //if (dx != 0 && vehicle.Stationary)
-                //    frontWheel.transform.localRotation = Quaternion.Euler(90 + dx, 0, 0);
+                frontWheel.transform.rotation = Quaternion.Euler(0, frontWheelTurningAngle, 0);
+
+                // Temporary - see Vehicle Dynamics doc
+                var slipAngle = 0.5f * frontWheelTurningAngle;
+                var steerAngle = slipAngle;
+                return Quaternion.Euler(0, steerAngle, 0) * Vector3.forward;
             }
 
             return Vector3.zero;
