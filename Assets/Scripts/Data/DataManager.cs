@@ -6,7 +6,10 @@ namespace VirtualTwin
 {
     public class DataManager : MonoBehaviour
     {
+        [SerializeField] bool recording = false;
+
         public Vehicle subject;
+        public HUD hud;
 
         [SerializeField] float timeElapsed = 0;
         [Range(1, 5)]
@@ -14,6 +17,16 @@ namespace VirtualTwin
         int framesSinceLog = 0;
 
         [SerializeField] List<DataPoint> data = new List<DataPoint>();
+
+        public DataPoint LastSample
+        {
+            get
+            {
+                if (data.Count > 0)
+                    return data[data.Count - 1];
+                return null;
+            }
+        }
 
         private void Start()
         {
@@ -29,11 +42,15 @@ namespace VirtualTwin
         {
             timeElapsed += Time.fixedDeltaTime;
 
-            framesSinceLog++;
-            if (framesSinceLog >= sampleEveryFixedFrame)
+            if (recording)
             {
-                LogData(subject.Speed, subject.Distance);
-                framesSinceLog = 0;
+                framesSinceLog++;
+                if (framesSinceLog >= sampleEveryFixedFrame)
+                {
+                    LogData(subject.Speed, subject.Distance);
+                    hud.UpdateUI(data.Count, LastSample);
+                    framesSinceLog = 0;
+                }
             }
         }
 
