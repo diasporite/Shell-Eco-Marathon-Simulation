@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e3d917b830d5be24bb2f7b96ce991ff4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -160,14 +160,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5472d54e7deba6e499adb5fc39b7c9a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataManager: {fileID: 0}
-  sampleEveryFixedFrame: 3
-  time: 0
   speed: 0
   distance: 0
-  topSpeed: 10
+  topSpeed: 40
   bodyMass: 200
   rideHeight: 0.25
+  stationaryThreshold: 0.04
   frontWheel: {fileID: 223258851587717059}
   backWheel: {fileID: 1984936855222181741}
   accelerator: {fileID: 0}
@@ -200,7 +198,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dc158c693828704786b26eea2fc5b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steeringSpeed: 30
+  steeringSpeed: 90
+  wheelLock: 75
+  steerLock: 75
+  frontWheelTurningAngle: 0
+  steerDir: {x: 0, y: 0, z: 0}
 --- !u!1 &6789180541736634258
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,6 +309,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2780635527387860948, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e3d917b830d5be24bb2f7b96ce991ff4, type: 2}
     - target: {fileID: 6001820012365640392, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
         type: 3}
       propertyPath: m_Name
@@ -394,6 +401,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2780635527387860948, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e3d917b830d5be24bb2f7b96ce991ff4, type: 2}
     - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
         type: 3}
       propertyPath: driving

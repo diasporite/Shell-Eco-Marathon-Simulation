@@ -54,6 +54,18 @@ namespace VirtualTwin
             }
         }
 
+        public void StartRecording()
+        {
+            data.Clear();
+
+            recording = true;
+        }
+
+        public void StopRecording()
+        {
+            recording = false;
+        }
+
         public void LogData(float speed, float distance)
         {
             data.Add(new DataPoint(timeElapsed, speed, distance));

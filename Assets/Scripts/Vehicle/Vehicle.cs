@@ -17,6 +17,9 @@ namespace VirtualTwin
         public float bodyMass = 200;
         public float rideHeight = 0.25f;
 
+        [Range(0.001f, 0.1f)]
+        public float stationaryThreshold = 0.04f;
+
         [Header("Wheels")]
         public Wheel frontWheel;
         public Wheel backWheel;
@@ -37,7 +40,7 @@ namespace VirtualTwin
 
         public Vector3 DriveDir => frontWheel.Drive;
 
-        public bool Stationary => rb.velocity.sqrMagnitude <= 0.12f;
+        public bool Stationary => speed <= stationaryThreshold;
 
         private void Awake()
         {

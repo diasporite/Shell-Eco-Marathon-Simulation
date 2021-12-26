@@ -9,10 +9,16 @@ namespace VirtualTwin
         [Header("Properties")]
         public float steeringSpeed = 30;
 
-        float wheelLock = 45f;
-        float steerLock = 75f;
+        public float wheelLock = 75f;
+        public float steerLock = 75f;
 
-        float frontWheelTurningAngle;
+        [Header("Variables")]
+        [SerializeField] float frontWheelTurningAngle;
+
+        float slipAngle;
+        float steerAngle;
+
+        [SerializeField] Vector3 steerDir = new Vector3(0, 0, 0);
 
         Vehicle vehicle;
 
@@ -29,20 +35,33 @@ namespace VirtualTwin
             backWheel = vehicle.backWheel;
         }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(transform.position, steerDir);  
+        }
+
         // Calculate direction of travel of body
         public Vector3 SteerDir()
         {
             if (frontWheel.driving)
             {
                 frontWheelTurningAngle += steeringSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
-                if (Mathf.Abs(frontWheelTurningAngle) > wheelLock) frontWheelTurningAngle = wheelLock * Mathf.Sign(frontWheelTurningAngle);
+                if (Mathf.Abs(frontWheelTurningAngle) > wheelLock)
+                    frontWheelTurningAngle = wheelLock * Mathf.Sign(frontWheelTurningAngle);
 
-                frontWheel.transform.rotation = Quaternion.Euler(0, frontWheelTurningAngle, 0);
+                frontWheel.transform.localRotation = Quaternion.Euler(0, frontWheelTurningAngle, 0);
 
                 // Temporary - see Vehicle Dynamics doc
-                var slipAngle = 0.5f * frontWheelTurningAngle;
-                var steerAngle = slipAngle;
-                return Quaternion.Euler(0, steerAngle, 0) * Vector3.forward;
+                slipAngle = 0.5f * frontWheelTurningAngle;
+                steerAngle = slipAngle + transform.eulerAngles.y;
+                if (Mathf.Abs(steerAngle) > steerLock)
+                    steerAngle = steerLock * Mathf.Sign(steerAngle);
+
+                steerDir.x = Mathf.Sin(steerAngle);
+                steerDir.z = Mathf.Cos(steerAngle);
+
+                return steerDir;
             }
 
             return Vector3.zero;
