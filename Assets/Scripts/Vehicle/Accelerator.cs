@@ -25,25 +25,6 @@ namespace VirtualTwin
             rb = GetComponent<Rigidbody>();
         }
 
-        public void Accelerate()
-        {
-            if (Input.GetKey(accelerateKey))
-            {
-                ds = acceleration * vehicle.DriveDir * Time.deltaTime;
-                rb.velocity += ds;
-
-                if (rb.velocity.sqrMagnitude > vehicle.topSpeed * vehicle.topSpeed)
-                    rb.velocity = rb.velocity.normalized * vehicle.topSpeed;
-            }
-            else if (Input.GetKey(brakeKey))
-            {
-                ds = -acceleration * vehicle.DriveDir * Time.deltaTime;
-                rb.velocity += ds;
-                if (Vector3.Dot(vehicle.transform.forward, rb.velocity) < 0)
-                    rb.velocity = Vector3.zero;
-            }
-        }
-
         public void Accelerate(Vector3 drive)
         {
             if (Input.GetKey(accelerateKey))

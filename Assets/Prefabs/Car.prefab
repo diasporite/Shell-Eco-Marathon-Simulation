@@ -163,6 +163,7 @@ MonoBehaviour:
   speed: 0
   distance: 0
   topSpeed: 40
+  bodyLength: 2
   bodyMass: 200
   rideHeight: 0.25
   stationaryThreshold: 0.04
@@ -198,10 +199,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dc158c693828704786b26eea2fc5b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steeringSpeed: 90
-  wheelLock: 75
-  steerLock: 75
+  steeringSpeed: 60
+  wheelLock: 45
+  steerLock: 90
   frontWheelTurningAngle: 0
+  slipAngle: 0
+  steerAngle: 0
   steerDir: {x: 0, y: 0, z: 0}
 --- !u!1 &6789180541736634258
 GameObject:

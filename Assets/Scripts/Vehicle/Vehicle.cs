@@ -13,7 +13,7 @@ namespace VirtualTwin
 
         [Header("Constants")]
         public float topSpeed = 10;
-
+        public float bodyLength = 2;
         public float bodyMass = 200;
         public float rideHeight = 0.25f;
 
@@ -38,8 +38,6 @@ namespace VirtualTwin
 
         public Rigidbody Rb => rb;
 
-        public Vector3 DriveDir => frontWheel.Drive;
-
         public bool Stationary => speed <= stationaryThreshold;
 
         private void Awake()
@@ -62,13 +60,13 @@ namespace VirtualTwin
 
         private void Update()
         {
+            accelerator.Accelerate(driveDir);
+
             driveDir = CalcDriveDir();
         }
 
         private void FixedUpdate()
         {
-            accelerator.Accelerate(driveDir);
-
             Drive();
 
             LogData();
@@ -78,9 +76,6 @@ namespace VirtualTwin
         {
             Gizmos.color = Color.green;
             Gizmos.DrawRay(transform.position, 2f * transform.forward);
-
-            Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, 2f * driveDir);
         }
 
         void Drive()

@@ -23,36 +23,23 @@ namespace VirtualTwin
         public float toe = 0;
         public float camber = 0;
 
+        [SerializeField] Vector3 contactPoint;
+
         Vehicle vehicle;
 
-        Collider col;
-
-        // Returns direction of travel of wheel
-        public Vector3 Drive
-        {
-            get
-            {
-                if (driving) return transform.forward;
-                return vehicle.transform.forward;
-            }
-        }
+        public Vector3 ContactPoint => contactPoint;
 
         private void Awake()
         {
             vehicle = GetComponentInParent<Vehicle>();
 
-            InitCol();
+            contactPoint = transform.position + radius * Vector3.down;
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, 1f * transform.forward);
-        }
-
-        void InitCol()
-        {
-            col = GetComponentInChildren<Collider>();
         }
     }
 }
