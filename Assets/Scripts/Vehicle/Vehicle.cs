@@ -60,9 +60,10 @@ namespace VirtualTwin
 
         private void Update()
         {
-            accelerator.Accelerate(driveDir);
-
             driveDir = CalcDriveDir();
+
+            accelerator.Accelerate();
+            accelerator.Accelerate(driveDir);
         }
 
         private void FixedUpdate()

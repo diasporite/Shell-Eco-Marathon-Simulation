@@ -58,8 +58,6 @@ namespace VirtualTwin
 
                 if (dx != 0)
                 {
-                    var yRotation = transform.eulerAngles.y;
-
                     frontWheelTurningAngle += steeringSpeed * dx * Time.deltaTime;
                     var frRot = frontWheel.transform.eulerAngles.y + frontWheelTurningAngle;
                     if (Mathf.Abs(frRot) > wheelLock)

@@ -11,7 +11,10 @@ namespace VirtualTwin
         public string brakeKey = "j";
 
         [Header("Properties")]
-        public float acceleration = 0.1f;
+        public float acceleration = 20f;
+        [SerializeField] float speed = 0;
+
+        float topSpeed;
 
         Vehicle vehicle;
         Vector3 ds;
@@ -23,6 +26,29 @@ namespace VirtualTwin
             vehicle = GetComponentInParent<Vehicle>();
 
             rb = GetComponent<Rigidbody>();
+        }
+
+        private void Start()
+        {
+            topSpeed = vehicle.topSpeed;
+
+            rb.velocity = Vector3.zero;
+            speed = 0;
+        }
+
+        public float Accelerate()
+        {
+            var sign = 0;
+
+            if (Input.GetKey(accelerateKey)) sign = 1;
+            else if (Input.GetKey(brakeKey)) sign = -1;
+
+            speed += sign * acceleration * Time.deltaTime;
+
+            if (speed > topSpeed) speed = topSpeed;
+            if (speed < 0) speed = 0;
+
+            return speed;
         }
 
         public void Accelerate(Vector3 drive)

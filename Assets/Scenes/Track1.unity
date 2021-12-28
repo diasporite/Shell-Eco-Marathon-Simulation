@@ -299,7 +299,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Vehicle Speed, |v| = 99m/s
+  m_Text: Vehicle Speed, |v| = --m/s
 --- !u!222 &468513445
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -393,7 +393,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Time Elapsed, t = 9999s
+  m_Text: Time Elapsed, t = ----s
 --- !u!222 &573954854
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -681,7 +681,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '# of Data Samples, n = 9999'
+  m_Text: '# of Data Samples, n = ----'
 --- !u!222 &879973260
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1375,7 +1375,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Distance Travelled, s = 9999m
+  m_Text: Distance Travelled, s = ----m
 --- !u!222 &2065898339
 CanvasRenderer:
   m_ObjectHideFlags: 0
