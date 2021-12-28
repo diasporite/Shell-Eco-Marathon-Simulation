@@ -19,9 +19,13 @@ namespace VirtualTwin
 
         float turningSpeed;
 
+        float frontWheelMin;
+        float frontWheelMax;
+
         [SerializeField] Vector3 steerDir = new Vector3(0, 0, 0);
 
-        float dtheta = 0;
+        [SerializeField] float dtheta = 0;
+        [SerializeField] float dx = 0;
 
         Vehicle vehicle;
 
@@ -29,6 +33,7 @@ namespace VirtualTwin
         Wheel backWheel;
 
         public float FrontWheelTurningAngle => frontWheelTurningAngle;
+        public float VehicleVelocityAngle => vehicleVelocityAngle;
 
         private void Awake()
         {
@@ -36,17 +41,26 @@ namespace VirtualTwin
 
             frontWheel = vehicle.frontWheel;
             backWheel = vehicle.backWheel;
+
+            frontWheelMax = Mathf.Abs(wheelLock);
+            frontWheelMin = -Mathf.Abs(wheelLock);
         }
 
         private void Start()
         {
-            steerDir = Vector3.forward;
+            steerDir = transform.forward;
+        }
+
+        private void Update()
+        {
+            //print(transform.eulerAngles.y);
+            print(transform.rotation.y);
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, 2f * steerDir);  
+            Gizmos.DrawRay(transform.position, 2f * steerDir);
         }
 
         // Calculate direction of travel of body
@@ -54,33 +68,53 @@ namespace VirtualTwin
         {
             if (frontWheel.driving)
             {
-                var dx = Input.GetAxisRaw("Horizontal");
+                var input = Input.GetAxisRaw("Horizontal");
 
-                if (dx != 0)
+                if (Mathf.Abs(input) > Mathf.Epsilon)
                 {
-                    frontWheelTurningAngle += steeringSpeed * dx * Time.deltaTime;
-                    var frRot = frontWheel.transform.eulerAngles.y + frontWheelTurningAngle;
-                    if (Mathf.Abs(frRot) > wheelLock)
-                        frRot = wheelLock * Mathf.Sign(frRot);
-                    frontWheel.transform.localRotation = Quaternion.Euler(0, frRot, 0);
+                    dtheta = steeringSpeed * input * Time.deltaTime;
+
+                    // Turn front wheel object
+                    frontWheelTurningAngle += dtheta;
+                    if (Mathf.Abs(frontWheelTurningAngle) > wheelLock)
+                        frontWheelTurningAngle = wheelLock * Mathf.Sign(frontWheelTurningAngle);
+                    frontWheel.transform.localRotation = Quaternion.Euler(0, frontWheelTurningAngle, 0);
 
                     // Temporary - see Vehicle Dynamics doc
-                    vehicleVelocityAngle += 0.5f * steeringSpeed * dx * Time.deltaTime;
-                    var vRot = transform.eulerAngles.y + vehicleVelocityAngle;
-                    if (Mathf.Abs(vRot) > 0.5f * wheelLock) vRot = wheelLock * Mathf.Sign(vRot);
+                    vehicleVelocityAngle = GetVelocityAngle();
                     slipAngle = 0.2f * frontWheelTurningAngle;
                     steerAngle = frontWheelTurningAngle - slipAngle;
 
-                    transform.rotation = Quaternion.Euler(0, vehicleVelocityAngle, 0);
+                    steerDir.x = Mathf.Sin(vehicleVelocityAngle * Mathf.Deg2Rad);
+                    steerDir.z = Mathf.Cos(vehicleVelocityAngle * Mathf.Deg2Rad);
 
-                    steerDir.x = Mathf.Sin((transform.eulerAngles.y + steerAngle) * Mathf.Deg2Rad);
-                    steerDir.z = Mathf.Cos((transform.eulerAngles.y + steerAngle) * Mathf.Deg2Rad);
+                    dx = vehicleVelocityAngle * Time.deltaTime;
+
+                    //transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + vehicleVelocityAngle * Time.deltaTime, 0);
+                    transform.Rotate(0, dx, 0);
+                    //rotation.y += GetEulerRotation(dtheta);
+                    //transform.eulerAngles = rotation;
 
                     return steerDir.normalized;
                 }
             }
 
             return transform.forward;
+        }
+
+        public float GetVelocityAngle()
+        {
+            // Temporary
+            return frontWheelTurningAngle;
+        }
+
+        float GetEulerRotation(float rot)
+        {
+            var r = transform.eulerAngles.y;
+            r += rot;
+            if (r >= 360) r -= 360;
+            if (r < 0) r += 360;
+            return r;
         }
     }
 }
