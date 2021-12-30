@@ -54,13 +54,14 @@ namespace VirtualTwin
         private void Update()
         {
             //print(transform.eulerAngles.y);
-            print(transform.rotation.y);
+            //print(transform.rotation.y);
+            //if (Input.GetKey("space")) transform.Rotate(0, vehicleVelocityAngle * Time.deltaTime, 0);
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, 2f * steerDir);
+            Gizmos.DrawRay(transform.position, 5f * steerDir);
         }
 
         // Calculate direction of travel of body
@@ -85,8 +86,8 @@ namespace VirtualTwin
                     slipAngle = 0.2f * frontWheelTurningAngle;
                     steerAngle = frontWheelTurningAngle - slipAngle;
 
-                    steerDir.x = Mathf.Sin(vehicleVelocityAngle * Mathf.Deg2Rad);
-                    steerDir.z = Mathf.Cos(vehicleVelocityAngle * Mathf.Deg2Rad);
+                    steerDir.x = Mathf.Sin(transform.eulerAngles.y + vehicleVelocityAngle * Mathf.Deg2Rad);
+                    steerDir.z = Mathf.Cos(transform.eulerAngles.y + vehicleVelocityAngle * Mathf.Deg2Rad);
 
                     dx = vehicleVelocityAngle * Time.deltaTime;
 

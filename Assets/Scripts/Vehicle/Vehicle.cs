@@ -38,6 +38,8 @@ namespace VirtualTwin
 
         public Rigidbody Rb => rb;
 
+        public float VehicleMass => bodyMass + frontWheel.mass + backWheel.mass;
+        
         public bool Stationary => speed <= stationaryThreshold;
 
         private void Awake()
@@ -68,15 +70,13 @@ namespace VirtualTwin
 
         private void FixedUpdate()
         {
-            Drive();
-
             LogData();
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawRay(transform.position, 2f * transform.forward);
+            Gizmos.DrawRay(transform.position, 5f * transform.forward);
         }
 
         void Drive()

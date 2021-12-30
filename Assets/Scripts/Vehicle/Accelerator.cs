@@ -14,6 +14,9 @@ namespace VirtualTwin
         public float acceleration = 20f;
         [SerializeField] float speed = 0;
 
+        [Header("Variables")]
+        [SerializeField] Vector3 velocity;
+
         float topSpeed;
 
         Vehicle vehicle;
@@ -34,6 +37,11 @@ namespace VirtualTwin
 
             rb.velocity = Vector3.zero;
             speed = 0;
+        }
+
+        private void FixedUpdate()
+        {
+            velocity = rb.velocity;
         }
 
         public float Accelerate()

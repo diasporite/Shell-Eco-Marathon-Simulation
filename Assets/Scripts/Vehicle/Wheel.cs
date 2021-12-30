@@ -13,33 +13,73 @@ namespace VirtualTwin
         [Header("Dimensions")]
         public float mass = 5;
         public float radius = 1;
+        [SerializeField] Vector3 contactPoint;
 
         [Header("Power")]
         public float torque = 1;
-        public float rollingRes = 0.5f;
+        [Range(0f, 1f)] public float resistance = 0.5f;
 
-        [Header("Orientation")]
-        // Rotation about axis, in degrees
-        public float toe = 0;
-        public float camber = 0;
+        [Header("Constants")]
+        public float wheelLock = 45f;
 
-        [SerializeField] Vector3 contactPoint;
+        [Header("Variables")]
+        [SerializeField] float wheelTurningAngle = 0;
+        [SerializeField] float slipAngle = 0;
+        [SerializeField] float wheelSpeedDeflectionAngle = 0;
+        [SerializeField] Vector3 velocity = new Vector3(0, 0, 0);
+        [SerializeField] Vector3 appliedForce = new Vector3(0, 0, 0);
 
         Vehicle vehicle;
 
+        float curvature;
+        float inverseVehicleMass;
+
         public Vector3 ContactPoint => contactPoint;
+
+        public Vector3 Velocity => velocity;
 
         private void Awake()
         {
             vehicle = GetComponentInParent<Vehicle>();
 
             contactPoint = transform.position + radius * Vector3.down;
+
+            curvature = 1 / radius;
+        }
+
+        private void Start()
+        {
+            inverseVehicleMass = 1 / vehicle.VehicleMass;
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position, 1f * transform.forward);
+            Gizmos.DrawRay(transform.position, 5f * transform.forward);
+        }
+
+        public void SteerWheel(float delta)
+        {
+            if (driving)
+            {
+                // Turn wheel
+                wheelTurningAngle += delta;
+                if (Mathf.Abs(wheelTurningAngle) > wheelLock)
+                    wheelTurningAngle = wheelLock * Mathf.Sign(wheelTurningAngle);
+
+                transform.Rotate(0, wheelTurningAngle, 0);
+            }
+        }
+
+        public void DriveWheel(float dt)
+        {
+            if (driving)
+            {
+                var dF = (1 - resistance) * torque * curvature;
+                var da = dF * inverseVehicleMass;
+
+                var appliedForce = dF * transform.forward * dt;
+            }
         }
     }
 }
