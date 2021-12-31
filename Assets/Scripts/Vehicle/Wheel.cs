@@ -26,8 +26,8 @@ namespace VirtualTwin
         [SerializeField] float wheelTurningAngle = 0;
         [SerializeField] float slipAngle = 0;
         [SerializeField] float wheelSpeedDeflectionAngle = 0;
+        [SerializeField] float acceleration = 0;
         [SerializeField] Vector3 velocity = new Vector3(0, 0, 0);
-        [SerializeField] Vector3 appliedForce = new Vector3(0, 0, 0);
 
         Vehicle vehicle;
 
@@ -36,6 +36,9 @@ namespace VirtualTwin
 
         public Vector3 ContactPoint => contactPoint;
 
+        public float WheelTurningAngle => wheelTurningAngle;
+        public float SlipAngle => slipAngle;
+        public float WheelSpeedDeflectionAngle => wheelSpeedDeflectionAngle;
         public Vector3 Velocity => velocity;
 
         private void Awake()
@@ -63,11 +66,14 @@ namespace VirtualTwin
             if (driving)
             {
                 // Turn wheel
-                wheelTurningAngle += delta;
+                wheelTurningAngle += 60 * delta;
                 if (Mathf.Abs(wheelTurningAngle) > wheelLock)
                     wheelTurningAngle = wheelLock * Mathf.Sign(wheelTurningAngle);
 
-                transform.Rotate(0, wheelTurningAngle, 0);
+                slipAngle = CalculateSlipAngle(wheelTurningAngle);
+                wheelSpeedDeflectionAngle = wheelTurningAngle - slipAngle;
+
+                transform.localRotation = Quaternion.Euler(0, wheelTurningAngle, 0);
             }
         }
 
@@ -75,11 +81,16 @@ namespace VirtualTwin
         {
             if (driving)
             {
-                var dF = (1 - resistance) * torque * curvature;
-                var da = dF * inverseVehicleMass;
+                var force = (1 - resistance) * torque * curvature;
+                acceleration = force * inverseVehicleMass;
 
-                var appliedForce = dF * transform.forward * dt;
+                velocity += acceleration * transform.forward * dt;
             }
+        }
+
+        float CalculateSlipAngle(float angle)
+        {
+            return 0.1f * angle;
         }
     }
 }
