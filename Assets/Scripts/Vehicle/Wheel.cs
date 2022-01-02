@@ -18,6 +18,9 @@ namespace VirtualTwin
         [Header("Power")]
         public float torque = 1;
         [Range(0f, 1f)] public float resistance = 0.5f;
+        //[Range(0f, 1f)] public float airResistance = 0.5f;
+        //[Range(0f, 1f)] public float rollingResistance = 0.5f;
+        //[Range(0f, 1f)] public float corneringResistance = 0.5f;
 
         [Header("Constants")]
         public float wheelLock = 45f;
@@ -85,6 +88,9 @@ namespace VirtualTwin
                 acceleration = force * inverseVehicleMass;
 
                 velocity += acceleration * transform.forward * dt;
+
+                var dot = Vector3.Dot(transform.forward, velocity.normalized);
+                if (dot < 0) velocity = Vector3.zero;
             }
         }
 

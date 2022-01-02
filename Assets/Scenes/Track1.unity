@@ -1077,11 +1077,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa23420a66dce14da82761bd5ba6802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recording: 0
+  recording: 1
   subject: {fileID: 1349884442}
   hud: {fileID: 1579623545}
   timeElapsed: 0
-  sampleEveryFixedFrame: 1
+  sampleEveryFixedFrame: 5
   data: []
 --- !u!4 &1596038480
 Transform:
