@@ -16,7 +16,8 @@ namespace VirtualTwin
         [SerializeField] Vector3 contactPoint;
 
         [Header("Power")]
-        public float torque = 100f;
+        public float driveTorque = 500f;
+        public float brakeTorque = 1500f;
         [Range(0f, 0.5f)] public float rollingResistance = 0.25f;
         [Range(0f, 0.5f)] public float corneringResistance = 0.25f;
 
@@ -93,10 +94,16 @@ namespace VirtualTwin
             {
                 if (input != 0)
                 {
+                    var torque = 0f;
+
+                    if (input > 0) torque = driveTorque;
+                    else torque = brakeTorque;
+
                     // Placeholder calculation
                     var force = (1 - rollingResistance + corneringResistance) * torque * curvature;
                     acceleration = force * inverseVehicleMass;
                     speed += input * acceleration * dt;
+                    if (speed < 0) speed = 0;
                 }
 
                 velocity.x = speed * Mathf.Sin((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);
