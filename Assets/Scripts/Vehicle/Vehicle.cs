@@ -22,6 +22,10 @@ namespace VirtualTwin
         [Range(0.001f, 0.1f)]
         public float stationaryThreshold = 0.04f;
 
+        [Header("Coefficients")]
+        [Range(0f, 1f)] public float liftCoefficent = 0.1f;
+        [Range(0f, 1f)] public float dragCoefficent = 0.1f;
+
         [Header("Components")]
         public Wheel frontWheel;
         public Wheel backWheel;
@@ -94,7 +98,7 @@ namespace VirtualTwin
         void Steer()
         {
             var input = Input.GetAxisRaw("Horizontal");
-            if (input != 0) frontWheel.SteerWheel(input * Time.deltaTime);
+            frontWheel.SteerWheel(input * Time.deltaTime);
         }
 
         void Accelerate()
@@ -104,7 +108,7 @@ namespace VirtualTwin
             if (Input.GetKey("j")) sign = 1;
             else if (Input.GetKey("l")) sign = -1;
 
-            if (sign != 0) frontWheel.DriveWheel(sign * Time.deltaTime);
+            frontWheel.DriveWheel(sign, Time.deltaTime);
         }
 
         void Drive()
@@ -116,35 +120,24 @@ namespace VirtualTwin
 
             // Calculate velocity and angle of body
             velocity = CalculateVelocity(v);
-            //driveAngle = AngleBetweenDegrees(velocity, Vector3.forward);
+            driveAngle = Vector3.SignedAngle(velocity, transform.forward, transform.up);
+
+            // Account for drag (placeholder)
+            velocity *= (1 - dragCoefficent);
 
             // Apply to rb
             rb.velocity = velocity;
 
             // Turn vehicle by small amount
-            transform.Rotate(0, driveAngle * Time.deltaTime, 0);
+            var delta = -driveAngle * Time.fixedDeltaTime;
+            //print(driveAngle);
+            transform.Rotate(0, delta, 0);
         }
 
         void LogData()
         {
             speed = rb.velocity.magnitude;
             distance += speed * Time.fixedDeltaTime;
-        }
-
-        float AngleBetweenDegrees(Vector3 vec1, Vector3 vec2)
-        {
-            vec1.Normalize();
-            vec2.Normalize();
-
-            var dot = Vector3.Dot(vec1, vec2);
-
-            return Mathf.Acos(dot) * Mathf.Rad2Deg;
-        }
-
-        Vector3 CalcDriveDir()
-        {
-            //return steering.SteerDir();
-            return transform.forward;
         }
 
         Vector3 CalculateVelocity(Vector3 frontWheelVelocity)

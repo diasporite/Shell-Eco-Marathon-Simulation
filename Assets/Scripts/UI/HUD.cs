@@ -18,7 +18,7 @@ namespace VirtualTwin
             if (sample == null) sample = new DataPoint(0, 0, 0);
 
             timeElapsed.text = "Time Elapsed, t = " + 
-                sample._time.ToString("0.000") + "s";
+                sample._time.ToString("0.00") + "s";
             vehicleSpeed.text = "Vehicle Speed, |v| = " + 
                 sample._speed.ToString("0.000") + "m/s";
             distanceTravelled.text = "Distance Travelled, s = " + 

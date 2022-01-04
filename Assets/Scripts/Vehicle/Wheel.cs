@@ -16,20 +16,21 @@ namespace VirtualTwin
         [SerializeField] Vector3 contactPoint;
 
         [Header("Power")]
-        public float torque = 1;
-        [Range(0f, 1f)] public float resistance = 0.5f;
-        //[Range(0f, 1f)] public float airResistance = 0.5f;
-        //[Range(0f, 1f)] public float rollingResistance = 0.5f;
-        //[Range(0f, 1f)] public float corneringResistance = 0.5f;
+        public float torque = 100f;
+        [Range(0f, 0.5f)] public float rollingResistance = 0.25f;
+        [Range(0f, 0.5f)] public float corneringResistance = 0.25f;
 
         [Header("Constants")]
         public float wheelLock = 45f;
+        public float steeringSpeed = 15f;
 
         [Header("Variables")]
+        [SerializeField] float globalWheelTurningAngle = 0;
         [SerializeField] float wheelTurningAngle = 0;
         [SerializeField] float slipAngle = 0;
         [SerializeField] float wheelSpeedDeflectionAngle = 0;
         [SerializeField] float acceleration = 0;
+        [SerializeField] float speed = 0;
         [SerializeField] Vector3 velocity = new Vector3(0, 0, 0);
 
         Vehicle vehicle;
@@ -62,6 +63,9 @@ namespace VirtualTwin
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, 5f * transform.forward);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(transform.position, 5f * velocity.normalized);
         }
 
         public void SteerWheel(float delta)
@@ -69,26 +73,36 @@ namespace VirtualTwin
             if (driving)
             {
                 // Turn wheel
-                wheelTurningAngle += 60 * delta;
+                wheelTurningAngle += steeringSpeed * delta;
+                globalWheelTurningAngle += steeringSpeed * delta;
                 if (Mathf.Abs(wheelTurningAngle) > wheelLock)
                     wheelTurningAngle = wheelLock * Mathf.Sign(wheelTurningAngle);
 
                 slipAngle = CalculateSlipAngle(wheelTurningAngle);
                 wheelSpeedDeflectionAngle = wheelTurningAngle - slipAngle;
 
-                transform.localRotation = Quaternion.Euler(0, wheelTurningAngle, 0);
+                //transform.localRotation = Quaternion.Euler(0, wheelTurningAngle, 0);
+                //transform.localRotation = Quaternion.Euler(0, globalWheelTurningAngle, 0);
+                transform.rotation = Quaternion.Euler(0, globalWheelTurningAngle, 0);
             }
         }
 
-        public void DriveWheel(float dt)
+        public void DriveWheel(float input, float dt)
         {
             if (driving)
             {
-                var force = (1 - resistance) * torque * curvature;
-                acceleration = force * inverseVehicleMass;
+                if (input != 0)
+                {
+                    // Placeholder calculation
+                    var force = (1 - rollingResistance + corneringResistance) * torque * curvature;
+                    acceleration = force * inverseVehicleMass;
+                    speed += acceleration * dt;
+                }
 
-                velocity += acceleration * transform.forward * dt;
+                velocity.x = speed * Mathf.Sin((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);
+                velocity.z = speed * Mathf.Cos((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);
 
+                // Prevents wheel from reversing when braking
                 var dot = Vector3.Dot(transform.forward, velocity.normalized);
                 if (dot < 0) velocity = Vector3.zero;
             }
