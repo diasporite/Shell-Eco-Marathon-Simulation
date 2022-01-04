@@ -96,7 +96,7 @@ namespace VirtualTwin
                     // Placeholder calculation
                     var force = (1 - rollingResistance + corneringResistance) * torque * curvature;
                     acceleration = force * inverseVehicleMass;
-                    speed += acceleration * dt;
+                    speed += input * acceleration * dt;
                 }
 
                 velocity.x = speed * Mathf.Sin((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);
