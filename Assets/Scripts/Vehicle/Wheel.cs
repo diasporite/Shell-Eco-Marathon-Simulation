@@ -25,11 +25,15 @@ namespace VirtualTwin
         public float wheelLock = 45f;
         public float steeringSpeed = 15f;
 
-        [Header("Variables")]
+        [Header("Variables - Wheel Angles")]
         [SerializeField] float globalWheelTurningAngle = 0;
         [SerializeField] float wheelTurningAngle = 0;
         [SerializeField] float slipAngle = 0;
         [SerializeField] float wheelSpeedDeflectionAngle = 0;
+
+        [Header("Variables - Forces")]
+        [SerializeField] float force = 0;
+        [SerializeField] float lateralForce = 0;
         [SerializeField] float acceleration = 0;
         [SerializeField] float speed = 0;
         [SerializeField] Vector3 velocity = new Vector3(0, 0, 0);
@@ -100,7 +104,8 @@ namespace VirtualTwin
                     else torque = brakeTorque;
 
                     // Placeholder calculation
-                    var force = (1 - rollingResistance + corneringResistance) * torque * curvature;
+                    force = (1 - rollingResistance + corneringResistance) * torque * curvature;
+                    lateralForce = force * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
                     acceleration = force * inverseVehicleMass;
                     speed += input * acceleration * dt;
                     if (speed < 0) speed = 0;
