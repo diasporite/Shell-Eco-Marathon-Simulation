@@ -86,7 +86,6 @@ namespace VirtualTwin
                 slipAngle = CalculateSlipAngle(wheelTurningAngle);
                 wheelSpeedDeflectionAngle = wheelTurningAngle - slipAngle;
 
-                print(4);
                 //transform.localRotation = Quaternion.Euler(0, wheelTurningAngle, 0);
                 //transform.localRotation = Quaternion.Euler(0, globalWheelTurningAngle, 0);
                 transform.rotation = Quaternion.Euler(0, globalWheelTurningAngle, 0);
