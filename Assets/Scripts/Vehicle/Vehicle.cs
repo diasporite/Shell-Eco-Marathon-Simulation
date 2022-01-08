@@ -7,10 +7,6 @@ namespace VirtualTwin
     [RequireComponent(typeof(Rigidbody))]
     public class Vehicle : MonoBehaviour
     {
-        [Header("Parameters")]
-        [SerializeField] float speed;
-        [SerializeField] float distance;
-
         [Header("Constants")]
         public float topSpeed = 10;
         public float bodyLength = 2;
@@ -18,6 +14,7 @@ namespace VirtualTwin
         public float length_bcm = 1;    // Length between back and centre of mass (l_r)
         public float bodyMass = 200;
         public float rideHeight = 0.25f;
+        public float surfaceArea = 0.2f;
 
         [Range(0.001f, 0.1f)]
         public float stationaryThreshold = 0.04f;
@@ -26,18 +23,25 @@ namespace VirtualTwin
         [Range(0f, 1f)] public float liftCoefficent = 0.1f;
         [Range(0f, 1f)] public float dragCoefficent = 0.1f;
 
+        [Header("Environment")]
+        public float airDensity = 1000f;
+
         [Header("Components")]
         public Wheel frontWheel;
         public Wheel backWheel;
-        //public Accelerator accelerator;
-        //public Steering steering;
         public BoxCollider undercarriage;
 
         Rigidbody rb;
 
         [Header("Variables")]
+        [SerializeField] float speed;
+        [SerializeField] float distance;
         [SerializeField] float driveAngle = 0;  // beta in vehicle dynamics doc
         [SerializeField] Vector3 velocity = new Vector3(0, 0, 0);
+        [SerializeField] float driveForce = 0;
+        [SerializeField] float liftForce = 0;
+        [SerializeField] float dragForce = 0;
+        [SerializeField] float dragAcceleration = 0;
 
         public float Speed => speed;
         public float Distance => distance;
@@ -45,7 +49,9 @@ namespace VirtualTwin
         public Rigidbody Rb => rb;
 
         public float VehicleMass => bodyMass + frontWheel.mass + backWheel.mass;
-        
+
+        public float InverseVehicleMass => 1 / VehicleMass;
+
         public bool Stationary => speed <= stationaryThreshold;
 
         private void Awake()
@@ -123,10 +129,13 @@ namespace VirtualTwin
             driveAngle = Vector3.SignedAngle(velocity, transform.forward, transform.up);
 
             // Account for drag (placeholder)
-            velocity *= (1 - dragCoefficent);
+            //velocity *= (1 - dragCoefficent);
+            dragForce = 0.5f * airDensity * velocity.sqrMagnitude * surfaceArea;
+            dragAcceleration = dragForce * InverseVehicleMass;
 
             // Apply to rb
-            rb.velocity = velocity;
+            speed -= dragAcceleration * Time.fixedDeltaTime;
+            rb.velocity = speed * velocity.normalized;
 
             // Turn vehicle by small amount
             var delta = -driveAngle * Time.fixedDeltaTime;
@@ -142,7 +151,11 @@ namespace VirtualTwin
 
         Vector3 CalculateVelocity(Vector3 frontWheelVelocity)
         {
-            return frontWheelVelocity;
+            var velocity = frontWheelVelocity;
+            var dv = Vector3.zero;
+            velocity += dv;
+
+            return velocity;
         }
     }
 }

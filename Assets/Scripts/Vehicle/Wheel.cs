@@ -32,7 +32,8 @@ namespace VirtualTwin
         [SerializeField] float wheelSpeedDeflectionAngle = 0;
 
         [Header("Variables - Forces")]
-        [SerializeField] float force = 0;
+        [SerializeField] float drivingForce = 0;
+        [SerializeField] float resistanceForce = 0;
         [SerializeField] float lateralForce = 0;
         [SerializeField] float acceleration = 0;
         [SerializeField] float speed = 0;
@@ -98,13 +99,16 @@ namespace VirtualTwin
             {
                 if (input != 0)
                 {
+                    var force = 0f;
                     var torque = 0f;
 
                     if (input > 0) torque = driveTorque;
                     else torque = brakeTorque;
 
                     // Placeholder calculation
-                    force = (1 - rollingResistance + corneringResistance) * torque * curvature;
+                    drivingForce = torque * curvature;
+                    resistanceForce = (rollingResistance + corneringResistance) * drivingForce;
+                    force = drivingForce - resistanceForce;
                     lateralForce = force * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
                     acceleration = force * inverseVehicleMass;
                     speed += input * acceleration * dt;

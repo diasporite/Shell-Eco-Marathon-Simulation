@@ -160,18 +160,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5472d54e7deba6e499adb5fc39b7c9a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  distance: 0
   topSpeed: 40
   bodyLength: 2
+  length_fcm: 1
+  length_bcm: 1
   bodyMass: 200
   rideHeight: 0.25
+  surfaceArea: 10
   stationaryThreshold: 0.04
+  liftCoefficent: 0.1
+  dragCoefficent: 0.1
+  airDensity: 1000
   frontWheel: {fileID: 223258851587717059}
   backWheel: {fileID: 1984936855222181741}
-  accelerator: {fileID: 0}
-  steering: {fileID: 0}
   undercarriage: {fileID: 8520109163244822071}
+  speed: 0
+  distance: 0
+  driveAngle: 0
+  velocity: {x: 0, y: 0, z: 0}
+  driveForce: 0
+  liftForce: 0
+  dragForce: 0
+  dragAcceleration: 0
 --- !u!114 &7148966427742733627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +197,8 @@ MonoBehaviour:
   accelerateKey: j
   brakeKey: l
   acceleration: 20
+  speed: 0
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &221955839966611259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,9 +215,12 @@ MonoBehaviour:
   wheelLock: 45
   steerLock: 90
   frontWheelTurningAngle: 0
+  vehicleVelocityAngle: 0
   slipAngle: 0
   steerAngle: 0
   steerDir: {x: 0, y: 0, z: 0}
+  dtheta: 0
+  dx: 0
 --- !u!1 &6789180541736634258
 GameObject:
   m_ObjectHideFlags: 0
