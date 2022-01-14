@@ -34,8 +34,9 @@ namespace VirtualTwin
         [Header("Variables - Forces")]
         [SerializeField] float drivingForce = 0;
         [SerializeField] float resistanceForce = 0;
+        [SerializeField] float resultantForce = 0;
         [SerializeField] float lateralForce = 0;
-        [SerializeField] float acceleration = 0;
+        [SerializeField] float wheelAcceleration = 0;
         [SerializeField] float speed = 0;
         [SerializeField] Vector3 velocity = new Vector3(0, 0, 0);
 
@@ -49,6 +50,9 @@ namespace VirtualTwin
         public float WheelTurningAngle => wheelTurningAngle;
         public float SlipAngle => slipAngle;
         public float WheelSpeedDeflectionAngle => wheelSpeedDeflectionAngle;
+
+        public float ResultantForce => resultantForce;
+        public float WheelAcceleration => wheelAcceleration;
         public Vector3 Velocity => velocity;
 
         private void Awake()
@@ -74,13 +78,13 @@ namespace VirtualTwin
             Gizmos.DrawRay(transform.position, 5f * velocity.normalized);
         }
 
-        public void SteerWheel(float delta)
+        public void SteerWheel(float input, float dt)
         {
             if (driving)
             {
                 // Turn wheel
-                wheelTurningAngle += steeringSpeed * delta;
-                globalWheelTurningAngle += steeringSpeed * delta;
+                wheelTurningAngle += steeringSpeed * input * dt;
+                globalWheelTurningAngle += steeringSpeed * input * dt;
                 if (Mathf.Abs(wheelTurningAngle) > wheelLock)
                     wheelTurningAngle = wheelLock * Mathf.Sign(wheelTurningAngle);
 
@@ -99,7 +103,6 @@ namespace VirtualTwin
             {
                 if (input != 0)
                 {
-                    var force = 0f;
                     var torque = 0f;
 
                     if (input > 0) torque = driveTorque;
@@ -108,10 +111,10 @@ namespace VirtualTwin
                     // Placeholder calculation
                     drivingForce = torque * curvature;
                     resistanceForce = (rollingResistance + corneringResistance) * drivingForce;
-                    force = drivingForce - resistanceForce;
-                    lateralForce = force * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
-                    acceleration = force * inverseVehicleMass;
-                    speed += input * acceleration * dt;
+                    resultantForce = drivingForce - resistanceForce;
+                    lateralForce = resultantForce * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
+                    wheelAcceleration = resultantForce * inverseVehicleMass;
+                    speed += input * wheelAcceleration * dt;
                     if (speed < 0) speed = 0;
                 }
 
