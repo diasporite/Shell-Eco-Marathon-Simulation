@@ -66,7 +66,7 @@ namespace VirtualTwin
 
         private void Start()
         {
-            inverseVehicleMass = 1 / vehicle.VehicleMass;
+            inverseVehicleMass = vehicle.InverseVehicleMass;
         }
 
         private void OnDrawGizmos()
@@ -101,13 +101,13 @@ namespace VirtualTwin
         {
             if (driving)
             {
-                if (input != 0)
+                var torque = 0f;
+
+                if (input > 0) torque = input * driveTorque;
+                else if (input < 0) torque = input * brakeTorque;
+
+                if (torque != 0)
                 {
-                    var torque = 0f;
-
-                    if (input > 0) torque = driveTorque;
-                    else torque = brakeTorque;
-
                     // Placeholder calculation
                     drivingForce = torque * curvature;
                     resistanceForce = (rollingResistance + corneringResistance) * drivingForce;

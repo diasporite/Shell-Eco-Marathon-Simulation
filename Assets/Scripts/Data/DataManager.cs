@@ -18,6 +18,8 @@ namespace VirtualTwin
 
         [SerializeField] List<DataPoint> data = new List<DataPoint>();
 
+        public bool Recording => recording;
+
         public DataPoint LastSample
         {
             get
@@ -30,6 +32,8 @@ namespace VirtualTwin
 
         private void Start()
         {
+            recording = false;
+
             timeElapsed = 0;
         }
 
@@ -40,23 +44,44 @@ namespace VirtualTwin
 
         void TickFixed()
         {
-            timeElapsed += Time.fixedDeltaTime;
-
             if (recording)
             {
+                timeElapsed += Time.fixedDeltaTime;
                 framesSinceLog++;
+
                 if (framesSinceLog >= sampleEveryFixedFrame)
-                {
-                    LogData(subject.Speed, subject.Distance);
-                    hud.UpdateUI(data.Count, LastSample);
-                    framesSinceLog = 0;
-                }
+                    LogSubjectData();
+            }
+        }
+
+        void LogSubjectData()
+        {
+            LogData(subject.Speed, subject.Distance);
+            hud.UpdateUI(data.Count, LastSample);
+            framesSinceLog = 0;
+        }
+
+        public void Record()
+        {
+            if (!recording) StartRecording();
+            else StopRecording();
+        }
+
+        public void ExportData()
+        {
+            if (!recording)
+            {
+                // Export code goes here
             }
         }
 
         public void StartRecording()
         {
             data.Clear();
+
+            timeElapsed = 0;
+
+            LogSubjectData();
 
             recording = true;
         }
