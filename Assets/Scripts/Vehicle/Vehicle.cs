@@ -49,7 +49,7 @@ namespace VirtualTwin
         [SerializeField] float resultantForce = 0;
 
         [SerializeField] float driveAngle = 0;  // beta in vehicle dynamics doc
-        [SerializeField] Vector3 steerDir = new Vector3(0, 0, 0);
+        [SerializeField] Vector3 driveVelocity = new Vector3(0, 0, 0);
 
         [SerializeField] float dv = 0;
 
@@ -99,8 +99,8 @@ namespace VirtualTwin
             Accelerate();
 
             //Drive();
-            //Drive2();
-            Drive3();
+            Drive2();
+            //Drive3();
         }
 
         private void OnDrawGizmos()
@@ -109,7 +109,7 @@ namespace VirtualTwin
             Gizmos.DrawRay(transform.position, 5f * transform.forward);
 
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, 5f * steerDir.normalized);
+            Gizmos.DrawRay(transform.position, 5f * driveVelocity.normalized);
         }
 
         void GetInputs()
@@ -163,17 +163,17 @@ namespace VirtualTwin
             var v = CalculateVelocity(frontWheel.Velocity);
 
             // Calculate velocity and angle of body
-            steerDir = v;
-            driveAngle = Vector3.SignedAngle(steerDir, transform.forward, transform.up);
+            driveVelocity = v;
+            driveAngle = Vector3.SignedAngle(driveVelocity, transform.forward, transform.up);
 
-            speed = steerDir.magnitude;
+            speed = driveVelocity.magnitude;
 
             // Account for drag (placeholder)
             //velocity *= (1 - dragCoefficent);
             //driveForce = frontWheel.ResultantForce;
             //driveAcceleration = driveForce * InverseVehicleMass;
 
-            //dragForce = 0.5f * airDensity * speed * speed * surfaceArea;
+            //dragForce = 0.5f * airDensity * speed * speed * dragCoefficient * surfaceArea;
             //dragAcceleration = dragForce * InverseVehicleMass;
 
             //resultantForce = driveForce - dragForce;
@@ -182,7 +182,7 @@ namespace VirtualTwin
             // Apply to rb
             speed += resultantAcceleration * Time.fixedDeltaTime;
             if (speed < 0) speed = 0;
-            rb.velocity = speed * steerDir.normalized;
+            rb.velocity = speed * driveVelocity.normalized;
 
             // Turn vehicle by small amount
             var delta = -driveAngle * Time.fixedDeltaTime;
@@ -196,13 +196,16 @@ namespace VirtualTwin
         {
             // Get current frame data
             speed = rb.velocity.magnitude;
-            steerDir = CalculateVelocity(frontWheel.Velocity);
+            velocity = rb.velocity;
+
+            driveVelocity = CalculateVelocity(frontWheel.Velocity);
+            driveAngle = Vector3.SignedAngle(driveVelocity, transform.forward, transform.up);
 
             // Get resultant force from front wheel
             driveForce = frontWheel.ResultantForce;
 
             // Calculate drag (and lift)
-            dragForce = 0.5f * airDensity * speed * speed * surfaceArea;
+            dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * surfaceArea;
 
             // Calculate new frame data
             resultantForce = driveForce - dragForce;
@@ -210,10 +213,11 @@ namespace VirtualTwin
 
             dv = resultantAcceleration * Time.fixedDeltaTime;
             speed = speed + dv;
+            if (speed < 0) speed = 0;
             distance += speed * Time.fixedDeltaTime;
 
             // Apply new frame data
-            var v = speed * steerDir.normalized;
+            var v = speed * driveVelocity.normalized;
             rb.velocity = v;
             print(rb.velocity + " " + v);
 
@@ -227,22 +231,23 @@ namespace VirtualTwin
         {
             // Get current frame data
             speed = rb.velocity.magnitude;
-            steerDir = CalculateVelocity(frontWheel.Velocity);
+            velocity = CalculateVelocity(frontWheel.Velocity);
 
             // Get resultant force from front wheel
             driveForce = frontWheel.ResultantForce;
 
             // Calculate drag (and lift)
-            dragForce = 0.5f * airDensity * speed * speed * surfaceArea;
+            dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * surfaceArea;
 
             // Calculate new frame data
             resultantForce = driveForce - dragForce;
             resultantAcceleration = resultantForce * InverseVehicleMass;
 
             // Apply new frame data
-            var v = steerDir.normalized;
+            var v = driveVelocity.normalized;
             //rb.AddForce(resultantForce * v * Time.fixedDeltaTime, ForceMode.Impulse);
-            rb.velocity += resultantAcceleration * v * InverseVehicleMass * Time.fixedDeltaTime;
+            //rb.velocity += resultantAcceleration * v * InverseVehicleMass * Time.fixedDeltaTime;
+            rb.AddForce(resultantAcceleration * v * InverseVehicleMass * Time.fixedDeltaTime, ForceMode.VelocityChange);
             velocity = rb.velocity;
 
             // Rotate vehicle
@@ -253,10 +258,8 @@ namespace VirtualTwin
         Vector3 CalculateVelocity(Vector3 frontWheelVelocity)
         {
             var velocity = frontWheelVelocity;
-            var dv = Vector3.zero;
-            velocity += dv;
 
-            return velocity;
+            return speed * velocity;
         }
     }
 }
