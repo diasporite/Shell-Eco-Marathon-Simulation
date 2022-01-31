@@ -1356,7 +1356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   follow: {fileID: 2922532309510854413}
   speed: 120
-  camDist: 10
+  camDist: 7
 --- !u!1 &1260796386
 GameObject:
   m_ObjectHideFlags: 0
@@ -2228,80 +2228,80 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 221955839966611259, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 221955839966611259, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: steeringSpeed
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: mass
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: torque
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: wheelLock
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: resistance
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
       propertyPath: brakeTorque
-      value: 1000
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
       propertyPath: driveTorque
-      value: 4600
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
-      propertyPath: steeringSpeed
-      value: 40
+      propertyPath: rollingResistance
+      value: 0.1
       objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
+    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
-      propertyPath: mass
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: torque
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: wheelLock
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: resistance
+      propertyPath: corneringResistance
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
       propertyPath: brakeTorque
-      value: 1000
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
       propertyPath: driveTorque
-      value: 4600
+      value: 260
+      objectReference: {fileID: 0}
+    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: rollingResistance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: corneringResistance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499068251770012623, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: fuelMass
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499068251770012623, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: fuelCapacity
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
@@ -2361,47 +2361,17 @@ PrefabInstance:
     - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
       propertyPath: bodyMass
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
-      propertyPath: airDensity
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: surfaceArea
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: dragCoefficent
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: liftCoefficent
-      value: 0.02
+      propertyPath: referenceArea
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5410751854116663081, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
       propertyPath: m_Name
       value: Car
       objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663081, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7148966427742733627, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7749177648930101975, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 37fd22bed01fbaa4cae9ee9b633f3d53, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3c32fec125b71841a7e98042250e502, type: 3}

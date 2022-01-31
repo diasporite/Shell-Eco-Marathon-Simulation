@@ -105,18 +105,16 @@ namespace VirtualTwin
 
                 if (input > 0) torque = input * driveTorque;
                 else if (input < 0) torque = input * brakeTorque;
+                else torque = 0;
 
-                if (torque != 0)
-                {
-                    // Placeholder calculation
-                    drivingForce = torque * curvature;
-                    resistanceForce = (rollingResistance + corneringResistance) * drivingForce;
-                    resultantForce = drivingForce - resistanceForce;
-                    lateralForce = resultantForce * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
-                    wheelAcceleration = resultantForce * inverseVehicleMass;
-                    speed += input * wheelAcceleration * dt;
-                    if (speed < 0) speed = 0;
-                }
+                // Placeholder calculation
+                drivingForce = torque * curvature;
+                resistanceForce = (rollingResistance + corneringResistance) * drivingForce;
+                resultantForce = drivingForce - resistanceForce;
+                lateralForce = resultantForce * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
+                wheelAcceleration = resultantForce * inverseVehicleMass;
+                speed += input * wheelAcceleration * dt;
+                if (speed < 0) speed = 0;
 
                 velocity.x = speed * Mathf.Sin((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);
                 velocity.z = speed * Mathf.Cos((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);

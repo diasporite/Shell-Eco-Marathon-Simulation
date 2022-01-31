@@ -46,9 +46,12 @@ namespace VirtualTwin
         {
             if (follow != null)
             {
-                camPos.x = follow.position.x + camDist * Mathf.Sin(thetaY * Mathf.Deg2Rad);
-                camPos.y = follow.position.y + camDist * Mathf.Sin(thetaXz * Mathf.Deg2Rad);
-                camPos.z = follow.position.z + camDist * Mathf.Cos(thetaY * Mathf.Deg2Rad);
+                //camPos.x = follow.position.x + camDist * (-follow.forward.x + Mathf.Sin(thetaY * Mathf.Deg2Rad));
+                //camPos.y = follow.position.y + camDist * (-follow.forward.y + Mathf.Sin(thetaXz * Mathf.Deg2Rad));
+                //camPos.z = follow.position.z + camDist * (-follow.forward.z + Mathf.Cos(thetaY * Mathf.Deg2Rad));
+
+                camPos = follow.position - camDist * follow.forward;
+                camPos.y = 3;
 
                 transform.position = camPos;
                 transform.LookAt(follow);

@@ -91,8 +91,7 @@ GameObject:
   - component: {fileID: 5410751854116663076}
   - component: {fileID: 5410751854116663079}
   - component: {fileID: 5410751854116663078}
-  - component: {fileID: 7148966427742733627}
-  - component: {fileID: 221955839966611259}
+  - component: {fileID: 2499068251770012623}
   m_Layer: 15
   m_Name: Car
   m_TagString: Untagged
@@ -164,25 +163,33 @@ MonoBehaviour:
   bodyLength: 2
   length_fcm: 1
   length_bcm: 1
-  bodyMass: 200
+  bodyMass: 100
   rideHeight: 0.25
-  surfaceArea: 10
+  surfaceArea: 1
   stationaryThreshold: 0.04
-  liftCoefficent: 0.1
-  dragCoefficent: 0.1
+  liftCoefficent: 0.02
+  dragCoefficent: 0.2
   airDensity: 1000
   frontWheel: {fileID: 223258851587717059}
   backWheel: {fileID: 1984936855222181741}
+  fuelCell: {fileID: 0}
   undercarriage: {fileID: 8520109163244822071}
-  speed: 0
   distance: 0
-  driveAngle: 0
+  speed: 0
   velocity: {x: 0, y: 0, z: 0}
+  driveAcceleration: 0
+  dragAcceleration: 0
+  resultantAcceleration: 0
   driveForce: 0
   liftForce: 0
   dragForce: 0
-  dragAcceleration: 0
---- !u!114 &7148966427742733627
+  resultantForce: 0
+  driveAngle: 0
+  driveVelocity: {x: 0, y: 0, z: 0}
+  dv: 0
+  steerInput: 0
+  keyInput: 
+--- !u!114 &2499068251770012623
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,36 +198,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5410751854116663081}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04000c885f45b644d83f60ade6c27c16, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c41a19ea6a0f5240be52af7f0e2a8a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accelerateKey: j
-  brakeKey: l
-  acceleration: 20
-  speed: 0
-  velocity: {x: 0, y: 0, z: 0}
---- !u!114 &221955839966611259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5410751854116663081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dc158c693828704786b26eea2fc5b7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  steeringSpeed: 60
-  wheelLock: 45
-  steerLock: 90
-  frontWheelTurningAngle: 0
-  vehicleVelocityAngle: 0
-  slipAngle: 0
-  steerAngle: 0
-  steerDir: {x: 0, y: 0, z: 0}
-  dtheta: 0
-  dx: 0
+  fuelMass: 10
+  energyDensity: 4200
+  fuelEfficiency: 0.5
+  fuelUsage: 0
 --- !u!1 &6789180541736634258
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +315,37 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e3d917b830d5be24bb2f7b96ce991ff4, type: 2}
+      objectReference: {fileID: 2100000, guid: 37fd22bed01fbaa4cae9ee9b633f3d53, type: 2}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: wheelLock
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: brakeTorque
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: driveTorque
+      value: 4600
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: steeringSpeed
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 6001820012365640392, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
         type: 3}
       propertyPath: m_Name
@@ -426,8 +440,33 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: e3d917b830d5be24bb2f7b96ce991ff4, type: 2}
     - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
         type: 3}
+      propertyPath: mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
       propertyPath: driving
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: wheelLock
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: brakeTorque
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622038223878365888, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
+        type: 3}
+      propertyPath: driveTorque
+      value: 4600
       objectReference: {fileID: 0}
     - target: {fileID: 6001820012365640392, guid: c23a57d5f5db0c14db4ce75aa7ac10f4,
         type: 3}
