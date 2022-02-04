@@ -56,7 +56,7 @@ namespace VirtualTwin
 
         void LogSubjectData()
         {
-            LogData(subject.Speed, subject.Distance);
+            LogData(subject);
             hud.UpdateUI(data.Count, LastSample);
             framesSinceLog = 0;
         }
@@ -89,6 +89,13 @@ namespace VirtualTwin
         public void StopRecording()
         {
             recording = false;
+        }
+
+        public void LogData(Vehicle subject)
+        {
+            //data.Add(new DataPoint(timeElapsed, subject.Speed, subject.Distance, 
+            //    subject.Acceleration, subject.Drag));
+            data.Add(new DataPoint(timeElapsed, subject));
         }
 
         public void LogData(float speed, float distance)

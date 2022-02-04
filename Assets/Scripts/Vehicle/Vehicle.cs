@@ -77,6 +77,8 @@ namespace VirtualTwin
 
         public float Speed => speed;
         public float Distance => distance;
+        public float Acceleration => resultantAcceleration;
+        public float Drag => dragForce;
 
         public Rigidbody Rb => rb;
 
@@ -121,8 +123,6 @@ namespace VirtualTwin
 
             Drive2();
             //Drive4();
-
-            fuelCell.CalculateFuelUsage();
         }
 
         private void OnDrawGizmos()
@@ -152,17 +152,20 @@ namespace VirtualTwin
         {
             var sign = 0;
 
-            switch (keyInput)
+            if (!fuelCell.FuelEmpty)
             {
-                case "j":
-                    sign = 1;
-                    break;
-                case "l":
-                    sign = -1;
-                    break;
-                default:
-                    sign = 0;
-                    break;
+                switch (keyInput)
+                {
+                    case "j":
+                        sign = 1;
+                        break;
+                    case "l":
+                        sign = -1;
+                        break;
+                    default:
+                        sign = 0;
+                        break;
+                }
             }
 
             frontWheel.DriveWheel(sign, Time.fixedDeltaTime);
@@ -216,6 +219,8 @@ namespace VirtualTwin
 
         void Drive2()
         {
+            rb.mass = VehicleMass;
+
             // Get current frame data
             velocity = rb.velocity;
 
@@ -223,7 +228,8 @@ namespace VirtualTwin
             driveAngle = Vector3.SignedAngle(driveDir, transform.forward, transform.up);
 
             // Get resultant force from front wheel
-            driveForce = frontWheel.ResultantForce;
+            if (fuelCell.FuelEmpty) driveForce = 0;
+            else driveForce = frontWheel.ResultantForce;
 
             // Calculate drag (and lift)
             dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * referenceArea;
@@ -247,6 +253,8 @@ namespace VirtualTwin
             // Rotate vehicle
             var delta = -driveAngle * Time.fixedDeltaTime;
             transform.Rotate(0, delta, 0);
+
+            fuelCell.CalculateFuelUsage(keyInput, Time.fixedDeltaTime);
         }
 
         // Force based approach

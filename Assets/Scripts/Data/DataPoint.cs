@@ -7,19 +7,60 @@ namespace VirtualTwin
     [System.Serializable]
     public class DataPoint
     {
+        Vehicle subject;
+
         [SerializeField] float time;
         [SerializeField] float speed;
         [SerializeField] float distance;
 
-        public float _time => time;
-        public float _speed => speed;
-        public float _distance => distance;
+        // acceleration
+        [SerializeField] float acceleration;
+
+        // drag
+        [SerializeField] float vehicleDrag;
+
+        // resistances
+        // tyre forces
+
+        [SerializeField] float mass;
+        [SerializeField] float fuelMass;
+
+        public float Time => time;
+        public float Speed => speed;
+        public float Distance => distance;
+        public float Acceleration => acceleration;
+        public float VehicleDrag => vehicleDrag;
+
+        public float Mass => mass;
+        public float FuelMass => fuelMass;
 
         public DataPoint(float t, float v, float s)
         {
             time = t;
             speed = v;
             distance = s;
+        }
+
+        public DataPoint(float t, float v, float s, float a, float fd)
+        {
+            time = t;
+            speed = v;
+            distance = s;
+            acceleration = a;
+            vehicleDrag = fd;
+        }
+
+        public DataPoint(float time, Vehicle subject)
+        {
+            this.time = time;
+
+            speed = subject.Speed;
+            distance = subject.Distance;
+            acceleration = subject.Acceleration;
+            vehicleDrag = subject.Drag;
+
+            mass = subject.VehicleMass;
+            fuelMass = subject.fuelCell.fuelMass;
         }
     }
 }
