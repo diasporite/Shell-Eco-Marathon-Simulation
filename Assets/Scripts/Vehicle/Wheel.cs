@@ -51,6 +51,8 @@ namespace VirtualTwin
         public float SlipAngle => slipAngle;
         public float WheelSpeedDeflectionAngle => wheelSpeedDeflectionAngle;
 
+        public float WheelDrive => drivingForce;
+        public float ResistanceForce => resistanceForce;
         public float ResultantForce => resultantForce;
         public float WheelAcceleration => wheelAcceleration;
         public Vector3 Velocity => velocity;
@@ -109,7 +111,35 @@ namespace VirtualTwin
 
                 // Placeholder calculation
                 drivingForce = torque * curvature;
-                resistanceForce = (rollingResistance + corneringResistance) * drivingForce;
+                resistanceForce = rollingResistance * vehicle.VehicleMass * 9.81f + corneringResistance * drivingForce;
+                resultantForce = drivingForce - resistanceForce;
+                lateralForce = resultantForce * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
+                wheelAcceleration = resultantForce * inverseVehicleMass;
+                speed += input * wheelAcceleration * dt;
+                if (speed < 0) speed = 0;
+
+                velocity.x = speed * Mathf.Sin((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);
+                velocity.z = speed * Mathf.Cos((globalWheelTurningAngle + wheelSpeedDeflectionAngle) * Mathf.Deg2Rad);
+
+                // Prevents wheel from reversing when braking
+                var dot = Vector3.Dot(transform.forward, velocity.normalized);
+                if (dot < 0) velocity = Vector3.zero;
+            }
+        }
+
+        public void DriveWheel(float input, float power, float dt)
+        {
+            if (driving)
+            {
+                var torque = 0f;
+
+                if (input > 0) torque = input * driveTorque;
+                else if (input < 0) torque = input * brakeTorque;
+                else torque = 0;
+
+                // Placeholder calculation
+                drivingForce = torque * curvature;
+                resistanceForce = rollingResistance * vehicle.VehicleMass * 9.81f + corneringResistance * drivingForce;
                 resultantForce = drivingForce - resistanceForce;
                 lateralForce = resultantForce * Mathf.Sin(wheelSpeedDeflectionAngle * Mathf.Deg2Rad);
                 wheelAcceleration = resultantForce * inverseVehicleMass;

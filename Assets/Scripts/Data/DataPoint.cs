@@ -21,9 +21,13 @@ namespace VirtualTwin
 
         // resistances
         // tyre forces
+        [SerializeField] float wheelDrive;
+        [SerializeField] float rollingRes;
 
         [SerializeField] float mass;
         [SerializeField] float fuelMass;
+
+        [SerializeField] float fuelEfficiency;
 
         public float Time => time;
         public float Speed => speed;
@@ -33,6 +37,7 @@ namespace VirtualTwin
 
         public float Mass => mass;
         public float FuelMass => fuelMass;
+        public float FuelEfficiency => fuelEfficiency;
 
         public DataPoint(float t, float v, float s)
         {
@@ -59,8 +64,12 @@ namespace VirtualTwin
             acceleration = subject.Acceleration;
             vehicleDrag = subject.Drag;
 
+            wheelDrive = subject.frontLeftWheel.WheelDrive;
+            rollingRes = subject.frontLeftWheel.ResistanceForce;
+
             mass = subject.VehicleMass;
-            fuelMass = subject.fuelCell.fuelMass;
+            fuelMass = subject.fuelCell.currentFuelMass;
+            fuelEfficiency = subject.FuelEfficiency;
         }
     }
 }
