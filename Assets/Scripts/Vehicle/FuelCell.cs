@@ -6,7 +6,8 @@ namespace VirtualTwin
 {
     public class FuelCell : MonoBehaviour
     {
-        public float fuelMass = 2;
+        public float cellMass = 3.3f;
+        public float fuelMass = 0.6f;
         public float fuelVolume;
         public float currentFuelMass;
         public float currentFuelVolume;
@@ -17,6 +18,8 @@ namespace VirtualTwin
         public float fuelCellEfficiency = 0.5f;
         public float power = 500;
 
+        float fuelVolRate = 0.1042f;
+
         // Constants
         float mH2;
         float b;
@@ -25,6 +28,7 @@ namespace VirtualTwin
 
         public bool FuelEmpty => fuelMass <= 0;
         public float ConsumedFuel => fuelMass - currentFuelMass;
+        public float TotalMass => cellMass + currentFuelMass;
 
         private void Start()
         {

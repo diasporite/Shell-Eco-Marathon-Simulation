@@ -1915,7 +1915,7 @@ GameObject:
   - component: {fileID: 1065730108}
   - component: {fileID: 1065730107}
   m_Layer: 0
-  m_Name: Time
+  m_Name: WheelDrive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1937,7 +1937,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 223, y: -20}
   m_SizeDelta: {x: 840, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1065730107
@@ -1987,7 +1987,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Time Elapsed, t = ----s
+  m_Text: Wheel Drive, = ----N
 --- !u!222 &1065730109
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3039,6 +3039,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
+      propertyPath: driving
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
       propertyPath: brakeTorque
       value: 20
       objectReference: {fileID: 0}
@@ -3069,6 +3074,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
+      propertyPath: steering
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
       propertyPath: brakeTorque
       value: 20
       objectReference: {fileID: 0}
@@ -3090,7 +3100,7 @@ PrefabInstance:
     - target: {fileID: 2499068251770012623, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
       propertyPath: fuelMass
-      value: 3.9
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 2499068251770012623, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}
@@ -3101,6 +3111,11 @@ PrefabInstance:
         type: 3}
       propertyPath: fuelMassFlowRate
       value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 5196533633348383732, guid: b3c32fec125b71841a7e98042250e502,
+        type: 3}
+      propertyPath: driving
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
         type: 3}

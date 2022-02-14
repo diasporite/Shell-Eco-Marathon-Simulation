@@ -9,13 +9,13 @@ namespace VirtualTwin
     {
         [Header("Constants")]
         public float topSpeed = 10;
-        public float bodyLength = 2;
+        public float bodyLength = 2.54f;
         public float length_fcm = 1;    // Length between front and centre of mass (l_f)
         public float length_bcm = 1;    // Length between back and centre of mass (l_r)
-        public float bodyMass = 200;
-        public float driverMass = 60;
+        public float bodyMass = 40;
+        public float driverMass = 50;
         public float rideHeight = 0.25f;
-        public float referenceArea = 1f;
+        public float referenceArea = 0.39f;
 
         [Range(0.001f, 0.1f)]
         public float stationaryThreshold = 0.04f;
@@ -25,7 +25,7 @@ namespace VirtualTwin
         [Range(0f, 1f)] public float dragCoefficent = 0.1f;
 
         [Header("Environment")]
-        public float airDensity = 1000f;
+        public float airDensity = 1.225f;
 
         [Header("Components")]
         public Wheel frontLeftWheel;
@@ -34,6 +34,8 @@ namespace VirtualTwin
         public FuelCell fuelCell;
         public BoxCollider undercarriage;
         public Wheel[] wheels;
+
+        [SerializeField] Vector3 centreOfSteering;
 
         Rigidbody rb;
 
@@ -58,22 +60,6 @@ namespace VirtualTwin
 
         [SerializeField] float fuelEfficiency = 0;
 
-        [Header("Current Variables")]
-        [SerializeField] float currentSpeed = 0;
-        [SerializeField] float currentResAcceleration = 0;
-        [SerializeField] float currentDriveForce = 0;
-        [SerializeField] float currentDragForce = 0;
-        [SerializeField] float currentResForce = 0;
-        [SerializeField] float currentLiftForce = 0;
-
-        [Header("New Variables")]
-        [SerializeField] float newSpeed = 0;
-        [SerializeField] float newResAcceleration = 0;
-        [SerializeField] float newDriveForce = 0;
-        [SerializeField] float newDragForce = 0;
-        [SerializeField] float newResForce = 0;
-        [SerializeField] float newLiftForce = 0;
-
         [Header("Input")]
         [SerializeField] float steerInput;
         [SerializeField] string keyInput;
@@ -87,7 +73,7 @@ namespace VirtualTwin
         public Rigidbody Rb => rb;
 
         public float VehicleMass => bodyMass + driverMass + frontLeftWheel.mass + 
-            backWheel.mass + fuelCell.currentFuelMass;
+            frontRightWheel.mass + backWheel.mass + fuelCell.TotalMass;
 
         public float InverseVehicleMass => 1 / VehicleMass;
 
@@ -96,8 +82,10 @@ namespace VirtualTwin
         private void Awake()
         {
             fuelCell = GetComponent<FuelCell>();
-            wheels = GetComponentsInChildren<Wheel>();
+
             rb = GetComponent<Rigidbody>();
+
+            wheels = new Wheel[] { frontLeftWheel, frontRightWheel, backWheel };
         }
 
         private void Start()
@@ -120,8 +108,7 @@ namespace VirtualTwin
             Steer();
             Accelerate();
 
-            Drive2();
-            //Drive4();
+            Drive();
         }
 
         private void OnDrawGizmos()
@@ -144,7 +131,9 @@ namespace VirtualTwin
 
         void Steer()
         {
-            frontLeftWheel.SteerWheel(steerInput, Time.fixedDeltaTime);
+            foreach(var w in wheels)
+                if (w.steering)
+                    w.SteerWheel(steerInput, Time.fixedDeltaTime);
         }
 
         void Accelerate()
@@ -167,22 +156,24 @@ namespace VirtualTwin
                 }
             }
 
-            frontLeftWheel.DriveWheel(sign, Time.fixedDeltaTime);
+            foreach(var w in wheels)
+                if (w.driving)
+                    w.DriveWheel(sign, Time.fixedDeltaTime);
         }
 
-        void Drive2()
+        void Drive()
         {
             rb.mass = VehicleMass;
 
             // Get current frame data
             velocity = rb.velocity;
 
-            driveDir = CalculateVelocity(frontLeftWheel.Velocity).normalized;
+            driveDir = CalculateSteerDir(frontLeftWheel.Velocity).normalized;
             driveAngle = Vector3.SignedAngle(driveDir, transform.forward, transform.up);
 
             // Get resultant force from front wheel
             if (fuelCell.FuelEmpty) driveForce = 0;
-            else driveForce = frontLeftWheel.ResultantForce;
+            else driveForce = GetWheelDrive();
 
             // Calculate drag (and lift)
             dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * referenceArea;
@@ -200,6 +191,7 @@ namespace VirtualTwin
 
             // Apply new frame data
             var v = speed * driveDir.normalized;
+            v.y = rb.velocity.y;    // Conserve y velocity for gravity
             rb.velocity = v;
             //print(rb.velocity + " " + v);
 
@@ -216,14 +208,20 @@ namespace VirtualTwin
 
             foreach(var w in wheels)
                 if (w.driving)
-                    drive += Mathf.Abs(w.ResultantForce);
-
+                    drive += w.ResultantForce;
+            print("drive " + drive);
             return drive;
         }
 
-        Vector3 CalculateVelocity(Vector3 frontWheelVelocity)
+        Vector3 CalculateSteerDir(Vector3 frontWheelVelocity)
         {
-            var velocity = frontWheelVelocity;
+            Vector3 velocity = Vector3.zero;
+
+            foreach (var w in wheels)
+                if (w.steering)
+                    velocity += w.Velocity.normalized;
+
+            velocity.Normalize();
 
             return speed * velocity;
         }

@@ -8,6 +8,7 @@ namespace VirtualTwin
     {
         public GameObject model;
 
+        public bool steering = true;
         public bool driving = true;
 
         [Header("Dimensions")]
@@ -82,7 +83,7 @@ namespace VirtualTwin
 
         public void SteerWheel(float input, float dt)
         {
-            if (driving)
+            if (steering)
             {
                 // Turn wheel
                 wheelTurningAngle += steeringSpeed * input * dt;
