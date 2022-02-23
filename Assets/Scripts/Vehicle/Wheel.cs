@@ -24,7 +24,7 @@ namespace VirtualTwin
 
         [Header("Constants")]
         public float wheelLock = 45f;
-        public float steeringSpeed = 15f;
+        public float steeringSpeed = 60f;
 
         [Header("Variables - Wheel Angles")]
         [SerializeField] float globalWheelTurningAngle = 0;
