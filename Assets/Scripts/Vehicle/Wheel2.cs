@@ -20,12 +20,16 @@ namespace VirtualTwin
         public float brakeTorque = 25f;
 
         [Header("Resistances")]
-        [Range(0f, 0.5f)] public float rollingResistance = 0.0081f;
-        [Range(0f, 0.5f)] public float corneringResistance = 0.12f;
+        [Range(0f, 1f)] public float rollingResistance = 0.0081f;
+        [Range(0f, 1f)] public float corneringResistance = 0.12f;
+
+        [Header("Coefficients")]
+        [Range(0f, 1f)] public float brakingCoefficient = 0.5f;
 
         [Header("Variables")]
         public Vector3 steerDir = new Vector3(0, 0, 1);
 
+        public float weightForce = 0;
         public float drivingForce = 0;
         public float brakingForce = 0;
         public float rollingResForce = 0;
@@ -46,6 +50,8 @@ namespace VirtualTwin
         {
             vehicle = GetComponentInParent<Vehicle2>();
 
+            weightForce = mass * 9.81f;
+
             curvature = 1 / radius;
         }
 
@@ -61,7 +67,7 @@ namespace VirtualTwin
             {
                 Gizmos.color = Color.red;
                 Gizmos.DrawRay(transform.position, 
-                    2f * (transform.root.rotation * steerDir).normalized);
+                    1f * (transform.root.rotation * steerDir).normalized);
             }
         }
 
@@ -79,39 +85,57 @@ namespace VirtualTwin
 
         public void Accelerate(float input, float dt)
         {
-            drivingForce = input * driveTorque * curvature;
-            brakingForce = -1f * input * BrakingForce(brakeTorque);
+            drivingForce = Mathf.Abs(input) * driveTorque * curvature;
+            brakingForce = Mathf.Abs(input) * BrakingForce(brakeTorque);
             rollingResForce = RollingResistanceForce();
             cornerResForce = 0; // TBD
 
-            resultantForce = drivingForce - rollingResForce;
+            resultantForce = drivingForce - brakingForce - rollingResForce;
 
-            if (vehicle.Stationary)
-                if (resultantForce < 0)
-                    resultantForce = 0;
+            //if (vehicle.Stationary)
+            //    if (resultantForce < 0)
+            //        resultantForce = 0;
+        }
+
+        public void Accelerate(float driveInput, float brakeInput, float dt)
+        {
+            drivingForce = Mathf.Abs(driveInput) * driveTorque * curvature;
+            brakingForce = Mathf.Abs(brakeInput) * BrakingForce(brakeTorque);
+            rollingResForce = RollingResistanceForce();
+            cornerResForce = 0; // TBD
+
+            resultantForce = drivingForce - brakingForce - rollingResForce;
+
+            //if (vehicle.Stationary)
+            //    if (resultantForce < 0)
+            //        resultantForce = 0;
         }
 
         float RollingResistanceForce()
         {
-            var speedForce = 0.5f * rollingResistance * vehicle.groundSpeed * vehicle.groundSpeed;
+            var speedForce = 0.5f * rollingResistance * vehicleMass * 9.81f * vehicle.groundSpeed * vehicle.groundSpeed;
             var flatForce = rollingResistance * vehicleMass * 9.81f;
 
-            if (speedForce > flatForce) return speedForce;
+            //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;
+            if (speedForce < flatForce) return speedForce;
 
             return flatForce;
         }
 
         float CorneringResistanceForce()
         {
+            // Fy = c1 * sin(2 * arctan(weightForce/c2)) * alpha
             return 0;
         }
 
         float BrakingForce(float torque)
         {
-            var speedForce = 0.5f * rollingResistance * vehicleMass * vehicle.groundSpeed * vehicle.groundSpeed;
+            var speedForce = 0.5f * brakingCoefficient * vehicleMass * 9.81f * vehicle.groundSpeed * vehicle.groundSpeed;
             var flatForce = brakeTorque * curvature;
 
-            if (speedForce > flatForce) return speedForce;
+            //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;
+            if (speedForce < flatForce) return speedForce;
+
             return flatForce;
         }
     }

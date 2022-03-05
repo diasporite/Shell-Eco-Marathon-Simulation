@@ -205,9 +205,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableLift: 0
+  enableReaction: 0
   bodyMass: 40
   driverMass: 50
   referenceArea: 0.39
+  centreOfMass: {x: 0, y: 0, z: 0}
   centreOfSteering: {x: 0, y: 0, z: 0}
   liftCoefficent: 0.02
   dragCoefficent: 0.12
@@ -217,6 +219,7 @@ MonoBehaviour:
   backWheel: {fileID: 6934445419253835882}
   fuelCell: {fileID: 4095274241458493725}
   undercarriage: {fileID: 7802113931111531749}
+  vehicleBody: {fileID: 5867615582393505432}
   steerDir: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
   groundVelocity: {x: 0, y: 0, z: 0}
@@ -231,6 +234,7 @@ MonoBehaviour:
   liftAcceleration: 0
   steerInput: 0
   accelerateInput: 0
+  brakeInput: 0
 --- !u!114 &4095274241458493725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,6 +318,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484181229144834870, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: e79ea4c2ccdf174438cd7adfcd980a53,
+        type: 2}
+    - target: {fileID: 2777436367031282065, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: brakingCoefficient
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6539094449104424326, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
@@ -402,6 +417,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2484181229144834870, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: e79ea4c2ccdf174438cd7adfcd980a53,
+        type: 2}
+    - target: {fileID: 2777436367031282065, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: brakingCoefficient
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6539094449104424326, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
       propertyPath: m_Name
@@ -488,6 +514,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484181229144834870, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: e79ea4c2ccdf174438cd7adfcd980a53,
+        type: 2}
+    - target: {fileID: 2777436367031282065, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: brakingCoefficient
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6539094449104424326, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}

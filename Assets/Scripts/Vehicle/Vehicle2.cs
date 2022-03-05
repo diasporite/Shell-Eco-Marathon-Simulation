@@ -8,6 +8,7 @@ namespace VirtualTwin
     public class Vehicle2 : MonoBehaviour
     {
         public bool enableLift = false;
+        public bool enableReaction = false;
 
         [Header("Constants")]
         public float bodyMass = 40;
@@ -15,6 +16,7 @@ namespace VirtualTwin
         public float referenceArea = 0.39f;
 
         float wheelSeparation = 1f;
+        [SerializeField] Vector3 centreOfMass;
         [SerializeField] Vector3 centreOfSteering;
 
         [Header("Coefficients")]
@@ -24,14 +26,16 @@ namespace VirtualTwin
         [Header("Environment")]
         public float airDensity = 1.225f;
 
-        [Header("Components")]
+        [Header("Wheels")]
         public Wheel2 frontLeftWheel;
         public Wheel2 frontRightWheel;
         public Wheel2 backWheel;
         Wheel2[] wheels;
 
+        [Header("Other Components")]
         public FuelCell fuelCell;
         public BoxCollider undercarriage;
+        public GameObject vehicleBody;
 
         [Header("Variables - Vectors")]
         public Vector3 steerDir;
@@ -53,8 +57,10 @@ namespace VirtualTwin
         public float driveAcceleration = 0;
         public float liftAcceleration = 0;
 
+        [Header("Inputs")]
         [SerializeField] float steerInput = 0;
         [SerializeField] float accelerateInput = 0;
+        [SerializeField] float brakeInput = 0;
 
         float gravity = 9.81f;
 
@@ -76,6 +82,8 @@ namespace VirtualTwin
             fuelCell = GetComponent<FuelCell>();
 
             wheels = new Wheel2[] { frontLeftWheel, frontRightWheel, backWheel };
+
+            centreOfMass = CalculateCOM(centreOfMass);
 
             centreOfSteering = 0.5f * (frontLeftWheel.transform.position +
                 frontRightWheel.transform.position);
@@ -105,9 +113,18 @@ namespace VirtualTwin
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.white;
+            Gizmos.color = Color.yellow;
             Gizmos.DrawRay(transform.position + wheelSeparation * transform.forward,
-                4f * transform.forward);
+                1f * transform.forward);
+
+            if (rb != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawRay(transform.position + centreOfMass, 2.5f * rb.velocity.normalized);
+            }
+
+            //Gizmos.color = Color.yellow;
+            //Gizmos.DrawRay(transform.position, 2f * (transform.rotation * steerDir).normalized);
         }
 
         void GetInputs()
@@ -115,8 +132,10 @@ namespace VirtualTwin
             steerInput = Input.GetAxisRaw("Horizontal");
 
             if (Input.GetKey("j")) accelerateInput = 1;
-            else if (Input.GetKey("l")) accelerateInput = -1;
             else accelerateInput = 0;
+
+            if (Input.GetKey("l")) brakeInput = 1;
+            else brakeInput = 0;
         }
 
         void Drive()
@@ -124,7 +143,7 @@ namespace VirtualTwin
             foreach (var wheel in wheels)
             {
                 wheel.Steer(steerInput, Time.fixedDeltaTime);
-                wheel.Accelerate(accelerateInput, Time.fixedDeltaTime);
+                wheel.Accelerate(accelerateInput, brakeInput, Time.fixedDeltaTime);
             }
 
             steerDir = GetSteerDir();
@@ -175,6 +194,9 @@ namespace VirtualTwin
             float steerY = steerDir.x;
             var steerTorque = steerY * transform.up * wheelSeparation;
             rb.AddRelativeTorque(steerTorque, ForceMode.Force);
+
+            // Apply a constant angular velocity
+            //rb.angularVelocity = ... * Mathf.Deg2Rad;
         }
 
         void AccelerateVehicle()
@@ -186,10 +208,27 @@ namespace VirtualTwin
 
             rb.AddRelativeForce(resultantDriveForce * transform.forward, ForceMode.Force);
 
-            if (enableLift) rb.AddRelativeForce(liftForce * transform.up, ForceMode.Force);
+            if (enableLift)
+                rb.AddRelativeForce(liftForce * transform.up, ForceMode.Force);
+
+            if (enableReaction && rb.useGravity)
+                rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
 
             //rb.AddRelativeForce(a * transform.forward * Time.fixedDeltaTime, ForceMode.VelocityChange);
             //rb.velocity += a * transform.forward;
+        }
+
+        Vector3 CalculateCOM(Vector3 com)
+        {
+            com = Vector3.zero;
+
+            com += (bodyMass + driverMass + fuelCell.TotalMass) * vehicleBody.transform.localPosition;
+
+            foreach (var wheel in wheels) com += wheel.mass * wheel.transform.localPosition;
+
+            com *= InverseVehicleMass;
+
+            return com;
         }
     }
 }

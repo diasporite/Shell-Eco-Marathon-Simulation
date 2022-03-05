@@ -2187,6 +2187,11 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5867615582671435254, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5867615582671435255, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
       propertyPath: m_RootOrder
@@ -2200,7 +2205,7 @@ PrefabInstance:
     - target: {fileID: 5867615582671435255, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5867615582671435255, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
@@ -2246,6 +2251,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Car2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: enableLift
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: enableReaction
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6934445419253835882, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
