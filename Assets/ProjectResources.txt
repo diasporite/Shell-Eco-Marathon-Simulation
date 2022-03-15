@@ -2,4 +2,7 @@
 PROJECT RESOURCES
 
 - Wheel colliders
-  - https://docs.unity3d.com/Manual/class-WheelCollider.html
+  1 - https://docs.unity3d.com/Manual/class-WheelCollider.html
+- Steering
+  2 - https://physics.stackexchange.com/questions/620458/how-do-we-implement-the-speed-differential-for-the-ackermann-steering
+  3 - https://thef1clan.com/2020/09/21/vehicle-dynamics-the-kinematic-bicycle-model/

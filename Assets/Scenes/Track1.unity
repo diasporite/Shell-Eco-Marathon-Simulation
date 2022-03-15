@@ -2182,6 +2182,11 @@ PrefabInstance:
       propertyPath: driving
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3328075529439417962, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: brakingCoefficient
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5867615582671435254, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
       propertyPath: m_UseGravity
@@ -2267,6 +2272,11 @@ PrefabInstance:
       propertyPath: steering
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6934445419253835882, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: brakingCoefficient
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7021889754880080628, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
       propertyPath: m_Radius
@@ -2281,6 +2291,11 @@ PrefabInstance:
         type: 3}
       propertyPath: driving
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313909037310758995, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: brakingCoefficient
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786, type: 3}
