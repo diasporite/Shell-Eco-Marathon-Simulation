@@ -8,36 +8,34 @@ namespace VirtualTwin
     public class DataPoint
     {
         Vehicle subject;
+        Vehicle2 subject2;
 
-        [SerializeField] float time;
-        [SerializeField] float speed;
-        [SerializeField] float distance;
+        public float time;
+        public float speed;
+        public float distance;
 
         // acceleration
-        [SerializeField] float acceleration;
+        public float acceleration;
 
         // drag
-        [SerializeField] float vehicleDrag;
+        public float vehicleDrag;
 
         // resistances
         // tyre forces
-        [SerializeField] float wheelDrive;
-        [SerializeField] float rollingRes;
+        public float wheelDrive;
+        public float rollingRes;
+        public float cornerRes;
+        public float wheelTurnAngle;
 
-        [SerializeField] float mass;
-        [SerializeField] float fuelMass;
+        public float turnAngle;
+        public float velAngle;
+        public float angularVelocity;
 
-        [SerializeField] float fuelEfficiency;
+        public float mass;
+        public float fuelMass;
 
-        public float Time => time;
-        public float Speed => speed;
-        public float Distance => distance;
-        public float Acceleration => acceleration;
-        public float VehicleDrag => vehicleDrag;
-
-        public float Mass => mass;
-        public float FuelMass => fuelMass;
-        public float FuelEfficiency => fuelEfficiency;
+        public float fuelCellEfficiency;
+        public float vehicleFuelEfficiency;
 
         public DataPoint(float t, float v, float s)
         {
@@ -69,7 +67,30 @@ namespace VirtualTwin
 
             mass = subject.VehicleMass;
             fuelMass = subject.fuelCell.currentFuelMass;
-            fuelEfficiency = subject.FuelEfficiency;
+            fuelCellEfficiency = subject.FuelEfficiency;
+        }
+
+        public DataPoint(float time, Vehicle2 subject)
+        {
+            this.time = time;
+
+            speed = subject.speed;
+            distance = subject.distanceTravelled;
+            acceleration = subject.resultantAcceleration;
+            vehicleDrag = subject.dragForce;
+
+            wheelDrive = subject.frontLeftWheel.drivingForce;
+            rollingRes = subject.frontLeftWheel.rollingResForce;
+            cornerRes = subject.frontLeftWheel.cornerResForce;
+            wheelTurnAngle = subject.frontLeftWheel.steerAngle;
+
+            turnAngle = subject.globalAngle;
+            velAngle = subject.velocityAngle;
+            angularVelocity = subject.angularVelocity;
+
+            mass = subject.VehicleMass;
+            fuelMass = subject.fuelCell.currentFuelMass;
+            fuelCellEfficiency = subject.fuelCell.fuelCellEfficiency;
         }
     }
 }

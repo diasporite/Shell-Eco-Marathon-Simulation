@@ -8,6 +8,7 @@ namespace VirtualTwin
     public class Vehicle2 : MonoBehaviour
     {
         [Header("Settings")]
+        public bool enableDrag = true;
         public bool enableLift = false;
         public bool enableReaction = false;
 
@@ -17,12 +18,14 @@ namespace VirtualTwin
         public float frontalArea = 0.39f;
 
         [Header("Dimensions")]
-        [SerializeField] Vector3 centreOfMass;
-        [SerializeField] Vector3 centreOfSteering;
+        [SerializeField] Vector3 relCentreOfMass;
+        [SerializeField] Vector3 relCentreOfSteering;
+        public Vector3 centreOfMass;
+        public Vector3 centreOfSteering;
 
-        float wheelSeparation = 1f;
-        float rearToCoM;
-        float frontToCoM;
+        [SerializeField] float wheelSeparation = 1f;
+        [SerializeField] float rearToCoM;
+        [SerializeField] float frontToCoM;
 
         [Header("Coefficients")]
         [Range(0f, 1f)] public float liftCoefficent = 0.02f;
@@ -38,29 +41,27 @@ namespace VirtualTwin
         Wheel2[] wheels;
 
         [Header("Other Components")]
+        public GameObject vehicleBody;
         public FuelCell fuelCell;
         public BoxCollider undercarriage;
-        public GameObject vehicleBody;
 
         [Header("Variables - Vectors")]
-        public Vector3 steerDir;
         public Vector3 velocity;
-        public Vector3 groundVelocity;
-        public Vector3 motionCentre;    // Centre of circular motion
+        public Vector3 velocityDir;
+        public Vector3 motionCentre;        // Centre of circular motion at centre of mass
         public Vector3 dirOfCircularMotion;
 
         [Header("Variables - Speed")]
         public float speed = 0;
-        public float groundSpeed = 0;
 
-        [Header("Variables - Linear Displacement")]
+        [Header("Variables - Linear")]
         public float distanceTravelled;
         public float turningRadius;
 
-        [Header("Variables - Angular Displacement")]
-        public float circleAngle;
-        public float angularVelocity;
-        public float vehicleRotation;
+        [Header("Variables - Rotation")]
+        public float angularVelocity;       // Speed at which vehicle axis rotates when steered
+        public float velocityAngle;         // Angle between vehicle axis and direction of velocity
+        public float globalAngle;           // Angle between vehicle axis and world z axis
 
         [Header("Variables - Forces")]
         public float wheelDriveForce = 0;
@@ -76,7 +77,7 @@ namespace VirtualTwin
         public float resultantLateralForce = 0;
 
         [Header("Variables - Acceleration")]
-        public float driveAcceleration = 0;
+        public float resultantAcceleration = 0;
         public float liftAcceleration = 0;
 
         [Header("Inputs")]
@@ -105,15 +106,15 @@ namespace VirtualTwin
 
             wheels = new Wheel2[] { frontLeftWheel, frontRightWheel, backWheel };
 
-            centreOfMass = GetCentreOfMass(centreOfMass);
+            relCentreOfMass = GetRelCentreOfMass();
 
-            centreOfSteering = 0.5f * (frontLeftWheel.transform.position +
-                frontRightWheel.transform.position);
+            relCentreOfSteering = 0.5f * (frontLeftWheel.transform.localPosition +
+                frontRightWheel.transform.localPosition);
 
-            wheelSeparation = (centreOfSteering - backWheel.transform.position).z;
+            wheelSeparation = (relCentreOfSteering - backWheel.transform.position).z;
 
-            rearToCoM = centreOfMass.z;
-            frontToCoM = centreOfSteering.z - centreOfMass.z;
+            rearToCoM = relCentreOfMass.z - backWheel.transform.localPosition.z;
+            frontToCoM = relCentreOfSteering.z - relCentreOfMass.z;
         }
 
         private void Start()
@@ -142,20 +143,23 @@ namespace VirtualTwin
             Gizmos.DrawRay(transform.position + wheelSeparation * transform.forward,
                 1f * transform.forward);
 
+            Gizmos.color = Color.red;
+            //Gizmos.DrawRay(centreOfSteering + 0.25f * Vector3.up, 10f * Mathf.Sign(frontLeftWheel.steerAngle) * 
+            //    frontLeftWheel.transform.right);
+            Gizmos.DrawWireSphere(centreOfSteering, 0.15f);
+
             if (rb != null)
             {
                 Gizmos.color = Color.blue;
-                Gizmos.DrawRay(transform.position + centreOfMass, 2.5f * rb.velocity.normalized);
+                Gizmos.DrawRay(centreOfMass, 2.5f * rb.velocity.normalized);
             }
 
             Gizmos.color = Color.magenta;
-            Gizmos.DrawRay(transform.position + centreOfSteering, 
-                5f * Mathf.Sign(frontLeftWheel.steerAngle) * frontLeftWheel.transform.right);
-            Gizmos.DrawRay(backWheel.transform.position, 5f * backWheel.transform.right);
-            Gizmos.DrawWireSphere(transform.position + motionCentre, 0.2f);
+            Gizmos.DrawRay(centreOfMass, 4f * dirOfCircularMotion);
+            Gizmos.DrawWireSphere(motionCentre, 0.4f);
 
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position + centreOfMass, 4f * dirOfCircularMotion);
+            Gizmos.color = Color.white;
+            Gizmos.DrawRay(centreOfMass, 3f * velocityDir);
         }
 
         void GetInputs()
@@ -177,7 +181,6 @@ namespace VirtualTwin
                 wheel.Accelerate(accelerateInput, brakeInput, Time.fixedDeltaTime);
             }
 
-            steerDir = GetSteerDir();
             wheelDriveForce = GetResultantForce();
 
             corneringResistanceForce = GetCorneringResistance();
@@ -185,33 +188,19 @@ namespace VirtualTwin
             rb.mass = VehicleMass;
 
             velocity = rb.velocity;
+            velocity.y = 0;
             speed = velocity.magnitude;
 
-            CalculateCentreOfMotion();
+            CalculateCentreOfMass();
+            CalculateCentreOfSteering();
+            //CalculateCentreOfMotion();
 
-            groundVelocity = velocity;
-            groundVelocity.y = 0;
-            groundSpeed = groundVelocity.magnitude;
+            dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * frontalArea;
+            liftForce = 0.5f * airDensity * speed * speed * liftCoefficent * frontalArea;
 
-            dragForce = 0.5f * airDensity * groundSpeed * groundSpeed * dragCoefficent * frontalArea;
-            liftForce = 0.5f * airDensity * groundSpeed * groundSpeed * liftCoefficent * frontalArea;
-
-            SteerVehicle(steerDir);
+            //AccelerateVehicle();
+            SteerVehicle();
             AccelerateVehicle();
-        }
-
-        Vector3 GetSteerDir()
-        {
-            var steerDir = Vector3.zero;
-
-            foreach (var wheel in wheels)
-                if (wheel.steering)
-                    //steerDir += wheel.transform.forward;
-                    steerDir += Quaternion.Euler(0, transform.eulerAngles.y, 0 ) * wheel.LocalSteerDir;
-
-            if (steerDir != Vector3.zero) return steerDir.normalized;
-
-            return transform.forward;
         }
 
         float GetResultantForce()
@@ -234,54 +223,99 @@ namespace VirtualTwin
             return res;
         }
 
+        void CalculateCentreOfMass()
+        {
+            //centreOfMass.x = (transform.position + relCentreOfMass.x * transform.right).x;
+            //centreOfMass.y = (transform.position + relCentreOfMass.y * transform.up).y;
+            //centreOfMass.z = (transform.position + relCentreOfMass.z * transform.forward).z;
+
+            centreOfMass = transform.position + (transform.rotation * relCentreOfMass);
+        }
+
+        void CalculateCentreOfSteering()
+        {
+            //centreOfSteering.x = (transform.position + relCentreOfSteering.x * transform.right).x;
+            //centreOfSteering.y = (transform.position + relCentreOfSteering.y * transform.up).y;
+            //centreOfSteering.z = (transform.position + relCentreOfSteering.z * transform.forward).z;
+
+            //centreOfSteering = transform.position + (transform.rotation * relCentreOfSteering);
+            //centreOfSteering = 0.5f * (frontLeftWheel.transform.position + frontRightWheel.transform.position);
+            centreOfSteering = Vector3.Lerp(frontLeftWheel.transform.position, frontRightWheel.transform.position, 0.5f);
+        }
+
         void CalculateCentreOfMotion()
         {
-            var delta = frontLeftWheel.steerAngle;
+            var zeta = frontLeftWheel.steerAngle;
 
-            if (delta != 0)
+            if (zeta != 0)
             {
-                var r0 = wheelSeparation / Mathf.Sin(delta * Mathf.Deg2Rad);
-                motionCentre = centreOfSteering + r0 * frontLeftWheel.transform.right;
+                var r0 = wheelSeparation / Mathf.Tan(zeta * Mathf.Deg2Rad);
+                motionCentre = transform.position + r0 * transform.right;
+                turningRadius = r0 / Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
 
                 dirOfCircularMotion = (motionCentre - centreOfMass).normalized;
                 dirOfCircularMotion.y = 0;
-                turningRadius = dirOfCircularMotion.magnitude;
 
-                centripetalForce = VehicleMass * groundSpeed * groundSpeed / turningRadius;
+                centripetalForce = VehicleMass * speed * speed / turningRadius;
                 lateralForce = centripetalForce * Mathf.Cos(Mathf.Atan(dirOfCircularMotion.z / dirOfCircularMotion.x));
                 tensionForce = centripetalForce * Mathf.Sin(Mathf.Atan(dirOfCircularMotion.z / dirOfCircularMotion.x));
             }
         }
 
-        void SteerVehicle(Vector3 steerDir)
+        void SteerVehicle()
         {
-            // [3]
-            vehicleRotation = Mathf.Atan(rearToCoM * frontLeftWheel.steerAngle * Mathf.Deg2Rad / wheelSeparation) * Mathf.Rad2Deg;
-            rb.MoveRotation(Quaternion.Euler(0, vehicleRotation, 0));
+            var zeta = frontLeftWheel.steerAngle;
+            globalAngle = transform.eulerAngles.y;
+
+            var tan_zeta = Mathf.Tan(zeta * Mathf.Deg2Rad);
+
+            // [3, 4]           
+            velocityAngle = Mathf.Atan(rearToCoM * tan_zeta / wheelSeparation) * Mathf.Rad2Deg;
+
+            var cos_velAngle = Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
+
+            angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / wheelSeparation;
+
+            globalAngle += angularVelocity * Time.fixedDeltaTime;
+            rb.rotation = Quaternion.Euler(0, globalAngle, 0);
+
+            velocityDir.x = Mathf.Sin((globalAngle + velocityAngle) * Mathf.Deg2Rad);
+            velocityDir.z = Mathf.Cos((globalAngle + velocityAngle) * Mathf.Deg2Rad);
+
+            if (tan_zeta != 0 && cos_velAngle != 0)
+            {
+                var r0 = wheelSeparation / tan_zeta;
+                turningRadius = r0 / cos_velAngle;
+                motionCentre = backWheel.transform.position + Mathf.Sign(zeta) * 
+                    r0 * backWheel.transform.right;
+                dirOfCircularMotion = (motionCentre - centreOfMass).normalized;
+                dirOfCircularMotion.y = 0;
+            }
         }
 
         void AccelerateVehicle()
         {
-            resultantDriveForce = wheelDriveForce - dragForce;
-            driveAcceleration = resultantDriveForce * InverseVehicleMass;
+            if (enableDrag) resultantDriveForce = wheelDriveForce - dragForce;
+            else resultantDriveForce = wheelDriveForce;
+
+            resultantAcceleration = resultantDriveForce * InverseVehicleMass;
 
             liftAcceleration = liftForce * InverseVehicleMass;
 
-            rb.AddRelativeForce(resultantDriveForce * transform.forward, ForceMode.Force);
+            speed += resultantDriveForce * InverseVehicleMass * Time.fixedDeltaTime;
+            //rb.velocity = speed * velocityDir.normalized;
+            rb.velocity = speed * transform.forward;
 
             if (enableLift)
                 rb.AddRelativeForce(liftForce * transform.up, ForceMode.Force);
 
             if (enableReaction && rb.useGravity)
                 rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
-
-            //rb.AddRelativeForce(a * transform.forward * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            //rb.velocity += a * transform.forward;
         }
 
-        Vector3 GetCentreOfMass(Vector3 com)
+        Vector3 GetRelCentreOfMass()
         {
-            com = Vector3.zero;
+            var com = Vector3.zero;
 
             com += (bodyMass + driverMass + fuelCell.TotalMass) * vehicleBody.transform.localPosition;
 

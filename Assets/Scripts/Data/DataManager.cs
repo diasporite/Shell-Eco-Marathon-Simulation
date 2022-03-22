@@ -8,7 +8,7 @@ namespace VirtualTwin
     {
         [SerializeField] bool recording = false;
 
-        public Vehicle subject;
+        public Vehicle2 subject;
         public HUD hud;
 
         [SerializeField] float timeElapsed = 0;
@@ -91,7 +91,7 @@ namespace VirtualTwin
             recording = false;
         }
 
-        public void LogData(Vehicle subject)
+        public void LogData(Vehicle2 subject)
         {
             //data.Add(new DataPoint(timeElapsed, subject.Speed, subject.Distance, 
             //    subject.Acceleration, subject.Drag));

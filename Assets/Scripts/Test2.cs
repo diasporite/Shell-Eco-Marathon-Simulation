@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Test2 : MonoBehaviour
 {
+    public float rotation;
+
     public float speed = 8f;
 
     public string key;
@@ -30,6 +32,8 @@ public class Test2 : MonoBehaviour
 
     private void Update()
     {
+        rotation = transform.eulerAngles.y;
+
         if (Input.GetKey("space")) key = "space";
         else key = "";
     }
@@ -68,7 +72,7 @@ public class Test2 : MonoBehaviour
 
     void AddForce()
     {
-        var f = 2f - 50f * rb.velocity.magnitude * rb.velocity.magnitude;
+        var f = 20f - 50f * rb.velocity.magnitude * rb.velocity.magnitude;
 
         rb.AddRelativeForce(f * transform.forward, ForceMode.Acceleration);
     }

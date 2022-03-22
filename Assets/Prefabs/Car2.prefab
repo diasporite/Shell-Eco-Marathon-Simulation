@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!136 &8728379720609899500
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403659590819115278}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4918824521591512384
 GameObject:
   m_ObjectHideFlags: 0
@@ -55,6 +69,7 @@ GameObject:
   - component: {fileID: 5867615582393505433}
   - component: {fileID: 5867615582393505435}
   - component: {fileID: 5867615582393505434}
+  - component: {fileID: 5250473246548418231}
   m_Layer: 15
   m_Name: VehicleBody
   m_TagString: Untagged
@@ -70,8 +85,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5867615582393505432}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1.27, z: 1}
   m_Children: []
   m_Father: {fileID: 5867615582671435255}
   m_RootOrder: 0
@@ -123,6 +138,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!136 &5250473246548418231
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867615582393505432}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5000001
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5867615582671435259
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +216,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 5867615582671435259}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 2
@@ -204,11 +233,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4717ca7e899ea10418b85236a14fd570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableDrag: 1
   enableLift: 0
   enableReaction: 0
   bodyMass: 40
   driverMass: 50
-  referenceArea: 0.39
+  frontalArea: 0.39
+  relCentreOfMass: {x: 0, y: 0, z: 0}
+  relCentreOfSteering: {x: 0, y: 0, z: 0}
   centreOfMass: {x: 0, y: 0, z: 0}
   centreOfSteering: {x: 0, y: 0, z: 0}
   liftCoefficent: 0.02
@@ -217,20 +249,29 @@ MonoBehaviour:
   frontLeftWheel: {fileID: 7313909037310758995}
   frontRightWheel: {fileID: 3328075529439417962}
   backWheel: {fileID: 6934445419253835882}
+  vehicleBody: {fileID: 5867615582393505432}
   fuelCell: {fileID: 4095274241458493725}
   undercarriage: {fileID: 7802113931111531749}
-  vehicleBody: {fileID: 5867615582393505432}
-  steerDir: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  groundVelocity: {x: 0, y: 0, z: 0}
+  velocityDir: {x: 0, y: 0, z: 0}
+  motionCentre: {x: 0, y: 0, z: 0}
+  dirOfCircularMotion: {x: 0, y: 0, z: 0}
   speed: 0
-  groundSpeed: 0
   distanceTravelled: 0
+  turningRadius: 0
+  angularVelocity: 0
+  velocityAngle: 0
+  globalAngle: 0
   wheelDriveForce: 0
   dragForce: 0
   liftForce: 0
   resultantDriveForce: 0
-  driveAcceleration: 0
+  corneringResistanceForce: 0
+  centripetalForce: 0
+  lateralForce: 0
+  tensionForce: 0
+  resultantLateralForce: 0
+  resultantAcceleration: 0
   liftAcceleration: 0
   steerInput: 0
   accelerateInput: 0
@@ -257,6 +298,34 @@ MonoBehaviour:
   fuelFlowRate: 0
   fuelCellEfficiency: 0.5
   power: 500
+--- !u!136 &6551204318793105497
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6401099949904410423}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &7576696120233211983
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6731023989776994062}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &622865256939438075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -277,12 +346,12 @@ PrefabInstance:
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
@@ -335,6 +404,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FrontRightWheel
       objectReference: {fileID: 0}
+    - target: {fileID: 6862139857093552677, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee4674a4d61c3c944a3e8ad883081e93, type: 3}
 --- !u!4 &1147404627898056054 stripped
@@ -355,6 +429,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be73a23ee3efbbd499d784a20d4c304d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1403659590819115278 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 622865256939438075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4831049779835042242
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375,12 +455,12 @@ PrefabInstance:
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
@@ -433,6 +513,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FrontLeftWheel
       objectReference: {fileID: 0}
+    - target: {fileID: 6862139857093552677, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee4674a4d61c3c944a3e8ad883081e93, type: 3}
 --- !u!4 &4919035688022047567 stripped
@@ -453,6 +538,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be73a23ee3efbbd499d784a20d4c304d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6401099949904410423 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 4831049779835042242}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5095672308028342779
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -473,12 +564,12 @@ PrefabInstance:
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
         type: 3}
@@ -531,6 +622,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BackWheel
       objectReference: {fileID: 0}
+    - target: {fileID: 6862139857093552677, guid: ee4674a4d61c3c944a3e8ad883081e93,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee4674a4d61c3c944a3e8ad883081e93, type: 3}
 --- !u!4 &4755744306619024246 stripped
@@ -551,3 +647,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be73a23ee3efbbd499d784a20d4c304d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6731023989776994062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 5095672308028342779}
+  m_PrefabAsset: {fileID: 0}

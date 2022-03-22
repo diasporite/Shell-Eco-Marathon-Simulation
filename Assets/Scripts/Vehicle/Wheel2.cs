@@ -6,12 +6,21 @@ namespace VirtualTwin
 {
     public class Wheel2 : MonoBehaviour
     {
+        [Header("Settings")]
         public bool steering = true;
         public bool driving = true;
+        public bool enableRollingRes = true;
+        public bool enableCorneringRes = true;
+
+        public GameObject wheelModel;
 
         [Header("Steering")]
-        public float steeringSpeed = 60f;
-        public float wheelLock = 75f;
+        public float steeringSpeed = 30f;
+        public float steeringRatio = 15f;
+        public float wheelLock = 30f;
+
+        float lowerLock;
+        float upperLock;
 
         [Header("Dimensions")]
         public float mass = 0.4f;
@@ -30,6 +39,9 @@ namespace VirtualTwin
         [Range(0f, 1f)] public float brakingCoefficient = 0.5f;
 
         [Header("Variables - Steering")]
+        public float eulerRotation = 360f;
+        public float globalAngle = 0;
+        public float vehicleRotation = 0;
         public float dtheta = 0;
         public float steerAngle = 0;    // delta in dynamics doc
         public float slipAngle = 0;     // alpha in dynamics doc
@@ -62,6 +74,9 @@ namespace VirtualTwin
             weightForce = mass * 9.81f;
 
             curvature = 1 / radius;
+
+            lowerLock = 360 - wheelLock;
+            upperLock = 360 + wheelLock;
         }
 
         private void Start()
@@ -72,32 +87,47 @@ namespace VirtualTwin
 
         private void OnDrawGizmos()
         {
-            if (steering)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(transform.position, 
-                    1f * (transform.root.rotation * steerDir).normalized);
-            }
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, 1.5f * transform.forward);
+            Gizmos.DrawRay(transform.position, 10f * Mathf.Sign(steerAngle) * transform.right);
         }
 
         public void Steer(float input, float dt)
         {
             if (steering)
             {
-                dtheta = input * steeringSpeed * dt;
-                steerAngle += dtheta;
+                vehicleRotation = vehicle.velocityAngle;
+                globalAngle = 360 + Vector3.SignedAngle(Vector3.forward, transform.forward, Vector3.up);
+                //globalAngle = transform.eulerAngles.y;
+
+                if (input != 0)
+                {
+                    dtheta = input * steeringSpeed * dt;
+                    eulerRotation += dtheta;
+                    steerAngle += dtheta;
+                }
+                // Self correcting steering
+                // Source: https://carfromjapan.com/article/driving-tips/steering-wheel-returns-to-center-after-turn/
+                else
+                {
+                    //steerAngle = Mathf.MoveTowards(steerAngle, 0, steeringSpeed * dt);
+                    eulerRotation = Mathf.MoveTowardsAngle(eulerRotation, 360, steeringSpeed * dt);
+                    steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
+                }
 
                 if (Mathf.Abs(steerAngle) > wheelLock)
                     steerAngle = Mathf.Sign(steerAngle) * wheelLock;
 
-                slipAngle = 0.5f * steerAngle;
+                if (eulerRotation > upperLock) eulerRotation = upperLock;
+                if (eulerRotation < lowerLock) eulerRotation = lowerLock;
 
-                steerDir.x = Mathf.Sin(steerAngle * Mathf.Deg2Rad);
-                steerDir.z = transform.forward.z + Mathf.Cos(steerAngle * Mathf.Deg2Rad);
+                //slipAngle = 0.5f * steerAngle;
 
-                // TEMPORARY
-                if (Mathf.Abs(steerAngle) < wheelLock)
-                    transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + dtheta, 0);
+                var angle = transform.localEulerAngles.y + steerAngle;
+                if (Mathf.Abs(angle) > wheelLock) angle = Mathf.Sign(angle) * wheelLock;
+
+                transform.localRotation = Quaternion.Euler(0, steerAngle, 0);
+
             }
         }
 
@@ -112,11 +142,19 @@ namespace VirtualTwin
             resultantForce = drivingForce - brakingForce - rollingResForce;
         }
 
+        public void ApplyRotation(float vehicleRot)
+        {
+            if (steering)
+                transform.localRotation = Quaternion.Euler(0, eulerRotation - 360 + vehicleRot, 0);
+        }
+
         float RollingResistanceForce()
         {
+            if (!enableRollingRes) return 0;
+
             //var speedForce = (0.005f + (0.01f + 0.0095f * (0.01f * 0.01f * vehicle.groundSpeed * vehicle.groundSpeed) / tyrePressure) * weightForce);
             //var speedForce = (0.0095f * (0.01f * 0.01f * vehicle.groundSpeed * vehicle.groundSpeed) / tyrePressure) * weightForce;
-            var speedForce = 0.5f * rollingResistance * vehicleMass * 9.81f * vehicle.groundSpeed * vehicle.groundSpeed;
+            var speedForce = 0.5f * rollingResistance * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
             //var flatForce = rollingResistance * vehicleMass * 9.81f;
             // Source: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
             var flatForce = rollingResistance * weightForce * curvature;
@@ -130,6 +168,8 @@ namespace VirtualTwin
 
         float CorneringResistanceForce()
         {
+            if (!enableCorneringRes) return 0;
+
             var f = c1 * Mathf.Sin(2 * Mathf.Atan(weightForce / c2)) * slipAngle;
             //return -weightForce * Mathf.Sin(steerAngle * Mathf.Deg2Rad);
             return f;
@@ -137,7 +177,7 @@ namespace VirtualTwin
 
         float BrakingForce(float torque)
         {
-            var speedForce = 0.5f * brakingCoefficient * vehicleMass * 9.81f * vehicle.groundSpeed * vehicle.groundSpeed;
+            var speedForce = 0.5f * brakingCoefficient * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
             var flatForce = brakeTorque * curvature;
 
             //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;

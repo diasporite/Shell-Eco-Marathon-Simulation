@@ -6,3 +6,12 @@ PROJECT RESOURCES
 - Steering
   2 - https://physics.stackexchange.com/questions/620458/how-do-we-implement-the-speed-differential-for-the-ackermann-steering
   3 - https://thef1clan.com/2020/09/21/vehicle-dynamics-the-kinematic-bicycle-model/
+  4 - https://dingyan89.medium.com/simple-understanding-of-kinematic-bicycle-model-81cac6420357
+
+NOTES
+- Velocity based model (rb.velocity = ...) seems better than force based model (rb.AddForce())
+- Assumptions
+  - Vehicle moves in 2D plane (if lift not enabled)
+  - No slip on wheels
+  - All mass of components are uniform
+  - Wheels steer at equal angular rates (allows front wheels to be modelled as one wheel)
