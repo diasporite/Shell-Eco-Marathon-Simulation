@@ -12,12 +12,14 @@ namespace VirtualTwin
         public bool enableRollingRes = true;
         public bool enableCorneringRes = true;
 
+        [Header("Components")]
         public GameObject wheelModel;
+        public GroundCheck groundCheck;
 
         [Header("Steering")]
-        public float steeringSpeed = 30f;
+        public float steeringSpeed = 15f;
         public float steeringRatio = 15f;
-        public float wheelLock = 30f;
+        public float wheelLock = 15f;
 
         float lowerLock;
         float upperLock;
@@ -70,6 +72,7 @@ namespace VirtualTwin
         private void Awake()
         {
             vehicle = GetComponentInParent<Vehicle2>();
+            groundCheck = GetComponentInChildren<GroundCheck>();
 
             weightForce = mass * 9.81f;
 

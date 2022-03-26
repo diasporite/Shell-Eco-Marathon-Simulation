@@ -27,6 +27,8 @@ namespace VirtualTwin
         [SerializeField] float rearToCoM;
         [SerializeField] float frontToCoM;
 
+        [SerializeField] bool grounded;
+
         [Header("Coefficients")]
         [Range(0f, 1f)] public float liftCoefficent = 0.02f;
         [Range(0f, 1f)] public float dragCoefficent = 0.12f;
@@ -59,9 +61,10 @@ namespace VirtualTwin
         public float turningRadius;
 
         [Header("Variables - Rotation")]
-        public float angularVelocity;       // Speed at which vehicle axis rotates when steered
-        public float velocityAngle;         // Angle between vehicle axis and direction of velocity
-        public float globalAngle;           // Angle between vehicle axis and world z axis
+        public float rearAngularVelocity;   // Speed at which back wheel rotates wheen steered
+        public float angularVelocity;       // Speed at which vehicle CoM rotates when steered
+        public float velocityAngle;         // Angle between vehicle axis (CoM) and direction of velocity
+        public float globalAngle;           // Angle between vehicle axis (CoM) and world z axis
 
         [Header("Variables - Forces")]
         public float wheelDriveForce = 0;
@@ -173,6 +176,14 @@ namespace VirtualTwin
             else brakeInput = 0;
         }
 
+        bool IsGrounded()
+        {
+            foreach (var wheel in wheels)
+                if (!wheel.groundCheck.IsGrounded) return false;
+
+            return true;
+        }
+
         void Drive()
         {
             foreach (var wheel in wheels)
@@ -190,6 +201,8 @@ namespace VirtualTwin
             velocity = rb.velocity;
             velocity.y = 0;
             speed = velocity.magnitude;
+
+            grounded = IsGrounded();
 
             CalculateCentreOfMass();
             CalculateCentreOfSteering();
@@ -274,6 +287,7 @@ namespace VirtualTwin
 
             var cos_velAngle = Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
 
+            rearAngularVelocity = speed / wheelSeparation;
             angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / wheelSeparation;
 
             globalAngle += angularVelocity * Time.fixedDeltaTime;
@@ -309,8 +323,18 @@ namespace VirtualTwin
             if (enableLift)
                 rb.AddRelativeForce(liftForce * transform.up, ForceMode.Force);
 
-            if (enableReaction && rb.useGravity)
-                rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
+            if (enableReaction && rb.useGravity && grounded)
+                    rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
+        }
+
+        void CalculateVariables()
+        {
+
+        }
+
+        void ApplyVariables()
+        {
+
         }
 
         Vector3 GetRelCentreOfMass()

@@ -9,8 +9,8 @@ namespace VirtualTwin
         public Transform follow;
 
         public float speed = 120f;
-        [Range(5, 15)]
-        public float camDist = 10f;
+        [Range(1, 10)]
+        public float camDist = 5f;
 
         float thetaY = 180f;
         float thetaXz = 15f;
