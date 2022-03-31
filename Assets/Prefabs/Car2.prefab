@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 5867615582671435254}
   - component: {fileID: 5867615582671435253}
   - component: {fileID: 6210415622088483735}
+  - component: {fileID: 1592102444065339924}
   - component: {fileID: 4095274241458493725}
   m_Layer: 15
   m_Name: Car2
@@ -255,6 +256,7 @@ MonoBehaviour:
   frontRightWheel: {fileID: 3328075529439417962}
   backWheel: {fileID: 6934445419253835882}
   vehicleBody: {fileID: 5867615582393505432}
+  motor: {fileID: 0}
   fuelCell: {fileID: 4095274241458493725}
   undercarriage: {fileID: 7802113931111531749}
   velocity: {x: 0, y: 0, z: 0}
@@ -264,6 +266,7 @@ MonoBehaviour:
   speed: 0
   distanceTravelled: 0
   turningRadius: 0
+  rearAngularVelocity: 0
   angularVelocity: 0
   velocityAngle: 0
   globalAngle: 0
@@ -278,9 +281,35 @@ MonoBehaviour:
   resultantLateralForce: 0
   resultantAcceleration: 0
   liftAcceleration: 0
+  currentRpm: 0
   steerInput: 0
   accelerateInput: 0
   brakeInput: 0
+--- !u!114 &1592102444065339924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867615582671435259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df1626d2c815ea040ac4e00ae69f0191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vehicle: {fileID: 0}
+  motorTorques:
+  - 3.5
+  - 3.43
+  - 3.37
+  - 3.23
+  - 3.13
+  - 2.97
+  - 2.76
+  - 2.61
+  - 2.47
+  - 2.47
+  - 0
 --- !u!114 &4095274241458493725
 MonoBehaviour:
   m_ObjectHideFlags: 0

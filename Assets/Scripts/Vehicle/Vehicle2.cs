@@ -44,6 +44,7 @@ namespace VirtualTwin
 
         [Header("Other Components")]
         public GameObject vehicleBody;
+        public Motor motor;
         public FuelCell fuelCell;
         public BoxCollider undercarriage;
 
@@ -83,6 +84,10 @@ namespace VirtualTwin
         public float resultantAcceleration = 0;
         public float liftAcceleration = 0;
 
+        [Header("Variables - Motor & Fuel Cell")]
+        [SerializeField] float currentRpm;
+        [SerializeField] float currentTorque;
+
         [Header("Inputs")]
         [SerializeField] float steerInput = 0;
         [SerializeField] float accelerateInput = 0;
@@ -101,10 +106,14 @@ namespace VirtualTwin
 
         public bool Stationary => speed <= 0.01f;
 
+        public float CurrentRpm => currentRpm;
+        public float CurrentTorque => currentTorque;
+
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
 
+            motor = GetComponent<Motor>();
             fuelCell = GetComponent<FuelCell>();
 
             wheels = new Wheel2[] { frontLeftWheel, frontRightWheel, backWheel };
@@ -206,12 +215,13 @@ namespace VirtualTwin
 
             CalculateCentreOfMass();
             CalculateCentreOfSteering();
-            //CalculateCentreOfMotion();
 
             dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * frontalArea;
             liftForce = 0.5f * airDensity * speed * speed * liftCoefficent * frontalArea;
 
-            //AccelerateVehicle();
+            // Placeholder
+            currentTorque = 8.69f;
+
             SteerVehicle();
             AccelerateVehicle();
         }
@@ -287,7 +297,7 @@ namespace VirtualTwin
 
             var cos_velAngle = Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
 
-            rearAngularVelocity = speed / wheelSeparation;
+            rearAngularVelocity = speed * Mathf.Rad2Deg / wheelSeparation;
             angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / wheelSeparation;
 
             globalAngle += angularVelocity * Time.fixedDeltaTime;

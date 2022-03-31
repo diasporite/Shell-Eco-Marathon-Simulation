@@ -136,6 +136,8 @@ namespace VirtualTwin
 
         public void Accelerate(float driveInput, float brakeInput, float dt)
         {
+            driveTorque = vehicle.CurrentTorque;
+
             drivingForce = Mathf.Abs(driveInput) * driveTorque * curvature;
             brakingForce = Mathf.Abs(brakeInput) * BrakingForce(brakeTorque);
             rollingResForce = RollingResistanceForce();
