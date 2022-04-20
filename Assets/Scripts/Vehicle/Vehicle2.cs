@@ -99,6 +99,10 @@ namespace VirtualTwin
 
         public Rigidbody Rb => rb;
 
+        public float WheelSeparation => wheelSeparation;
+        public float RearToCoM => rearToCoM;
+        public float FrontToCoM => frontToCoM;
+
         public float VehicleMass => bodyMass + driverMass + frontLeftWheel.mass +
             frontRightWheel.mass + backWheel.mass + fuelCell.TotalMass;
 
@@ -197,6 +201,8 @@ namespace VirtualTwin
         {
             foreach (var wheel in wheels)
             {
+                wheel.driveTorque = 0.5f * motor.currentTorque;
+
                 wheel.Steer(steerInput, Time.fixedDeltaTime);
                 wheel.Accelerate(accelerateInput, brakeInput, Time.fixedDeltaTime);
             }
@@ -248,22 +254,13 @@ namespace VirtualTwin
 
         void CalculateCentreOfMass()
         {
-            //centreOfMass.x = (transform.position + relCentreOfMass.x * transform.right).x;
-            //centreOfMass.y = (transform.position + relCentreOfMass.y * transform.up).y;
-            //centreOfMass.z = (transform.position + relCentreOfMass.z * transform.forward).z;
-
             centreOfMass = transform.position + (transform.rotation * relCentreOfMass);
         }
 
         void CalculateCentreOfSteering()
         {
-            //centreOfSteering.x = (transform.position + relCentreOfSteering.x * transform.right).x;
-            //centreOfSteering.y = (transform.position + relCentreOfSteering.y * transform.up).y;
-            //centreOfSteering.z = (transform.position + relCentreOfSteering.z * transform.forward).z;
-
-            //centreOfSteering = transform.position + (transform.rotation * relCentreOfSteering);
-            //centreOfSteering = 0.5f * (frontLeftWheel.transform.position + frontRightWheel.transform.position);
-            centreOfSteering = Vector3.Lerp(frontLeftWheel.transform.position, frontRightWheel.transform.position, 0.5f);
+            centreOfSteering = Vector3.Lerp(frontLeftWheel.transform.position, 
+                frontRightWheel.transform.position, 0.5f);
         }
 
         void CalculateCentreOfMotion()
@@ -327,7 +324,7 @@ namespace VirtualTwin
             liftAcceleration = liftForce * InverseVehicleMass;
 
             speed += resultantDriveForce * InverseVehicleMass * Time.fixedDeltaTime;
-            //rb.velocity = speed * velocityDir.normalized;
+
             rb.velocity = speed * transform.forward;
 
             if (enableLift)

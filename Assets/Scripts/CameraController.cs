@@ -6,6 +6,9 @@ namespace VirtualTwin
 {
     public class CameraController : MonoBehaviour
     {
+        public bool firstPersonMode = true;
+
+        public Vehicle2 vehicle;
         public Transform follow;
 
         public float speed = 120f;
@@ -18,22 +21,27 @@ namespace VirtualTwin
 
         private void Start()
         {
-            FollowTarget();
+            if (firstPersonMode)
+            {
+                vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = false;
+                FirstPersonFollow();
+            }
+            else FollowTarget();
         }
 
         private void Update()
         {
-            RotateCamera();
+            if (!firstPersonMode) RotateCamera();
         }
 
         private void LateUpdate()
         {
-            FollowTarget();
+            if (firstPersonMode) FirstPersonFollow();
+            else FollowTarget();
         }
 
         void RotateCamera()
         {
-            print(5);
             if (Input.GetKey("left")) thetaY += speed * Time.deltaTime;
             if (Input.GetKey("right")) thetaY -= speed * Time.deltaTime;
 
@@ -69,6 +77,12 @@ namespace VirtualTwin
 
             transform.position = camPos;
             transform.LookAt(follow);
+        }
+
+        void FirstPersonFollow()
+        {
+            transform.position = follow.transform.position;
+            transform.forward = follow.transform.forward;
         }
     }
 }

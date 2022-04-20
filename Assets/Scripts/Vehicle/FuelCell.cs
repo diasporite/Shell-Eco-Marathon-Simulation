@@ -30,7 +30,7 @@ namespace VirtualTwin
         public float ConsumedFuel => fuelMass - currentFuelMass;
         public float TotalMass => cellMass + currentFuelMass;
 
-        private void Start()
+        private void Awake()
         {
             mH2 = -9f / 287f;
             b = 17552f / 287f;

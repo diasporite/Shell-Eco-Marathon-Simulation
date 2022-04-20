@@ -4,9 +4,17 @@ using UnityEngine;
 
 namespace VirtualTwin
 {
+    public enum WheelOrientation
+    {
+        FrontLeft = 0,
+        FrontRight = 1,
+        Back = 2,
+    }
+
     public class Wheel2 : MonoBehaviour
     {
         [Header("Settings")]
+        public WheelOrientation orientation;
         public bool steering = true;
         public bool driving = true;
         public bool enableRollingRes = true;
@@ -50,7 +58,7 @@ namespace VirtualTwin
         public Vector3 steerDir = new Vector3(0, 0, 1);
 
         [Header("Variables - Forces")]
-        public float weightForce = 0;
+        public float vertForce = 0;
         public float drivingForce = 0;
         public float brakingForce = 0;
         public float rollingResForce = 0;
@@ -73,8 +81,6 @@ namespace VirtualTwin
         {
             vehicle = GetComponentInParent<Vehicle2>();
             groundCheck = GetComponentInChildren<GroundCheck>();
-
-            weightForce = mass * 9.81f;
 
             curvature = 1 / radius;
 
@@ -162,7 +168,7 @@ namespace VirtualTwin
             var speedForce = 0.5f * rollingResistance * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
             //var flatForce = rollingResistance * vehicleMass * 9.81f;
             // Source: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
-            var flatForce = rollingResistance * weightForce * curvature;
+            var flatForce = rollingResistance * vertForce * curvature;
 
             //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;
             if (speedForce < flatForce) return speedForce;
@@ -175,7 +181,7 @@ namespace VirtualTwin
         {
             if (!enableCorneringRes) return 0;
 
-            var f = c1 * Mathf.Sin(2 * Mathf.Atan(weightForce / c2)) * slipAngle;
+            var f = c1 * Mathf.Sin(2 * Mathf.Atan2(vertForce, c2)) * slipAngle;
             //return -weightForce * Mathf.Sin(steerAngle * Mathf.Deg2Rad);
             return f;
         }
@@ -189,6 +195,21 @@ namespace VirtualTwin
             if (speedForce < flatForce) return speedForce;
 
             return flatForce;
+        }
+
+        float VerticalForce()
+        {
+            switch (orientation)
+            {
+                case WheelOrientation.FrontLeft:
+                    return 0.5f * mass * 9.81f * vehicle.RearToCoM / vehicle.WheelSeparation;
+                case WheelOrientation.FrontRight:
+                    return 0.5f * mass * 9.81f * vehicle.RearToCoM / vehicle.WheelSeparation;
+                case WheelOrientation.Back:
+                    return mass * 9.81f * vehicle.FrontToCoM / vehicle.WheelSeparation;
+                default:
+                    return 0;
+            }
         }
     }
 }

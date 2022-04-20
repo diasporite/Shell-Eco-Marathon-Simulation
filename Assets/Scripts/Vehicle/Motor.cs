@@ -9,18 +9,22 @@ namespace VirtualTwin
         public Vehicle2 vehicle;
         FuelCell fuelCell;
 
-        public Wheel frontLeftWheel;
-        public Wheel frontRightWheel;
-        public Wheel backWheel;
+        [Header("Wheels")]
+        public Wheel2 frontLeftWheel;
+        public Wheel2 frontRightWheel;
+        public Wheel2 backWheel;
+
+        [Header("Engine Variables")]
+        public float topRpm = 1000;
 
         public float currentTorque;
         public float currentRpm;
-        public float topRpm;
         public float pRpm;
 
         float gearRatio = 6f;
         float torqueCutoff = 3.57f;
 
+        [Header("Constants")]
         public float reqVoltage = 24;
         public float reqCurrent = 49.7f;
         public float reqPower;
@@ -40,6 +44,7 @@ namespace VirtualTwin
         public float consumedEnergy;
         public float transientEfficiency;
 
+        [Header("Variables")]
         public float pTorque;
         public float energyIn;
 
@@ -59,13 +64,22 @@ namespace VirtualTwin
             currentTorque = torqueCutoff;
             kv = 1 / ke;
 
+            topRpm = reqPower / 8.69f;
+
             energyIn = 0;
             energyLossDrag = 0;
             motorOutEnergy = 0;
         }
 
+        private void FixedUpdate()
+        {
+            CalculateData(Time.fixedDeltaTime);
+        }
+
         public void CalculateData(float dt)
         {
+            // Temporary
+            currentRpm = 30f * vehicle.speed / (Mathf.PI * frontLeftWheel.radius);
             currentRpm = Mathf.Min(currentRpm, topRpm);
             pRpm = currentRpm * gearRatio / topRpm;
 
@@ -76,11 +90,15 @@ namespace VirtualTwin
             pTorque = currentTorque / gearRatio;
 
             reqPower = reqVoltage * reqCurrent;
+            outputPower = currentTorque * currentRpm * Mathf.PI / 30f;
             transientEfficiency = outputPower / reqPower;
 
             energyIn += reqPower * dt;
             energyLossDrag += vehicle.dragForce * vehicle.speed * dt;
             motorOutEnergy += outputPower * dt;
+
+            usefulEnergy = transientEfficiency * energyIn;
+            // currentRpm is not incrementing
         }
     }
 }

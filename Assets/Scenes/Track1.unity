@@ -1679,7 +1679,7 @@ Transform:
   - {fileID: 7879598219378615992}
   - {fileID: 1854006997}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &858870243
 GameObject:
@@ -2121,6 +2121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec0f768193ddcd4da679837ab8f28af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstPersonMode: 1
+  vehicle: {fileID: 1018936528}
   follow: {fileID: 1325475128}
   speed: 120
   camDist: 4
@@ -2547,13 +2549,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5867615582671435254, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5867615582671435254, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5867615582671435254, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5867615582671435255, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5867615582671435255, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
@@ -3639,7 +3651,7 @@ Transform:
   m_Children:
   - {fileID: 1525099396}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!54 &1915044751
 Rigidbody:
@@ -3863,7 +3875,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2048882086
 PrefabInstance:
@@ -4223,220 +4235,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2135756362}
   m_CullTransparentMesh: 0
---- !u!1001 &7176540442250967080
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: mass
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: radius
-      value: 0.254
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: driving
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: brakeTorque
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: driveTorque
-      value: 8.69
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: rollingResistance
-      value: 0.00081
-      objectReference: {fileID: 0}
-    - target: {fileID: 223258851587717059, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: corneringResistance
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: mass
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: radius
-      value: 0.254
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: steering
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: brakeTorque
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: driveTorque
-      value: 8.69
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: rollingResistance
-      value: 0.00081
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984936855222181741, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: corneringResistance
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2499068251770012623, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: fuelMass
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2499068251770012623, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: fuelCapacity
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2499068251770012623, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: fuelMassFlowRate
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: 5196533633348383732, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: driving
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_AngularDrag
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_Interpolate
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663076, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663077, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: bodyMass
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: airDensity
-      value: 1.225
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: driverMass
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: referenceArea
-      value: 0.39
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663078, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: dragCoefficent
-      value: 0.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663081, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_Name
-      value: Car
-      objectReference: {fileID: 0}
-    - target: {fileID: 5410751854116663081, guid: b3c32fec125b71841a7e98042250e502,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b3c32fec125b71841a7e98042250e502, type: 3}
 --- !u!1001 &7879598219378615991
 PrefabInstance:
   m_ObjectHideFlags: 0
