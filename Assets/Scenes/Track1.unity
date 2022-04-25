@@ -2123,7 +2123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstPersonMode: 1
   vehicle: {fileID: 1018936528}
-  follow: {fileID: 1325475128}
+  follow: {fileID: 1197680136}
   speed: 120
   camDist: 4
 --- !u!114 &1018936528 stripped
@@ -2406,6 +2406,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1098442334}
   m_CullTransparentMesh: 0
+--- !u!4 &1197680136 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1528830917152572040, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+    type: 3}
+  m_PrefabInstance: {fileID: 1297140967}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1260796386
 GameObject:
   m_ObjectHideFlags: 0
@@ -2983,12 +2989,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4db02aa193217544b890ec787abedbf9,
     type: 3}
   m_PrefabInstance: {fileID: 1320631943}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1325475128 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5867615582671435255, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
-    type: 3}
-  m_PrefabInstance: {fileID: 1297140967}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1490498282
 GameObject:

@@ -18,6 +18,8 @@ namespace VirtualTwin
         public float frontalArea = 0.39f;
 
         [Header("Dimensions")]
+        [SerializeField] Transform com;
+        [SerializeField] Transform cos;
         [SerializeField] Vector3 relCentreOfMass;
         [SerializeField] Vector3 relCentreOfSteering;
         public Vector3 centreOfMass;
@@ -162,20 +164,20 @@ namespace VirtualTwin
             Gizmos.color = Color.red;
             //Gizmos.DrawRay(centreOfSteering + 0.25f * Vector3.up, 10f * Mathf.Sign(frontLeftWheel.steerAngle) * 
             //    frontLeftWheel.transform.right);
-            Gizmos.DrawWireSphere(centreOfSteering, 0.15f);
+            Gizmos.DrawWireSphere(cos.position, 0.15f);
 
             if (rb != null)
             {
                 Gizmos.color = Color.blue;
-                Gizmos.DrawRay(centreOfMass, 2.5f * rb.velocity.normalized);
+                Gizmos.DrawRay(com.position, 2.5f * rb.velocity.normalized);
             }
 
             Gizmos.color = Color.magenta;
-            Gizmos.DrawRay(centreOfMass, 4f * dirOfCircularMotion);
+            Gizmos.DrawRay(com.position, 4f * dirOfCircularMotion);
             Gizmos.DrawWireSphere(motionCentre, 0.4f);
 
             Gizmos.color = Color.white;
-            Gizmos.DrawRay(centreOfMass, 3f * velocityDir);
+            Gizmos.DrawRay(com.position, 3f * velocityDir);
         }
 
         void GetInputs()
