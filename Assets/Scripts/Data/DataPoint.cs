@@ -19,6 +19,9 @@ namespace VirtualTwin
 
         // drag
         public float vehicleDrag;
+        public float lift;
+        public float centripetal;
+        public float turningRadius;
 
         // resistances
         // tyre forces
@@ -27,7 +30,7 @@ namespace VirtualTwin
         public float cornerRes;
         public float wheelTurnAngle;
 
-        public float turnAngle;
+        public float orientation;
         public float velAngle;
         public float angularVelocity;
 
@@ -78,13 +81,16 @@ namespace VirtualTwin
             distance = subject.distanceTravelled;
             acceleration = subject.resultantAcceleration;
             vehicleDrag = subject.dragForce;
+            lift = subject.liftForce;
+            centripetal = subject.centripetalForce;
+            turningRadius = subject.turningRadiusCoM;
 
-            wheelDrive = subject.frontLeftWheel.drivingForce;
-            rollingRes = subject.frontLeftWheel.rollingResForce;
+            wheelDrive = subject.wheelDriveForce;
+            rollingRes = subject.wheelRollRes;
             cornerRes = subject.frontLeftWheel.cornerResForce;
             wheelTurnAngle = subject.frontLeftWheel.steerAngle;
 
-            turnAngle = subject.globalAngle;
+            orientation = subject.globalAngle;
             velAngle = subject.velocityAngle;
             angularVelocity = subject.angularVelocity;
 

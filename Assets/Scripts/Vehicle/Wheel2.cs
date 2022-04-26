@@ -35,7 +35,7 @@ namespace VirtualTwin
         [Header("Dimensions")]
         public float mass = 0.4f;
         public float radius = 0.254f;
-        public float tyrePressure = 500000f;
+        public float tyrePressure_Bar = 5f;
 
         [Header("Power")]
         public float driveTorque = 8.69f;
@@ -49,7 +49,6 @@ namespace VirtualTwin
         [Range(0f, 1f)] public float brakingCoefficient = 0.5f;
 
         [Header("Variables - Steering")]
-        public float eulerRotation = 360f;
         public float globalAngle = 0;
         public float vehicleRotation = 0;
         public float dtheta = 0;
@@ -112,25 +111,18 @@ namespace VirtualTwin
                 if (input != 0)
                 {
                     dtheta = input * steeringSpeed * dt;
-                    eulerRotation += dtheta;
                     steerAngle += dtheta;
                 }
                 // Self correcting steering
                 // Source: https://carfromjapan.com/article/driving-tips/steering-wheel-returns-to-center-after-turn/
                 else
-                {
-                    //steerAngle = Mathf.MoveTowards(steerAngle, 0, steeringSpeed * dt);
-                    eulerRotation = Mathf.MoveTowardsAngle(eulerRotation, 360, steeringSpeed * dt);
                     steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
-                }
+
 
                 if (Mathf.Abs(steerAngle) > wheelLock)
                     steerAngle = Mathf.Sign(steerAngle) * wheelLock;
 
-                if (eulerRotation > upperLock) eulerRotation = upperLock;
-                if (eulerRotation < lowerLock) eulerRotation = lowerLock;
-
-                //slipAngle = 0.5f * steerAngle;
+                slipAngle = SlipAngle();
 
                 var angle = transform.localEulerAngles.y + steerAngle;
                 if (Mathf.Abs(angle) > wheelLock) angle = Mathf.Sign(angle) * wheelLock;
@@ -142,21 +134,17 @@ namespace VirtualTwin
 
         public void Accelerate(float driveInput, float brakeInput, float dt)
         {
+            vertForce = VerticalForce();
+
             driveTorque = vehicle.CurrentTorque;
 
-            drivingForce = Mathf.Abs(driveInput) * driveTorque * curvature;
-            brakingForce = Mathf.Abs(brakeInput) * BrakingForce(brakeTorque);
+            drivingForce = DriveForce(driveInput, driveTorque);
+            brakingForce = BrakingForce(brakeInput, brakeTorque);
             rollingResForce = RollingResistanceForce();
 
             cornerResForce = CorneringResistanceForce(); // TBD
 
             resultantForce = drivingForce - brakingForce - rollingResForce;
-        }
-
-        public void ApplyRotation(float vehicleRot)
-        {
-            if (steering)
-                transform.localRotation = Quaternion.Euler(0, eulerRotation - 360 + vehicleRot, 0);
         }
 
         float RollingResistanceForce()
@@ -165,8 +153,10 @@ namespace VirtualTwin
 
             //var speedForce = (0.005f + (0.01f + 0.0095f * (0.01f * 0.01f * vehicle.groundSpeed * vehicle.groundSpeed) / tyrePressure) * weightForce);
             //var speedForce = (0.0095f * (0.01f * 0.01f * vehicle.groundSpeed * vehicle.groundSpeed) / tyrePressure) * weightForce;
-            var speedForce = 0.5f * rollingResistance * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
-            //var flatForce = rollingResistance * vehicleMass * 9.81f;
+            //var speedForce = 0.5f * rollingResistance * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
+            var speedForce = vertForce * (0.0095f * 0.0001f * (1000/3600) * (1000/3600) * 
+                vehicle.speed * vehicle.speed / (tyrePressure_Bar * 100000f));
+
             // Source: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
             var flatForce = rollingResistance * vertForce * curvature;
 
@@ -186,15 +176,28 @@ namespace VirtualTwin
             return f;
         }
 
-        float BrakingForce(float torque)
+        float DriveForce(float driveInput, float torque)
         {
-            var speedForce = 0.5f * brakingCoefficient * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
-            var flatForce = brakeTorque * curvature;
+            if (driveInput > 0)
+                return driveTorque * curvature;
 
-            //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;
-            if (speedForce < flatForce) return speedForce;
+            return 0;
+        }
 
-            return flatForce;
+        float BrakingForce(float brakeInput, float torque)
+        {
+            if (brakeInput > 0)
+            {
+                var speedForce = 0.5f * brakingCoefficient * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
+                var flatForce = brakeTorque * curvature;
+
+                //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;
+                if (speedForce < flatForce) return speedForce;
+
+                return flatForce;
+            }
+
+            return 0;
         }
 
         float VerticalForce()
@@ -209,6 +212,20 @@ namespace VirtualTwin
                     return mass * 9.81f * vehicle.FrontToCoM / vehicle.WheelSeparation;
                 default:
                     return 0;
+            }
+        }
+
+        float SlipAngle()
+        {
+            switch (orientation)
+            {
+                case WheelOrientation.Back:
+                    return Mathf.Atan2(-vehicle.WheelSeparation,
+                        2 * vehicle.turningRadiusCoM * Mathf.Cos(vehicle.velocityAngle * 
+                        Mathf.Deg2Rad)) * Mathf.Rad2Deg;
+                default:
+                    return steerAngle - Mathf.Atan2(vehicle.WheelSeparation, 
+                        2 * vehicle.turningRadiusCoM * Mathf.Cos(vehicle.velocityAngle * Mathf.Deg2Rad)) * Mathf.Rad2Deg;
             }
         }
     }

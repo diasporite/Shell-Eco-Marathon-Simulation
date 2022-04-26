@@ -14,6 +14,9 @@ namespace VirtualTwin
         public Text numSamples;
         public Text acceleration;
         public Text drag;
+        public Text lift;
+        public Text centripetal;
+        public Text turningRadius;
 
         [Header("Top Right Text")]
         public Text wheelDriveForce;
@@ -34,7 +37,7 @@ namespace VirtualTwin
 
             timeElapsed.text = "Time Elapsed, t = " + 
                 sample.time.ToString("0.00") + "s";
-            vehicleSpeed.text = "Vehicle Speed, |v| = " + 
+            vehicleSpeed.text = "Vehicle Speed, v = " + 
                 sample.speed.ToString("0.000") + "m/s";
             distanceTravelled.text = "Distance Travelled, s = " + 
                 sample.distance.ToString("0.000") + "m";
@@ -42,14 +45,23 @@ namespace VirtualTwin
             acceleration.text = "Acceleration, a = " + 
                 sample.acceleration.ToString("0.0000") + "m/s2";
             drag.text = "Drag, Fd = " + sample.vehicleDrag.ToString("0.0000") + "N";
+            lift.text = "Lift, Fl = " + sample.lift.ToString("0.0000") + "N";
+            centripetal.text = "Centripetal (CoM), Fc = " + 
+                sample.centripetal + "N";
+            turningRadius.text = "Turning Radius (CoM), R = " + 
+                sample.turningRadius.ToString("0.000") + "m";
 
-            wheelTurnAngle.text = "Wheel Turning Angle, = " + 
+            wheelDriveForce.text = "Wheel Drive Force, Fw = " + 
+                sample.wheelDrive.ToString("0.000") + "N";
+            wheelRollRes.text = "Wheel Rolling Res, Fr = " + 
+                sample.rollingRes.ToString("0.000") + "N";
+            wheelTurnAngle.text = "Wheel Turning Angle, delta = " + 
                 sample.wheelTurnAngle.ToString("0.00") + "deg";
-            vehicleTurnAngle.text = "Vehicle Turning Angle, = " + 
-                sample.turnAngle.ToString("0.00") + "deg";
-            vehicleVelAngle.text = "Vehicle Velocity Angle, = " + 
+            vehicleTurnAngle.text = "Vehicle Orientation (CoM), θ = " + 
+                sample.orientation.ToString("0.00") + "deg";
+            vehicleVelAngle.text = "Vehicle Velocity Angle (CoM), β = " + 
                 sample.velAngle.ToString("0.00") + "deg";
-            vehicleAngVelocity.text = "Vehicle Angular Velocity, = " + 
+            vehicleAngVelocity.text = "Vehicle Angular Velocity (CoM), β_dot = " + 
                 sample.angularVelocity.ToString("0.00") + "deg/s";
 
             vehicleMass.text = "Vehicle Mass, m = " + sample.mass.ToString("0.000") + "kg";
@@ -57,3 +69,6 @@ namespace VirtualTwin
         }
     }
 }
+
+// α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ τ υ φ χ ψ ω
+// Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω
