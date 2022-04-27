@@ -55,7 +55,7 @@ namespace VirtualTwin
                 sample.wheelDrive.ToString("0.000") + "N";
             wheelRollRes.text = "Wheel Rolling Res, Fr = " + 
                 sample.rollingRes.ToString("0.000") + "N";
-            wheelTurnAngle.text = "Wheel Turning Angle, delta = " + 
+            wheelTurnAngle.text = "Wheel Turning Angle, δ = " + 
                 sample.wheelTurnAngle.ToString("0.00") + "deg";
             vehicleTurnAngle.text = "Vehicle Orientation (CoM), θ = " + 
                 sample.orientation.ToString("0.00") + "deg";
