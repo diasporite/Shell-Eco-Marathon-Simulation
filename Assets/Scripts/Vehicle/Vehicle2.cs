@@ -7,6 +7,8 @@ namespace VirtualTwin
     [RequireComponent(typeof(Rigidbody))]
     public class Vehicle2 : MonoBehaviour
     {
+        InputManager inputManager;
+
         [Header("Settings")]
         public bool enableDrag = true;
         public bool enableLift = false;
@@ -119,6 +121,8 @@ namespace VirtualTwin
 
         private void Awake()
         {
+            inputManager = GetComponent<InputManager>();
+
             rb = GetComponent<Rigidbody>();
 
             motor = GetComponent<Motor>();
@@ -180,13 +184,18 @@ namespace VirtualTwin
 
         void GetInputs()
         {
-            steerInput = Input.GetAxisRaw("Horizontal");
+            //steerInput = Input.GetAxisRaw("Horizontal");
 
-            if (Input.GetKey("j")) accelerateInput = 1;
-            else accelerateInput = 0;
+            //if (Input.GetKey("j")) accelerateInput = 1;
+            //else accelerateInput = 0;
 
-            if (Input.GetKey("l")) brakeInput = 1;
-            else brakeInput = 0;
+            //if (Input.GetKey("l")) brakeInput = 1;
+            //else brakeInput = 0;
+
+            steerInput = inputManager.Steer;
+
+            accelerateInput = inputManager.Accelerate;
+            brakeInput = inputManager.Brake;
         }
 
         bool IsGrounded()

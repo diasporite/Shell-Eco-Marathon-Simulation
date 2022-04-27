@@ -2027,7 +2027,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec0f768193ddcd4da679837ab8f28af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstPersonMode: 1
+  firstPersonMode: 0
   vehicle: {fileID: 1018936528}
   follow: {fileID: 1197680136}
   camDist: 4
