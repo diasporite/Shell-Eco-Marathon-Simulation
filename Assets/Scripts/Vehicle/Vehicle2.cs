@@ -109,6 +109,10 @@ namespace VirtualTwin
         public float RearToCoM => rearToCoM;
         public float FrontToCoM => frontToCoM;
 
+        public float SteerInput => steerInput;
+        public float AccelerateInput => accelerateInput;
+        public float BrakeInput => brakeInput;
+
         public float VehicleMass => bodyMass + driverMass + frontLeftWheel.mass +
             frontRightWheel.mass + backWheel.mass + fuelCell.TotalMass;
 
@@ -184,14 +188,6 @@ namespace VirtualTwin
 
         void GetInputs()
         {
-            //steerInput = Input.GetAxisRaw("Horizontal");
-
-            //if (Input.GetKey("j")) accelerateInput = 1;
-            //else accelerateInput = 0;
-
-            //if (Input.GetKey("l")) brakeInput = 1;
-            //else brakeInput = 0;
-
             steerInput = inputManager.Steer;
 
             accelerateInput = inputManager.Accelerate;
@@ -248,8 +244,13 @@ namespace VirtualTwin
             // Placeholder
             currentTorque = 8.69f;
 
-            SteerVehicle();
-            AccelerateVehicle();
+            //SteerVehicle();
+            //AccelerateVehicle();
+
+            CalculateVariables();
+            ApplyVariables();
+
+            motor.CalculateData(Time.fixedDeltaTime);
         }
 
         //void CalculateCentreOfMotion()
@@ -332,12 +333,63 @@ namespace VirtualTwin
 
         void CalculateVariables()
         {
+            var zeta = frontLeftWheel.steerAngle;
+            globalAngle = transform.eulerAngles.y;
+
+            var tan_zeta = Mathf.Tan(zeta * Mathf.Deg2Rad);
+
+            // [3, 4]           
+            velocityAngle = Mathf.Atan2(rearToCoM * tan_zeta, wheelSeparation) * Mathf.Rad2Deg;
+
+            var cos_velAngle = Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
+
+            rearAngularVelocity = speed * Mathf.Rad2Deg / wheelSeparation;
+            angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / wheelSeparation;
+
+            globalAngle += angularVelocity * Time.fixedDeltaTime;
+
+            velocityDir.x = Mathf.Sin((globalAngle + velocityAngle) * Mathf.Deg2Rad);
+            velocityDir.z = Mathf.Cos((globalAngle + velocityAngle) * Mathf.Deg2Rad);
+
+            if (tan_zeta != 0 && cos_velAngle != 0)
+            {
+                turningRadius = wheelSeparation / tan_zeta;
+                turningRadiusCoM = turningRadius / cos_velAngle;
+                centripetalForce = VehicleMass * turningRadiusCoM * (angularVelocity *
+                    Mathf.Deg2Rad) * (angularVelocity * Mathf.Deg2Rad);
+                motionCentre = backWheel.transform.position + Mathf.Sign(zeta) *
+                    turningRadius * backWheel.transform.right;
+                dirOfCircularMotion = (motionCentre - centreOfMass).normalized;
+                dirOfCircularMotion.y = 0;
+            }
+
+            float drag = 1f;
+
+            if (!enableDrag) drag = 0;
+
+            resultantDriveForce = wheelDriveForce - wheelBrakeForce - wheelRollRes - drag * dragForce;
+
+            resultantAcceleration = resultantDriveForce * InverseVehicleMass;
+
+            liftAcceleration = liftForce * InverseVehicleMass;
+
+            speed += resultantDriveForce * InverseVehicleMass * Time.fixedDeltaTime;
+
+            distanceTravelled += speed * Time.fixedDeltaTime;
 
         }
 
         void ApplyVariables()
         {
+            rb.rotation = Quaternion.Euler(0, globalAngle, 0);
 
+            rb.velocity = speed * transform.forward;
+
+            if (enableLift)
+                rb.AddRelativeForce(liftForce * transform.up, ForceMode.Force);
+
+            if (enableReaction && rb.useGravity && grounded)
+                rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
         }
 
         Vector3 GetRelCentreOfMass()

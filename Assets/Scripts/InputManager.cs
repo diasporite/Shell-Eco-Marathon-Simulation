@@ -31,5 +31,11 @@ namespace VirtualTwin
         {
             brake = value.Get<float>();
         }
+
+        public void OnToggleRecording(InputValue value)
+        {
+            FindObjectOfType<DataManager>().Record();
+            FindObjectOfType<RecordButton>().SwitchText();
+        }
     }
 }

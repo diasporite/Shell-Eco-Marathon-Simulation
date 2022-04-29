@@ -55,6 +55,8 @@ namespace VirtualTwin
         public float deltaKe;
         public float usefulEnergy;
 
+        const float RPM_TO_RADPS = Mathf.PI / 30f;
+
         private void Awake()
         {
             vehicle = GetComponent<Vehicle2>();
@@ -78,13 +80,12 @@ namespace VirtualTwin
 
         public void CalculateData(float dt)
         {
-            // Temporary
-            currentRpm = 30f * vehicle.speed / (Mathf.PI * frontLeftWheel.radius);
+            currentRpm = RPM_TO_RADPS * vehicle.speed / (gearRatio * frontLeftWheel.radius);
             currentRpm = Mathf.Min(currentRpm, topRpm);
             pRpm = currentRpm * gearRatio / topRpm;
 
-            xl = (currentRpm / 60) * 2 * Mathf.PI * inductance * p;
-            trueVoltage = (reqVoltage - (ke * (currentRpm / 60) * 2 * Mathf.PI)) / 1.2f;
+            xl = currentRpm * RPM_TO_RADPS * inductance * p;
+            trueVoltage = (reqVoltage - (ke * currentRpm * RPM_TO_RADPS)) / 1.2f;
 
             currentTorque = kt * reqCurrent * gearRatio;
             pTorque = currentTorque / gearRatio;
@@ -93,12 +94,12 @@ namespace VirtualTwin
             outputPower = currentTorque * currentRpm * Mathf.PI / 30f;
             transientEfficiency = outputPower / reqPower;
 
-            energyIn += reqPower * dt;
+            if (vehicle.AccelerateInput > 0) energyIn += reqPower * dt;
             energyLossDrag += vehicle.dragForce * vehicle.speed * dt;
+            energyLossOther += vehicle.wheelBrakeForce * vehicle.speed * dt;
             motorOutEnergy += outputPower * dt;
 
             usefulEnergy = transientEfficiency * energyIn;
-            // currentRpm is not incrementing
         }
     }
 }
