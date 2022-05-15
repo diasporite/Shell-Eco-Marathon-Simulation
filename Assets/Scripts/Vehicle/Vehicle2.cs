@@ -242,7 +242,8 @@ namespace VirtualTwin
             liftForce = 0.5f * airDensity * speed * speed * liftCoefficent * frontalArea;
 
             // Placeholder
-            currentTorque = 8.69f;
+            currentTorque = motor.currentTorque;
+            currentRpm = motor.currentRpm;
 
             //SteerVehicle();
             //AccelerateVehicle();

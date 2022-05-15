@@ -34,11 +34,18 @@ namespace VirtualTwin
         public float velAngle;
         public float angularVelocity;
 
+        public float currentTorque;
+        public float currentRpm;
+        public float energyIn;
+        public float transientEfficiency;
+
         public float mass;
         public float fuelMass;
 
         public float fuelCellEfficiency;
         public float vehicleFuelEfficiency;
+
+        public Vehicle2 Subject2 => subject2;
 
         public DataPoint(float t, float v, float s)
         {
@@ -93,6 +100,11 @@ namespace VirtualTwin
             orientation = subject.globalAngle;
             velAngle = subject.velocityAngle;
             angularVelocity = subject.angularVelocity;
+
+            currentTorque = subject.CurrentTorque;
+            currentRpm = subject.CurrentRpm;
+            energyIn = subject.motor.energyIn;
+            transientEfficiency = subject.motor.transientEfficiency;
 
             mass = subject.VehicleMass;
             fuelMass = subject.fuelCell.currentFuelMass;

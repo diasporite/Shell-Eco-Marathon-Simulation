@@ -24,11 +24,12 @@ namespace VirtualTwin
         float gearRatio = 6f;
         float torqueCutoff = 3.57f;
 
-        [Header("Constants")]
+        [Header("Requirements")]
         public float reqVoltage = 24;
         public float reqCurrent = 49.7f;
         public float reqPower;
 
+        [Header("Constants")]
         public float p = 16;
         public float kt = 0.076f;
         public float ke = 0.015f;
@@ -73,11 +74,6 @@ namespace VirtualTwin
             motorOutEnergy = 0;
         }
 
-        private void FixedUpdate()
-        {
-            CalculateData(Time.fixedDeltaTime);
-        }
-
         public void CalculateData(float dt)
         {
             currentRpm = RPM_TO_RADPS * vehicle.speed / (gearRatio * frontLeftWheel.radius);
@@ -91,7 +87,7 @@ namespace VirtualTwin
             pTorque = currentTorque / gearRatio;
 
             reqPower = reqVoltage * reqCurrent;
-            outputPower = currentTorque * currentRpm * Mathf.PI / 30f;
+            outputPower = currentTorque * currentRpm * RPM_TO_RADPS;
             transientEfficiency = outputPower / reqPower;
 
             if (vehicle.AccelerateInput > 0) energyIn += reqPower * dt;

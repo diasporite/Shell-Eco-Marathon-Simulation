@@ -27,9 +27,17 @@ namespace VirtualTwin
         public Text vehicleVelAngle;
         public Text vehicleAngVelocity;
 
+        [Header("Bottom Center Text")]
+        public Text currentTorque;
+        public Text currentRpm;
+        public Text energyIn;
+        public Text transientEfficiency;
+
         [Header("Bottom Right Text")]
         public Text vehicleMass;
         public Text fuelMass;
+        public Text fuelCellEfficiency;
+        public Text vehicleFuelEfficiency;
 
         public void UpdateUI(int numSample, DataPoint sample)
         {
@@ -64,8 +72,21 @@ namespace VirtualTwin
             vehicleAngVelocity.text = "Vehicle Angular Velocity (CoM), β_dot = " + 
                 sample.angularVelocity.ToString("0.00") + "deg/s";
 
+            currentTorque.text = "Current Torque, τ = " + 
+                sample.currentTorque.ToString("0.00") + "Nm";
+            currentRpm.text = "Current Rpm, N = " + 
+                sample.currentRpm.ToString("0.00") + "rpm";
+            energyIn.text = "Energy Consumed, E = " + 
+                sample.energyIn.ToString("0.00") + "J";
+            transientEfficiency.text = "Transient Efficiency, ηt = " + 
+                sample.transientEfficiency.ToString("0.000");
+
             vehicleMass.text = "Vehicle Mass, m = " + sample.mass.ToString("0.000") + "kg";
             fuelMass.text = "Fuel Mass, mf = " + sample.fuelMass.ToString("0.000") + "kg";
+            fuelCellEfficiency.text = "Fuel Cell Efficiency, ηf = " + 
+                sample.fuelCellEfficiency.ToString("0.000");
+            vehicleFuelEfficiency.text = "Vehicle Fuel Efficiency, ηv = " + 
+                sample.vehicleFuelEfficiency.ToString("0.000");
         }
     }
 }
