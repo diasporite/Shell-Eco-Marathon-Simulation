@@ -204,54 +204,17 @@ namespace VirtualTwin
 
         void Drive()
         {
-            float drive = 0;
-            float brake = 0;
-            float roll = 0;
-            float corn = 0;
+            GetVariables();
 
-            foreach (var wheel in wheels)
-            {
-                wheel.driveTorque = 0.5f * motor.currentTorque;
+            GetPower();
 
-                wheel.Steer(steerInput, Time.fixedDeltaTime);
-                wheel.Accelerate(accelerateInput, brakeInput, Time.fixedDeltaTime);
-
-                drive += wheel.drivingForce;
-                brake += wheel.brakingForce;
-                roll += wheel.rollingResForce;
-                corn += wheel.cornerResForce;
-            }
-
-            wheelDriveForce = drive;
-            wheelBrakeForce = brake;
-            wheelRollRes = roll;            
-            corneringResistanceForce = corn;
-
-            rb.mass = VehicleMass;
-
-            velocity = rb.velocity;
-            velocity.y = 0;
-            speed = velocity.magnitude;
-
-            grounded = IsGrounded();
-
-            centreOfMass = com.position;
-            centreOfSteering = cos.position;
-
-            dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * frontalArea;
-            liftForce = 0.5f * airDensity * speed * speed * liftCoefficent * frontalArea;
-
-            // Placeholder
-            currentTorque = motor.currentTorque;
-            currentRpm = motor.currentRpm;
-
-            //SteerVehicle();
-            //AccelerateVehicle();
+            CalculateWheelVariables();
 
             CalculateVariables();
             ApplyVariables();
 
             motor.CalculateData(Time.fixedDeltaTime);
+            fuelCell.CalculateFuelUsage(accelerateInput, Time.fixedDeltaTime);
         }
 
         //void CalculateCentreOfMotion()
@@ -273,67 +236,70 @@ namespace VirtualTwin
         //    }
         //}
 
-        void SteerVehicle()
+        void GetPower()
         {
-            var zeta = frontLeftWheel.steerAngle;
-            globalAngle = transform.eulerAngles.y;
-
-            var tan_zeta = Mathf.Tan(zeta * Mathf.Deg2Rad);
-
-            // [3, 4]           
-            velocityAngle = Mathf.Atan2(rearToCoM * tan_zeta, wheelSeparation) * Mathf.Rad2Deg;
-
-            var cos_velAngle = Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
-
-            rearAngularVelocity = speed * Mathf.Rad2Deg / wheelSeparation;
-            angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / wheelSeparation;
-
-            globalAngle += angularVelocity * Time.fixedDeltaTime;
-            rb.rotation = Quaternion.Euler(0, globalAngle, 0);
-
-            velocityDir.x = Mathf.Sin((globalAngle + velocityAngle) * Mathf.Deg2Rad);
-            velocityDir.z = Mathf.Cos((globalAngle + velocityAngle) * Mathf.Deg2Rad);
-
-            if (tan_zeta != 0 && cos_velAngle != 0)
-            {
-                turningRadius = wheelSeparation / tan_zeta;
-                turningRadiusCoM = turningRadius / cos_velAngle;
-                centripetalForce = VehicleMass * turningRadiusCoM * (angularVelocity * 
-                    Mathf.Deg2Rad) * (angularVelocity * Mathf.Deg2Rad);
-                motionCentre = backWheel.transform.position + Mathf.Sign(zeta) * 
-                    turningRadius * backWheel.transform.right;
-                dirOfCircularMotion = (motionCentre - centreOfMass).normalized;
-                dirOfCircularMotion.y = 0;
-            }
+            // Calculate fuel usage based on accelerate input
         }
 
-        void AccelerateVehicle()
+        void GetVariables()
         {
+            velocity = rb.velocity;
+            velocity.y = 0;
+            speed = velocity.magnitude;
+
+            grounded = IsGrounded();
+
+            centreOfMass = com.position;
+            centreOfSteering = cos.position;
+
+            currentTorque = motor.currentTorque;
+            currentRpm = motor.currentRpm;
+        }
+
+        void CalculateWheelVariables()
+        {
+            float drive = 0;
+            float brake = 0;
+            float roll = 0;
+            float corn = 0;
+
+            foreach (var wheel in wheels)
+            {
+                wheel.driveTorque = 0.5f * motor.currentTorque;
+
+                wheel.Steer(steerInput, Time.fixedDeltaTime);
+                wheel.Accelerate(accelerateInput, brakeInput, Time.fixedDeltaTime);
+
+                drive += wheel.drivingForce;
+                brake += wheel.brakingForce;
+                roll += wheel.rollingResForce;
+                corn += wheel.cornerResForce;
+            }
+
+            wheelDriveForce = drive;
+            wheelBrakeForce = brake;
+            wheelRollRes = roll;
+            corneringResistanceForce = corn;
+        }
+
+        void CalculateVariables()
+        {
+            // ================ LINEAR MOTION ================ 
+            dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * frontalArea;
+            liftForce = 0.5f * airDensity * speed * speed * liftCoefficent * frontalArea;
+
             float drag = 1f;
 
             if (!enableDrag) drag = 0;
 
             resultantDriveForce = wheelDriveForce - wheelBrakeForce - wheelRollRes - drag * dragForce;
-
             resultantAcceleration = resultantDriveForce * InverseVehicleMass;
-
             liftAcceleration = liftForce * InverseVehicleMass;
 
             speed += resultantDriveForce * InverseVehicleMass * Time.fixedDeltaTime;
-
-            rb.velocity = speed * transform.forward;
-
             distanceTravelled += speed * Time.fixedDeltaTime;
 
-            if (enableLift)
-                rb.AddRelativeForce(liftForce * transform.up, ForceMode.Force);
-
-            if (enableReaction && rb.useGravity && grounded)
-                    rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
-        }
-
-        void CalculateVariables()
-        {
+            // ================ CIRCULAR MOTION ================ 
             var zeta = frontLeftWheel.steerAngle;
             globalAngle = transform.eulerAngles.y;
 
@@ -346,7 +312,6 @@ namespace VirtualTwin
 
             rearAngularVelocity = speed * Mathf.Rad2Deg / wheelSeparation;
             angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / wheelSeparation;
-
             globalAngle += angularVelocity * Time.fixedDeltaTime;
 
             velocityDir.x = Mathf.Sin((globalAngle + velocityAngle) * Mathf.Deg2Rad);
@@ -363,25 +328,12 @@ namespace VirtualTwin
                 dirOfCircularMotion = (motionCentre - centreOfMass).normalized;
                 dirOfCircularMotion.y = 0;
             }
-
-            float drag = 1f;
-
-            if (!enableDrag) drag = 0;
-
-            resultantDriveForce = wheelDriveForce - wheelBrakeForce - wheelRollRes - drag * dragForce;
-
-            resultantAcceleration = resultantDriveForce * InverseVehicleMass;
-
-            liftAcceleration = liftForce * InverseVehicleMass;
-
-            speed += resultantDriveForce * InverseVehicleMass * Time.fixedDeltaTime;
-
-            distanceTravelled += speed * Time.fixedDeltaTime;
-
         }
 
         void ApplyVariables()
         {
+            rb.mass = VehicleMass;
+
             rb.rotation = Quaternion.Euler(0, globalAngle, 0);
 
             rb.velocity = speed * transform.forward;

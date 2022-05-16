@@ -213,7 +213,7 @@ namespace VirtualTwin
             var delta = -driveAngle * Time.fixedDeltaTime;
             transform.Rotate(0, delta, 0);
 
-            fuelCell.CalculateFuelUsage(keyInput, Time.fixedDeltaTime);
+            //fuelCell.CalculateFuelUsage(keyInput, Time.fixedDeltaTime);
         }
 
         void Drive2()
@@ -242,7 +242,7 @@ namespace VirtualTwin
 
             AccelerateVehicle();
 
-            fuelCell.CalculateFuelUsage(keyInput, Time.fixedDeltaTime);
+            //fuelCell.CalculateFuelUsage(keyInput, Time.fixedDeltaTime);
         }
 
         float GetWheelDrive()
