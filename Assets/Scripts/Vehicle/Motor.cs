@@ -76,7 +76,7 @@ namespace VirtualTwin
 
         public void CalculateData(float dt)
         {
-            currentRpm = RPM_TO_RADPS * vehicle.speed / (gearRatio * frontLeftWheel.radius);
+            currentRpm = vehicle.speed / (gearRatio * frontLeftWheel.radius * RPM_TO_RADPS);
             currentRpm = Mathf.Min(currentRpm, topRpm);
             pRpm = currentRpm * gearRatio / topRpm;
 
