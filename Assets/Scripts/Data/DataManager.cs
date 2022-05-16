@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Text;
+using System.IO;
+using System;
 
 namespace VirtualTwin
 {
@@ -15,7 +19,8 @@ namespace VirtualTwin
         [Range(1, 5)]
         [SerializeField] int sampleEveryFixedFrame = 1;
         int framesSinceLog = 0;
-
+        bool writetime = false;
+        public string filename = "Output-Name";
         [SerializeField] List<DataPoint> data = new List<DataPoint>();
 
         public bool Recording => recording;
@@ -71,7 +76,17 @@ namespace VirtualTwin
         {
             if (!recording)
             {
-                // Export code goes here
+                string path = PathMethod();
+                StreamWriter writer = new StreamWriter(path);
+                writer.WriteLine("Time,Speed,Distance");
+
+                for (int i = 0; i < data.Count; ++i)
+                {
+                    DataPoint test = data[i];
+                    writer.WriteLine(test.time.ToString() + "," + test.speed.ToString()+ test.distance.ToString());
+                }
+                writer.Flush();
+                writer.Close();
             }
         }
 
@@ -106,6 +121,18 @@ namespace VirtualTwin
         public void LogData(float time, float speed, float distance)
         {
             data.Add(new DataPoint(time, speed, distance));
+        }
+        public void OnApplicationQuit()
+        {
+            if (!writetime)
+            {
+                // we can have another write method here for when the sim is closed?
+                //ExportData();
+            }
+        }
+        private string PathMethod()
+        {
+            return Application.dataPath + "/" + filename + ".csv";
         }
     }
 }
