@@ -214,7 +214,7 @@ namespace VirtualTwin
             ApplyVariables();
 
             motor.CalculateData(Time.fixedDeltaTime);
-            fuelCell.CalculateFuelUsage(accelerateInput, Time.fixedDeltaTime);
+            //fuelCell.CalculateFuelUsage(accelerateInput, Time.fixedDeltaTime);
         }
 
         //void CalculateCentreOfMotion()
@@ -239,6 +239,7 @@ namespace VirtualTwin
         void GetPower()
         {
             // Calculate fuel usage based on accelerate input
+            fuelCell.CalculateFuelUsage(accelerateInput, Time.fixedDeltaTime);
         }
 
         void GetVariables()

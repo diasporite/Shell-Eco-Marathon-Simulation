@@ -26,7 +26,7 @@ namespace VirtualTwin
         // Constants
         float mH2;
         float b;
-        float lowerHeatingValueH2 = 178.393f;
+        float lowerHeatingValueH2 = 2973.216667f;   //178.393Wmin/L
         float rhoH2 = 1f;
         float consumptionPerWatt = 0.00000021f;
 
@@ -58,7 +58,7 @@ namespace VirtualTwin
                 return;
             }
 
-            energyIn = motor.energyIn;
+            //energyIn = motor.energyIn;
             consumedH2 = consumptionPerWatt * motor.outputPower + 5e-07f;
 
             fuelMassFlowRate = consumedH2 / dt;
