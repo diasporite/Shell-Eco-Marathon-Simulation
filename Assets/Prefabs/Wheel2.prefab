@@ -202,30 +202,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be73a23ee3efbbd499d784a20d4c304d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  orientation: 0
   steering: 1
   driving: 1
   enableRollingRes: 1
   enableCorneringRes: 1
   wheelModel: {fileID: 0}
+  groundCheck: {fileID: 0}
   steeringSpeed: 30
   steeringRatio: 15
   wheelLock: 30
   mass: 0.4
   radius: 0.254
-  tyrePressure: 500000
+  tyrePressure_Bar: 5
   driveTorque: 8.69
-  brakeTorque: 25
+  brakeTorque: 53.75
   rollingResistance: 0.0081
   corneringResistance: 0.12
   brakingCoefficient: 0.5
-  eulerRotation: 360
   globalAngle: 0
   vehicleRotation: 0
   dtheta: 0
   steerAngle: 0
   slipAngle: 0
   steerDir: {x: 0, y: 0, z: 1}
-  weightForce: 0
+  vertForce: 0
   drivingForce: 0
   brakingForce: 0
   rollingResForce: 0

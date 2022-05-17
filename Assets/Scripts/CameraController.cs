@@ -85,5 +85,15 @@ namespace VirtualTwin
             transform.position = Vector3.MoveTowards(transform.position, follow.transform.position, updateSpeed * Time.deltaTime);
             transform.forward = follow.transform.forward;
         }
+
+        void SwitchViewMode(bool firstPerson)
+        {
+            firstPersonMode = firstPerson;
+
+            if (firstPerson)
+                vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = false;
+            else
+                vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = true;
+        }
     }
 }

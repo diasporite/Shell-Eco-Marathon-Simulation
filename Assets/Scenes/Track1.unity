@@ -3193,6 +3193,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5867615582671435254, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
+      propertyPath: m_Constraints
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 5867615582671435254, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
       propertyPath: m_Interpolate
       value: 1
       objectReference: {fileID: 0}
@@ -3906,6 +3911,7 @@ MonoBehaviour:
   hud: {fileID: 1579623545}
   timeElapsed: 0
   sampleEveryFixedFrame: 5
+  filename: Output-Name
   data: []
 --- !u!4 &1596038480
 Transform:

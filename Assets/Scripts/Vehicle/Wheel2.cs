@@ -45,8 +45,9 @@ namespace VirtualTwin
         [Range(0f, 1f)] public float rollingResistance = 0.0081f;
         [Range(0f, 1f)] public float corneringResistance = 0.12f;
 
-        [Header("Coefficients")]
+        [Header("Braking Arbitrary Figures")]
         [Range(0f, 1f)] public float brakingCoefficient = 0.5f;
+        public float forceSpeedThreshold = 0.04f;
 
         [Header("Variables - Steering")]
         public float globalAngle = 0;
@@ -73,6 +74,9 @@ namespace VirtualTwin
         // See vehicle dynamics doc
         float c1 = 148f;
         float c2 = 1000f;
+
+        const float KMPH_TO_MPS = 0.277777778f;
+        const float MPS_TO_KMPH = 3.6f;
 
         public Vector3 LocalSteerDir => steerDir;
 
@@ -115,9 +119,7 @@ namespace VirtualTwin
                 }
                 // Self correcting steering
                 // Source: https://carfromjapan.com/article/driving-tips/steering-wheel-returns-to-center-after-turn/
-                else
-                    steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
-
+                else steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
 
                 if (Mathf.Abs(steerAngle) > wheelLock)
                     steerAngle = Mathf.Sign(steerAngle) * wheelLock;
@@ -128,7 +130,6 @@ namespace VirtualTwin
                 if (Mathf.Abs(angle) > wheelLock) angle = Mathf.Sign(angle) * wheelLock;
 
                 transform.localRotation = Quaternion.Euler(0, steerAngle, 0);
-
             }
         }
 
@@ -151,20 +152,17 @@ namespace VirtualTwin
         {
             if (!enableRollingRes) return 0;
 
-            //var speedForce = (0.005f + (0.01f + 0.0095f * (0.01f * 0.01f * vehicle.groundSpeed * vehicle.groundSpeed) / tyrePressure) * weightForce);
-            //var speedForce = (0.0095f * (0.01f * 0.01f * vehicle.groundSpeed * vehicle.groundSpeed) / tyrePressure) * weightForce;
-            //var speedForce = 0.5f * rollingResistance * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
-            var speedForce = vertForce * (0.0095f * 0.0001f * (1000/3600) * (1000/3600) * 
-                vehicle.speed * vehicle.speed / (tyrePressure_Bar * 100000f));
+            var speedForce = vertForce * (0.005f + (0.0095f * (0.01f * vehicle.speed * MPS_TO_KMPH) * 
+                (0.01f * vehicle.speed * MPS_TO_KMPH) / (tyrePressure_Bar)));
 
             // Source: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
-            var flatForce = rollingResistance * vertForce * curvature;
+            //var flatForce = rollingResistance * vertForce * curvature;
 
-            //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;
-            if (speedForce < flatForce) return speedForce;
+            //if (vehicle.speed < forceSpeedThreshold) return 0;
 
             //return speedForce;
-            return flatForce;
+
+            return vehicle.speed < forceSpeedThreshold ? 0 : speedForce;
         }
 
         float CorneringResistanceForce()
@@ -191,10 +189,11 @@ namespace VirtualTwin
                 var speedForce = 0.5f * brakingCoefficient * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
                 var flatForce = brakeTorque * curvature;
 
-                //if (vehicle.groundSpeed < forceSpeedThreshold) return speedForce;
-                if (speedForce < flatForce) return speedForce;
+                return vehicle.speed < forceSpeedThreshold ? speedForce : flatForce;
 
-                return flatForce;
+                //if (vehicle.speed < forceSpeedThreshold) return speedForce;
+
+                //return flatForce;
             }
 
             return 0;
@@ -225,7 +224,8 @@ namespace VirtualTwin
                         Mathf.Deg2Rad)) * Mathf.Rad2Deg;
                 default:
                     return steerAngle - Mathf.Atan2(vehicle.WheelSeparation, 
-                        2 * vehicle.turningRadiusCoM * Mathf.Cos(vehicle.velocityAngle * Mathf.Deg2Rad)) * Mathf.Rad2Deg;
+                        2 * vehicle.turningRadiusCoM * Mathf.Cos(vehicle.velocityAngle * 
+                        Mathf.Deg2Rad)) * Mathf.Rad2Deg;
             }
         }
     }

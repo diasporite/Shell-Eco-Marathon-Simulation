@@ -91,7 +91,7 @@ namespace VirtualTwin
             outputPower = currentTorque * currentRpm * RPM_TO_RADPS;
             transientEfficiency = outputPower / reqPower;
 
-            if (vehicle.AccelerateInput > 0) energyIn = reqPower * dt;
+            energyIn = vehicle.AccelerateInput > 0 ? reqPower * dt : 0f;
             energyConsumed += energyIn;
             energyLossDrag += vehicle.dragForce * vehicle.speed * dt;
             energyLossOther += vehicle.wheelBrakeForce * vehicle.speed * dt;

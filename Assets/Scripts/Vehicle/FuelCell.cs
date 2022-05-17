@@ -28,7 +28,7 @@ namespace VirtualTwin
         float b;
         float lowerHeatingValueH2 = 2973.216667f;   //178.393Wmin/L
         float rhoH2 = 1f;
-        float consumptionPerWatt = 0.00000021f;
+        float consumptionPerWatt = 1.786667e-07f;
 
         Motor motor;
 
@@ -78,13 +78,11 @@ namespace VirtualTwin
             return power;
         }
 
-
-
         /// Notes
         /// From 2021 report
-        /// - H2 consumption linear w/ power (6.3l/min, 500W) 
-        ///   -> 0.000105kg/s per 500W
-        ///   -> 0.00000021kg/Ws
+        /// - H2 consumption linear w/ power (5.86l/min, 500W) 
+        ///   -> 0.000089333kg/s per 500W
+        ///   -> 0.0000001786667kg/Ws
         /// - y intercept of ~0.03l/min
         ///   -> 0.0000005kg/Ws
     }
