@@ -19,9 +19,10 @@ namespace VirtualTwin
         [Range(1, 5)]
         [SerializeField] int sampleEveryFixedFrame = 1;
         int framesSinceLog = 0;
+        [SerializeField] List<DataPoint> data = new List<DataPoint>();
+
         bool writetime = false;
         public string filename = "Output-Name";
-        [SerializeField] List<DataPoint> data = new List<DataPoint>();
 
         public bool Recording => recording;
 
@@ -78,13 +79,17 @@ namespace VirtualTwin
             {
                 string path = PathMethod();
                 StreamWriter writer = new StreamWriter(path);
-                writer.WriteLine("Time,Speed,Distance");
+                writer.WriteLine(DataHeader);
 
                 for (int i = 0; i < data.Count; ++i)
                 {
                     DataPoint test = data[i];
-                    writer.WriteLine(test.time.ToString() + "," + test.speed.ToString()+ test.distance.ToString());
+                    writer.WriteLine(test.time + "," + test.x + "," + test.z + "," + 
+                        test.speed + "," + test.distance.ToString() + "," + 
+                        test.acceleration + "," + test.rollingRes + "," + test.h2Consumption + 
+                        "," + test.currentTorque + "," + test.currentRpm); 
                 }
+
                 writer.Flush();
                 writer.Close();
             }
@@ -122,6 +127,7 @@ namespace VirtualTwin
         {
             data.Add(new DataPoint(time, speed, distance));
         }
+
         public void OnApplicationQuit()
         {
             if (!writetime)
@@ -130,9 +136,14 @@ namespace VirtualTwin
                 //ExportData();
             }
         }
+
         private string PathMethod()
         {
             return Application.dataPath + "/" + filename + ".csv";
         }
+
+        string DataHeader => "Time (s),Position X, Position Z,Speed (m/s),Distance (m),Acceleration (m/s2)," +
+            "Rolling Resistance (N),H2 Consumption (L/min),Torque (Nm),Motor RPM";
+
     }
 }

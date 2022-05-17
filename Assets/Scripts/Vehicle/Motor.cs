@@ -42,18 +42,23 @@ namespace VirtualTwin
         public float inductance = 0.0000658f;
 
         public float outputPower;
-        public float consumedEnergy;
+
+        [Header("Efficiencies")]
         public float transientEfficiency;
+        public float motorEfficiency;
+        public float averageMotorEfficiency;
 
         [Header("Variables")]
         public float pTorque;
         public float energyConsumed;
         public float energyIn;
+        public float energyLossDrag;
+        public float energyLossBrake;
 
         public float motorOutEnergy;
-        public float energyLossDrag;
-        public float energyLossOther;
-        public float energyLoss;
+        public float energyWastedDrag;
+        public float energyWastedBrake;
+
         public float deltaKe;
         public float usefulEnergy;
 
@@ -71,7 +76,7 @@ namespace VirtualTwin
             topRpm = reqPower / 8.69f;
 
             energyConsumed = 0;
-            energyLossDrag = 0;
+            energyWastedDrag = 0;
             motorOutEnergy = 0;
         }
 
@@ -92,12 +97,18 @@ namespace VirtualTwin
             transientEfficiency = outputPower / reqPower;
 
             energyIn = vehicle.AccelerateInput > 0 ? reqPower * dt : 0f;
+            energyLossDrag = vehicle.dragForce * vehicle.speed * dt;
+            energyLossBrake = vehicle.wheelBrakeForce * vehicle.speed * dt;
+
             energyConsumed += energyIn;
-            energyLossDrag += vehicle.dragForce * vehicle.speed * dt;
-            energyLossOther += vehicle.wheelBrakeForce * vehicle.speed * dt;
-            motorOutEnergy += outputPower * dt;
+            energyWastedDrag += energyLossDrag;
+            energyWastedBrake += energyLossBrake;
+            motorOutEnergy = vehicle.AccelerateInput > 0 ? outputPower * dt : 0f;
 
             usefulEnergy = transientEfficiency * energyConsumed;
+
+            motorEfficiency = energyIn / (energyIn + energyLossDrag + energyLossBrake);
+            averageMotorEfficiency = energyConsumed / (energyConsumed + energyWastedDrag + energyWastedBrake);
         }
     }
 }

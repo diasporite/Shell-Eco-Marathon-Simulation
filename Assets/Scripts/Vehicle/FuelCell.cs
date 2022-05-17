@@ -19,7 +19,7 @@ namespace VirtualTwin
         public float power = 500;
 
         public float energyIn;
-        public float consumedH2;
+        public float consumedH2_lpm;
 
         float fuelVolRate = 0.1042f;
 
@@ -28,7 +28,7 @@ namespace VirtualTwin
         float b;
         float lowerHeatingValueH2 = 2973.216667f;   //178.393Wmin/L
         float rhoH2 = 1f;
-        float consumptionPerWatt = 1.786667e-07f;
+        float consumptionPerWatt = 0.01172f;
 
         Motor motor;
 
@@ -54,20 +54,21 @@ namespace VirtualTwin
             if (accelerateInput <= 0)
             {
                 energyIn = 0f;
-                consumedH2 = 0f;
+                consumedH2_lpm = 0f;
                 return;
             }
 
             //energyIn = motor.energyIn;
-            consumedH2 = consumptionPerWatt * motor.outputPower + 5e-07f;
+            consumedH2_lpm = (consumptionPerWatt * motor.outputPower + 0.03f);
 
-            fuelMassFlowRate = consumedH2 / dt;
-            fuelVolFlowRate = fuelMassFlowRate / rhoH2;
+            fuelVolFlowRate = consumedH2_lpm / 60000f;
+            fuelMassFlowRate = fuelVolFlowRate * rhoH2;
 
-            currentFuelMass -= consumedH2;
+            currentFuelMass -= fuelMassFlowRate * dt;
             currentFuelMass = Mathf.Clamp(currentFuelMass, 0, fuelMass);
 
-            fuelCellEfficiency = motor.outputPower / (fuelVolFlowRate * lowerHeatingValueH2);
+            //fuelCellEfficiency = motor.outputPower / (fuelVolFlowRate * lowerHeatingValueH2);
+            fuelCellEfficiency = 0.01f * (-0.0023f * motor.outputPower + 50.514f);    // From 2021 report
         }
 
         public float GetPower(float dt)

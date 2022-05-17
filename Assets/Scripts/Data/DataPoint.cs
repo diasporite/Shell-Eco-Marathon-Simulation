@@ -14,6 +14,9 @@ namespace VirtualTwin
         public float speed;
         public float distance;
 
+        public float x;
+        public float z;
+
         // acceleration
         public float acceleration;
 
@@ -44,6 +47,7 @@ namespace VirtualTwin
 
         public float fuelCellEfficiency;
         public float vehicleFuelEfficiency;
+        public float h2Consumption;
 
         public Vehicle2 Subject2 => subject2;
 
@@ -86,6 +90,9 @@ namespace VirtualTwin
 
             speed = subject.speed;
             distance = subject.distanceTravelled;
+            x = subject.transform.position.x;
+            z = subject.transform.position.z;
+
             acceleration = subject.resultantAcceleration;
             vehicleDrag = subject.dragForce;
             lift = subject.liftForce;
@@ -109,6 +116,7 @@ namespace VirtualTwin
             mass = subject.VehicleMass;
             fuelMass = subject.fuelCell.currentFuelMass;
             fuelCellEfficiency = subject.fuelCell.fuelCellEfficiency;
+            h2Consumption = subject.fuelCell.consumedH2_lpm;
         }
     }
 }
