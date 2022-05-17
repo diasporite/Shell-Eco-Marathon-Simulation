@@ -47,6 +47,7 @@ namespace VirtualTwin
 
         [Header("Variables")]
         public float pTorque;
+        public float energyConsumed;
         public float energyIn;
 
         public float motorOutEnergy;
@@ -69,14 +70,14 @@ namespace VirtualTwin
 
             topRpm = reqPower / 8.69f;
 
-            energyIn = 0;
+            energyConsumed = 0;
             energyLossDrag = 0;
             motorOutEnergy = 0;
         }
 
         public void CalculateData(float dt)
         {
-            currentRpm = RPM_TO_RADPS * vehicle.speed / (gearRatio * frontLeftWheel.radius);
+            currentRpm = vehicle.speed / (gearRatio * frontLeftWheel.radius * RPM_TO_RADPS);
             currentRpm = Mathf.Min(currentRpm, topRpm);
             pRpm = currentRpm * gearRatio / topRpm;
 
@@ -90,12 +91,13 @@ namespace VirtualTwin
             outputPower = currentTorque * currentRpm * RPM_TO_RADPS;
             transientEfficiency = outputPower / reqPower;
 
-            if (vehicle.AccelerateInput > 0) energyIn += reqPower * dt;
+            if (vehicle.AccelerateInput > 0) energyIn = reqPower * dt;
+            energyConsumed += energyIn;
             energyLossDrag += vehicle.dragForce * vehicle.speed * dt;
             energyLossOther += vehicle.wheelBrakeForce * vehicle.speed * dt;
             motorOutEnergy += outputPower * dt;
 
-            usefulEnergy = transientEfficiency * energyIn;
+            usefulEnergy = transientEfficiency * energyConsumed;
         }
     }
 }

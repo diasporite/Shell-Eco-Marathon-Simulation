@@ -103,7 +103,7 @@ namespace VirtualTwin
 
             currentTorque = subject.CurrentTorque;
             currentRpm = subject.CurrentRpm;
-            energyIn = subject.motor.energyIn;
+            energyIn = subject.motor.energyConsumed;
             transientEfficiency = subject.motor.transientEfficiency;
 
             mass = subject.VehicleMass;
