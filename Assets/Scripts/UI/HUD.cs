@@ -30,7 +30,8 @@ namespace VirtualTwin
         [Header("Bottom Center Text")]
         public Text currentTorque;
         public Text currentRpm;
-        public Text energyIn;
+        public Text energyConsumed;
+        public Text powerOutput;
         public Text transientEfficiency;
 
         [Header("Bottom Right Text")]
@@ -76,8 +77,10 @@ namespace VirtualTwin
                 sample.currentTorque.ToString("0.00") + "Nm";
             currentRpm.text = "Current Rpm, N = " + 
                 sample.currentRpm.ToString("0.00") + "rpm";
-            energyIn.text = "Energy Consumed, E = " + 
-                sample.energyIn.ToString("0.00") + "J";
+            energyConsumed.text = "Energy Consumed, E = " + 
+                sample.energyConsumed.ToString("0.0") + "J";
+            powerOutput.text = "Power Output, Pout = " + 
+                sample.powerOutput.ToString("0.0") + "W";
             transientEfficiency.text = "Transient Efficiency, ηt = " + 
                 sample.transientEfficiency.ToString("0.000");
 

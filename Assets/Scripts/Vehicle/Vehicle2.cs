@@ -8,11 +8,13 @@ namespace VirtualTwin
     public class Vehicle2 : MonoBehaviour
     {
         InputManager inputManager;
+        DataManager dataManager;
 
         [Header("Settings")]
         public bool enableDrag = true;
         public bool enableLift = false;
         public bool enableReaction = false;
+        public bool automaticDriving = false;
 
         [Header("Constants")]
         public float bodyMass = 40;
@@ -26,9 +28,11 @@ namespace VirtualTwin
         public Vector3 centreOfMass;
         public Vector3 centreOfSteering;
 
-        [SerializeField] float wheelSeparation = 1f;
+        [SerializeField] float frontWheelSeparation;
+        [SerializeField] float chassisLength = 1f;
         [SerializeField] float rearToCoM;
         [SerializeField] float frontToCoM;
+        [SerializeField] float comHeight;
 
         [SerializeField] bool grounded;
 
@@ -49,6 +53,7 @@ namespace VirtualTwin
         public GameObject vehicleBody;
         public Motor motor;
         public FuelCell fuelCell;
+        public Autopilot autopilot;
         public BoxCollider undercarriage;
 
         [Header("Variables - Vectors")]
@@ -59,6 +64,7 @@ namespace VirtualTwin
 
         [Header("Variables - Speed")]
         public float speed = 0;
+        public float tippingVelocity = 0;
 
         [Header("Variables - Linear")]
         public float distanceTravelled;
@@ -81,9 +87,8 @@ namespace VirtualTwin
 
         [Header("Variables - Lateral Forces")]
         public float corneringResistanceForce = 0;
+        public float corneringForwardComponent = 0;
         public float centripetalForce = 0;
-        public float lateralForce = 0;
-        public float tensionForce = 0;
         public float resultantLateralForce = 0;
 
         [Header("Variables - Acceleration")]
@@ -105,9 +110,11 @@ namespace VirtualTwin
 
         public Rigidbody Rb => rb;
 
-        public float WheelSeparation => wheelSeparation;
+        public float FrontWheelSeparation => frontWheelSeparation;
+        public float ChassisLength => chassisLength;
         public float RearToCoM => rearToCoM;
         public float FrontToCoM => frontToCoM;
+        public float ComHeight => comHeight;
 
         public float SteerInput => steerInput;
         public float AccelerateInput => accelerateInput;
@@ -118,26 +125,29 @@ namespace VirtualTwin
 
         public float InverseVehicleMass => 1 / VehicleMass;
 
-        public bool Stationary => speed <= 0.01f;
-
         public float CurrentRpm => currentRpm;
         public float CurrentTorque => currentTorque;
 
         private void Awake()
         {
             inputManager = GetComponent<InputManager>();
+            dataManager = FindObjectOfType<DataManager>();
 
             rb = GetComponent<Rigidbody>();
 
             motor = GetComponent<Motor>();
             fuelCell = GetComponent<FuelCell>();
+            autopilot = GetComponent<Autopilot>();
 
             wheels = new Wheel2[] { frontLeftWheel, frontRightWheel, backWheel };
 
-            wheelSeparation = (cos.position - backWheel.transform.position).z;
+            frontWheelSeparation = (frontRightWheel.transform.position - frontLeftWheel.transform.position).magnitude;
+            chassisLength = (cos.position - backWheel.transform.position).magnitude;
 
             rearToCoM = com.localPosition.z - backWheel.transform.localPosition.z;
             frontToCoM = cos.localPosition.z - com.localPosition.z;
+
+            comHeight = com.position.y - backWheel.transform.position.y + backWheel.radius;
         }
 
         private void Start()
@@ -152,7 +162,15 @@ namespace VirtualTwin
 
         private void Update()
         {
-            GetInputs();
+            if (automaticDriving)
+            {
+                autopilot.Pilot();
+
+                steerInput = autopilot.Steer;
+                accelerateInput = autopilot.Accelerate;
+                brakeInput = autopilot.Brake;
+            }
+            else GetInputs();
         }
 
         private void FixedUpdate()
@@ -163,7 +181,7 @@ namespace VirtualTwin
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(transform.position + wheelSeparation * transform.forward,
+            Gizmos.DrawRay(transform.position + chassisLength * transform.forward,
                 1f * transform.forward);
 
             Gizmos.color = Color.red;
@@ -213,8 +231,7 @@ namespace VirtualTwin
             CalculateVariables();
             ApplyVariables();
 
-            motor.CalculateData(Time.fixedDeltaTime);
-            //fuelCell.CalculateFuelUsage(accelerateInput, Time.fixedDeltaTime);
+            dataManager.TickFixed();
         }
 
         //void CalculateCentreOfMotion()
@@ -240,6 +257,10 @@ namespace VirtualTwin
         {
             // Calculate fuel usage based on accelerate input
             fuelCell.CalculateFuelUsage(accelerateInput, Time.fixedDeltaTime);
+            motor.CalculateData(Time.fixedDeltaTime);
+
+            currentTorque = motor.currentTorque;
+            currentRpm = motor.currentRpm;
         }
 
         void GetVariables()
@@ -252,9 +273,6 @@ namespace VirtualTwin
 
             centreOfMass = com.position;
             centreOfSteering = cos.position;
-
-            currentTorque = motor.currentTorque;
-            currentRpm = motor.currentRpm;
         }
 
         void CalculateWheelVariables()
@@ -266,8 +284,6 @@ namespace VirtualTwin
 
             foreach (var wheel in wheels)
             {
-                wheel.driveTorque = 0.5f * motor.currentTorque;
-
                 wheel.Steer(steerInput, Time.fixedDeltaTime);
                 wheel.Accelerate(accelerateInput, brakeInput, Time.fixedDeltaTime);
 
@@ -307,12 +323,12 @@ namespace VirtualTwin
             var tan_zeta = Mathf.Tan(zeta * Mathf.Deg2Rad);
 
             // [3, 4]           
-            velocityAngle = Mathf.Atan2(rearToCoM * tan_zeta, wheelSeparation) * Mathf.Rad2Deg;
+            velocityAngle = Mathf.Atan2(rearToCoM * tan_zeta, chassisLength) * Mathf.Rad2Deg;
 
             var cos_velAngle = Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
 
-            rearAngularVelocity = speed * Mathf.Rad2Deg / wheelSeparation;
-            angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / wheelSeparation;
+            rearAngularVelocity = speed * Mathf.Rad2Deg / chassisLength;
+            angularVelocity = speed * tan_zeta * cos_velAngle * Mathf.Rad2Deg / chassisLength;
             globalAngle += angularVelocity * Time.fixedDeltaTime;
 
             velocityDir.x = Mathf.Sin((globalAngle + velocityAngle) * Mathf.Deg2Rad);
@@ -320,7 +336,7 @@ namespace VirtualTwin
 
             if (tan_zeta != 0 && cos_velAngle != 0)
             {
-                turningRadius = wheelSeparation / tan_zeta;
+                turningRadius = chassisLength / tan_zeta;
                 turningRadiusCoM = turningRadius / cos_velAngle;
                 centripetalForce = VehicleMass * turningRadiusCoM * (angularVelocity *
                     Mathf.Deg2Rad) * (angularVelocity * Mathf.Deg2Rad);
@@ -328,7 +344,13 @@ namespace VirtualTwin
                     turningRadius * backWheel.transform.right;
                 dirOfCircularMotion = (motionCentre - centreOfMass).normalized;
                 dirOfCircularMotion.y = 0;
+
+                turningRadius = Mathf.Abs(turningRadius);
+                turningRadiusCoM = Mathf.Abs(turningRadiusCoM);
             }
+
+            // Source: https://www.youtube.com/watch?v=joiPd1lJOZs
+            tippingVelocity = Mathf.Sqrt((9.81f * frontWheelSeparation * turningRadiusCoM) / (2 * comHeight));
         }
 
         void ApplyVariables()
@@ -346,17 +368,17 @@ namespace VirtualTwin
                 rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
         }
 
-        Vector3 GetRelCentreOfMass()
-        {
-            var com = Vector3.zero;
+        //Vector3 GetRelCentreOfMass()
+        //{
+        //    var com = Vector3.zero;
 
-            com += (bodyMass + driverMass + fuelCell.TotalMass) * vehicleBody.transform.localPosition;
+        //    com += (bodyMass + driverMass + fuelCell.TotalMass) * vehicleBody.transform.localPosition;
 
-            foreach (var wheel in wheels) com += wheel.mass * wheel.transform.localPosition;
+        //    foreach (var wheel in wheels) com += wheel.mass * wheel.transform.localPosition;
 
-            com *= InverseVehicleMass;
+        //    com *= InverseVehicleMass;
 
-            return com;
-        }
+        //    return com;
+        //}
     }
 }

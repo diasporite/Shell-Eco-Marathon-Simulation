@@ -15,6 +15,7 @@ namespace VirtualTwin
         public float distance;
 
         public float x;
+        public float y;
         public float z;
 
         // acceleration
@@ -33,13 +34,18 @@ namespace VirtualTwin
         public float cornerRes;
         public float wheelTurnAngle;
 
+        public float normalFrontLeft;
+        public float normalFrontRight;
+        public float normalBack;
+
         public float orientation;
         public float velAngle;
         public float angularVelocity;
 
         public float currentTorque;
         public float currentRpm;
-        public float energyIn;
+        public float energyConsumed;
+        public float powerOutput;
         public float transientEfficiency;
 
         public float mass;
@@ -91,6 +97,7 @@ namespace VirtualTwin
             speed = subject.speed;
             distance = subject.distanceTravelled;
             x = subject.transform.position.x;
+            y = subject.transform.position.y;
             z = subject.transform.position.z;
 
             acceleration = subject.resultantAcceleration;
@@ -104,13 +111,18 @@ namespace VirtualTwin
             cornerRes = subject.frontLeftWheel.cornerResForce;
             wheelTurnAngle = subject.frontLeftWheel.steerAngle;
 
+            normalFrontLeft = subject.frontLeftWheel.normalForce;
+            normalFrontRight = subject.frontRightWheel.normalForce;
+            normalBack = subject.backWheel.normalForce;
+
             orientation = subject.globalAngle;
             velAngle = subject.velocityAngle;
             angularVelocity = subject.angularVelocity;
 
             currentTorque = subject.CurrentTorque;
             currentRpm = subject.CurrentRpm;
-            energyIn = subject.motor.energyConsumed;
+            energyConsumed = subject.motor.energyConsumed;
+            powerOutput = subject.motor.outputPower;
             transientEfficiency = subject.motor.transientEfficiency;
 
             mass = subject.VehicleMass;

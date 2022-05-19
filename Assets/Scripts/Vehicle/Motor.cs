@@ -17,6 +17,7 @@ namespace VirtualTwin
         [Header("Engine Variables")]
         public float topRpm = 1000;
 
+        public float currentAngularVelocity;
         public float currentTorque;
         public float currentRpm;
         public float pRpm;
@@ -41,6 +42,9 @@ namespace VirtualTwin
 
         public float inductance = 0.0000658f;
 
+        public float outputCurrent;
+        public float inducedResistance;
+        public float resistance = 0.035f;
         public float outputPower;
 
         [Header("Efficiencies")]
@@ -63,6 +67,9 @@ namespace VirtualTwin
         public float usefulEnergy;
 
         const float RPM_TO_RADPS = Mathf.PI / 30f;
+        const float RADPS_TO_RPM = 30f / Mathf.PI;
+
+        public float GearRatio => gearRatio;
 
         private void Awake()
         {
@@ -82,14 +89,20 @@ namespace VirtualTwin
 
         public void CalculateData(float dt)
         {
-            currentRpm = vehicle.speed / (gearRatio * frontLeftWheel.radius * RPM_TO_RADPS);
+            currentAngularVelocity = vehicle.speed / (gearRatio * frontLeftWheel.radius);
+            currentRpm = currentAngularVelocity * RADPS_TO_RPM;
             currentRpm = Mathf.Min(currentRpm, topRpm);
             pRpm = currentRpm * gearRatio / topRpm;
 
             xl = currentRpm * RPM_TO_RADPS * inductance * p;
-            trueVoltage = (reqVoltage - (ke * currentRpm * RPM_TO_RADPS)) / 1.2f;
+            trueVoltage = (reqVoltage - (ke * currentAngularVelocity)) / 1.2f;
 
-            currentTorque = kt * reqCurrent * gearRatio;
+            inducedResistance = 2 * Mathf.PI * currentAngularVelocity * inductance * outputPower;
+            outputCurrent = trueVoltage / 
+                Mathf.Sqrt(inducedResistance * inducedResistance + resistance * resistance);
+            outputPower = resistance / (2 * Mathf.PI * currentAngularVelocity * outputCurrent);
+
+            currentTorque = kt * outputCurrent * gearRatio;
             pTorque = currentTorque / gearRatio;
 
             reqPower = reqVoltage * reqCurrent;

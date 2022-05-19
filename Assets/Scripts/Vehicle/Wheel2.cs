@@ -58,7 +58,7 @@ namespace VirtualTwin
         public Vector3 steerDir = new Vector3(0, 0, 1);
 
         [Header("Variables - Forces")]
-        public float vertForce = 0;
+        public float normalForce = 0;
         public float drivingForce = 0;
         public float brakingForce = 0;
         public float rollingResForce = 0;
@@ -78,7 +78,8 @@ namespace VirtualTwin
         const float KMPH_TO_MPS = 0.277777778f;
         const float MPS_TO_KMPH = 3.6f;
 
-        public Vector3 LocalSteerDir => steerDir;
+        bool TurningLeft => steerAngle < 0;
+        bool TurningRight => steerAngle > 0;
 
         private void Awake()
         {
@@ -135,12 +136,12 @@ namespace VirtualTwin
 
         public void Accelerate(float driveInput, float brakeInput, float dt)
         {
-            vertForce = VerticalForce();
+            driveTorque = vehicle.CurrentTorque / vehicle.motor.GearRatio;
 
-            driveTorque = vehicle.CurrentTorque;
+            normalForce = NormalForce();
 
-            drivingForce = DriveForce(driveInput, driveTorque);
-            brakingForce = BrakingForce(brakeInput, brakeTorque);
+            drivingForce = DriveForce(driveInput);
+            brakingForce = BrakingForce(brakeInput);
             rollingResForce = RollingResistanceForce();
 
             cornerResForce = CorneringResistanceForce(); // TBD
@@ -152,63 +153,57 @@ namespace VirtualTwin
         {
             if (!enableRollingRes) return 0;
 
-            var speedForce = vertForce * (0.005f + (0.0095f * (0.01f * vehicle.speed * MPS_TO_KMPH) * 
+            var speedForce = normalForce * (0.005f + (0.0095f * (0.01f * vehicle.speed * MPS_TO_KMPH) * 
                 (0.01f * vehicle.speed * MPS_TO_KMPH) / (tyrePressure_Bar)));
 
-            // Source: https://www.engineeringtoolbox.com/rolling-friction-resistance-d_1303.html
-            //var flatForce = rollingResistance * vertForce * curvature;
-
-            //if (vehicle.speed < forceSpeedThreshold) return 0;
-
-            //return speedForce;
-
-            return vehicle.speed < forceSpeedThreshold ? 0 : speedForce;
+            return vehicle.speed <= forceSpeedThreshold ? 0 : speedForce;
         }
 
         float CorneringResistanceForce()
         {
             if (!enableCorneringRes) return 0;
 
-            var f = c1 * Mathf.Sin(2 * Mathf.Atan2(vertForce, c2)) * slipAngle;
+            var f = c1 * Mathf.Sin(2 * Mathf.Atan2(normalForce, c2)) * slipAngle;
             //return -weightForce * Mathf.Sin(steerAngle * Mathf.Deg2Rad);
             return f;
         }
 
-        float DriveForce(float driveInput, float torque)
+        float DriveForce(float driveInput)
         {
-            if (driveInput > 0)
-                return driveTorque * curvature;
-
-            return 0;
+            return driveInput > 0 ? driveTorque * curvature : 0;
         }
 
-        float BrakingForce(float brakeInput, float torque)
+        float BrakingForce(float brakeInput)
         {
             if (brakeInput > 0)
             {
                 var speedForce = 0.5f * brakingCoefficient * vehicleMass * 9.81f * vehicle.speed * vehicle.speed;
                 var flatForce = brakeTorque * curvature;
 
-                return vehicle.speed < forceSpeedThreshold ? speedForce : flatForce;
-
-                //if (vehicle.speed < forceSpeedThreshold) return speedForce;
-
-                //return flatForce;
+                return vehicle.speed <= forceSpeedThreshold ? speedForce : flatForce;
             }
 
             return 0;
         }
 
-        float VerticalForce()
+        float NormalForce()
         {
+            var f1 = 0.5f * mass * 9.81f * vehicle.RearToCoM / (2 * vehicle.ChassisLength);
+            var f2 = vehicle.centripetalForce * (radius - vehicle.ComHeight) * 
+                Mathf.Cos(steerAngle * Mathf.Deg2Rad) / vehicle.FrontWheelSeparation;
+
             switch (orientation)
             {
                 case WheelOrientation.FrontLeft:
-                    return 0.5f * mass * 9.81f * vehicle.RearToCoM / vehicle.WheelSeparation;
+                    if (TurningRight) return f1 - f2;
+                    else if (TurningLeft) return f1 + f2;
+                    else return 0;
                 case WheelOrientation.FrontRight:
-                    return 0.5f * mass * 9.81f * vehicle.RearToCoM / vehicle.WheelSeparation;
+                    if (TurningRight) return f1 + f2;
+                    else if (TurningLeft) return f1 - f2;
+                    else return 0;
                 case WheelOrientation.Back:
-                    return mass * 9.81f * vehicle.FrontToCoM / vehicle.WheelSeparation;
+                    return mass * 9.81f * vehicle.FrontToCoM / vehicle.ChassisLength;
                 default:
                     return 0;
             }
@@ -219,11 +214,11 @@ namespace VirtualTwin
             switch (orientation)
             {
                 case WheelOrientation.Back:
-                    return Mathf.Atan2(-vehicle.WheelSeparation,
+                    return Mathf.Atan2(-vehicle.ChassisLength,
                         2 * vehicle.turningRadiusCoM * Mathf.Cos(vehicle.velocityAngle * 
                         Mathf.Deg2Rad)) * Mathf.Rad2Deg;
                 default:
-                    return steerAngle - Mathf.Atan2(vehicle.WheelSeparation, 
+                    return steerAngle - Mathf.Atan2(vehicle.ChassisLength, 
                         2 * vehicle.turningRadiusCoM * Mathf.Cos(vehicle.velocityAngle * 
                         Mathf.Deg2Rad)) * Mathf.Rad2Deg;
             }

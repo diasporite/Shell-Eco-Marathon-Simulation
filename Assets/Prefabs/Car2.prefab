@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 4095274241458493725}
   - component: {fileID: 1579564602533293076}
   - component: {fileID: 3180697447440632564}
+  - component: {fileID: 6235148256936019256}
   m_Layer: 15
   m_Name: Car2
   m_TagString: Untagged
@@ -185,9 +186,11 @@ MonoBehaviour:
   cos: {fileID: 387489741779427674}
   centreOfMass: {x: 0, y: 0, z: 0}
   centreOfSteering: {x: 0, y: 0, z: 0}
-  wheelSeparation: 1
+  frontWheelSeparation: 0
+  chassisLength: 1
   rearToCoM: 0
   frontToCoM: 0
+  comHeight: 0
   grounded: 0
   liftCoefficent: 0.02
   dragCoefficent: 0.12
@@ -218,6 +221,7 @@ MonoBehaviour:
   liftForce: 0
   resultantDriveForce: 0
   corneringResistanceForce: 0
+  corneringForwardComponent: 0
   centripetalForce: 0
   lateralForce: 0
   tensionForce: 0
@@ -246,6 +250,7 @@ MonoBehaviour:
   frontRightWheel: {fileID: 3328075529439417962}
   backWheel: {fileID: 6934445419253835882}
   topRpm: 137.26
+  currentAngularVelocity: 0
   currentTorque: 0
   currentRpm: 0
   pRpm: 0
@@ -260,15 +265,21 @@ MonoBehaviour:
   trueVoltage: 0
   xl: 0
   inductance: 0.0000658
+  outputCurrent: 0
+  inducedResistance: 0
+  resistance: 0.035
   outputPower: 0
-  consumedEnergy: 0
   transientEfficiency: 0
+  motorEfficiency: 0
+  averageMotorEfficiency: 0
   pTorque: 0
+  energyConsumed: 0
   energyIn: 0
-  motorOutEnergy: 0
   energyLossDrag: 0
-  energyLossOther: 0
-  energyLoss: 0
+  energyLossBrake: 0
+  motorOutEnergy: 0
+  energyWastedDrag: 0
+  energyWastedBrake: 0
   deltaKe: 0
   usefulEnergy: 0
 --- !u!114 &4095274241458493725
@@ -290,9 +301,11 @@ MonoBehaviour:
   currentFuelVolume: 0
   energyDensity: 4200
   fuelMassFlowRate: 0.001
-  fuelFlowRate: 0
+  fuelVolFlowRate: 0
   fuelCellEfficiency: 0.5
   power: 500
+  energyIn: 0
+  consumedH2_lpm: 0
 --- !u!114 &1579564602533293076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,6 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa8bf42d438ad045a1c59220024a85d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  steer: 0
   accelerate: 0
   brake: 0
 --- !u!114 &3180697447440632564
@@ -338,6 +352,24 @@ MonoBehaviour:
   m_DefaultActionMap: Car
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &6235148256936019256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867615582671435259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d919bdb6c188704cbac904c31913fa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypointHolder: {fileID: 0}
+  wayPoints: []
+  speedLimit: 10
+  steerInput: 0
+  accelerateInput: 0
+  brakeInput: 0
 --- !u!136 &6551204318793105497
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -627,6 +659,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee4674a4d61c3c944a3e8ad883081e93, type: 3}
+--- !u!4 &1147404627898056054 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 622865256939438075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3328075529439417962 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2777436367031282065, guid: ee4674a4d61c3c944a3e8ad883081e93,
@@ -642,12 +680,6 @@ MonoBehaviour:
 --- !u!1 &1403659590819115278 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
-    type: 3}
-  m_PrefabInstance: {fileID: 622865256939438075}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1147404627898056054 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
     type: 3}
   m_PrefabInstance: {fileID: 622865256939438075}
   m_PrefabAsset: {fileID: 0}
@@ -766,6 +798,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee4674a4d61c3c944a3e8ad883081e93, type: 3}
+--- !u!1 &6401099949904410423 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 4831049779835042242}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7313909037310758995 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2777436367031282065, guid: ee4674a4d61c3c944a3e8ad883081e93,
@@ -781,12 +819,6 @@ MonoBehaviour:
 --- !u!4 &4919035688022047567 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
-    type: 3}
-  m_PrefabInstance: {fileID: 4831049779835042242}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6401099949904410423 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
     type: 3}
   m_PrefabInstance: {fileID: 4831049779835042242}
   m_PrefabAsset: {fileID: 0}

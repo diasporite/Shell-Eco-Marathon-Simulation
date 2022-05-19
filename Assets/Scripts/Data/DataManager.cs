@@ -24,6 +24,18 @@ namespace VirtualTwin
         bool writetime = false;
         public string filename = "Output-Name";
 
+        string DataHeader => "Time (s),Position X (m),Position Z (m),Orientation (deg)," +
+            "Speed (m/s),Distance (m),Acceleration (m/s2),Normal FL (N),Normal FR (N)," +
+            "Normal Back (N),Rolling Resistance (N),Cornering Resistance (N)," +
+            "H2 Consumption (L/min),Torque (Nm),Motor RPM";
+
+        string DataString(DataPoint test) => test.time + "," + test.x + "," + test.z + "," +
+                        test.orientation + "," + test.speed + "," + test.distance + "," +
+                        test.acceleration + "," + test.normalFrontLeft + "," +
+                        test.normalFrontRight + "," + test.normalBack + "," +
+                        test.rollingRes + "," + test.h2Consumption + "," +
+                        test.currentTorque + "," + test.currentRpm;
+
         public bool Recording => recording;
 
         public DataPoint LastSample
@@ -43,12 +55,7 @@ namespace VirtualTwin
             timeElapsed = 0;
         }
 
-        private void FixedUpdate()
-        {
-            TickFixed();
-        }
-
-        void TickFixed()
+        public void TickFixed()
         {
             if (recording)
             {
@@ -84,10 +91,7 @@ namespace VirtualTwin
                 for (int i = 0; i < data.Count; ++i)
                 {
                     DataPoint test = data[i];
-                    writer.WriteLine(test.time + "," + test.x + "," + test.z + "," + 
-                        test.speed + "," + test.distance.ToString() + "," + 
-                        test.acceleration + "," + test.rollingRes + "," + test.h2Consumption + 
-                        "," + test.currentTorque + "," + test.currentRpm); 
+                    writer.WriteLine(DataString(test)); 
                 }
 
                 writer.Flush();
@@ -141,9 +145,5 @@ namespace VirtualTwin
         {
             return Application.dataPath + "/" + filename + ".csv";
         }
-
-        string DataHeader => "Time (s),Position X, Position Z,Speed (m/s),Distance (m),Acceleration (m/s2)," +
-            "Rolling Resistance (N),H2 Consumption (L/min),Torque (Nm),Motor RPM";
-
     }
 }
