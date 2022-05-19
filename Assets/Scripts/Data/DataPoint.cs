@@ -93,6 +93,7 @@ namespace VirtualTwin
         public DataPoint(float time, Vehicle2 subject)
         {
             this.time = time;
+            subject2 = subject;
 
             speed = subject.speed;
             distance = subject.distanceTravelled;

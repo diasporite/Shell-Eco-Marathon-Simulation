@@ -64,7 +64,7 @@ namespace VirtualTwin
 
         [Header("Variables - Speed")]
         public float speed = 0;
-        public float tippingVelocity = 0;
+        public float tippingSpeed = 0;
 
         [Header("Variables - Linear")]
         public float distanceTravelled;
@@ -127,6 +127,8 @@ namespace VirtualTwin
 
         public float CurrentRpm => currentRpm;
         public float CurrentTorque => currentTorque;
+
+        public bool VehicleTipping => speed > tippingSpeed;
 
         private void Awake()
         {
@@ -228,30 +230,11 @@ namespace VirtualTwin
 
             CalculateWheelVariables();
 
-            CalculateVariables();
+            CalculateOtherVariables();
             ApplyVariables();
 
             dataManager.TickFixed();
         }
-
-        //void CalculateCentreOfMotion()
-        //{
-        //    var zeta = frontLeftWheel.steerAngle;
-
-        //    if (zeta != 0)
-        //    {
-        //        var r0 = wheelSeparation / Mathf.Tan(zeta * Mathf.Deg2Rad);
-        //        motionCentre = transform.position + r0 * transform.right;
-        //        turningRadiusCoM = r0 / Mathf.Cos(velocityAngle * Mathf.Deg2Rad);
-
-        //        dirOfCircularMotion = (motionCentre - centreOfMass).normalized;
-        //        dirOfCircularMotion.y = 0;
-
-        //        centripetalForce = VehicleMass * speed * speed / turningRadiusCoM;
-        //        lateralForce = centripetalForce * Mathf.Cos(Mathf.Atan(dirOfCircularMotion.z / dirOfCircularMotion.x));
-        //        tensionForce = centripetalForce * Mathf.Sin(Mathf.Atan(dirOfCircularMotion.z / dirOfCircularMotion.x));
-        //    }
-        //}
 
         void GetPower()
         {
@@ -299,7 +282,7 @@ namespace VirtualTwin
             corneringResistanceForce = corn;
         }
 
-        void CalculateVariables()
+        void CalculateOtherVariables()
         {
             // ================ LINEAR MOTION ================ 
             dragForce = 0.5f * airDensity * speed * speed * dragCoefficent * frontalArea;
@@ -350,7 +333,10 @@ namespace VirtualTwin
             }
 
             // Source: https://www.youtube.com/watch?v=joiPd1lJOZs
-            tippingVelocity = Mathf.Sqrt((9.81f * frontWheelSeparation * turningRadiusCoM) / (2 * comHeight));
+            if (turningRadiusCoM > 0)
+                tippingSpeed = Mathf.Sqrt((9.81f * frontWheelSeparation * turningRadiusCoM) /
+                    (2 * comHeight));
+            else tippingSpeed = Mathf.Infinity;
         }
 
         void ApplyVariables()
