@@ -106,6 +106,10 @@ namespace VirtualTwin
 
         float gravity = 9.81f;
 
+        // Constants for tipping speed
+        float t1_rad = 0f;
+        float d = 0f;
+
         Rigidbody rb;
 
         public Rigidbody Rb => rb;
@@ -150,6 +154,10 @@ namespace VirtualTwin
             frontToCoM = cos.localPosition.z - com.localPosition.z;
 
             comHeight = com.position.y - backWheel.transform.position.y + backWheel.radius;
+
+            var ac = frontLeftWheel.transform.position - backWheel.transform.position;
+            t1_rad = Mathf.Atan2(ac.z, ac.x);
+            d = rearToCoM * Mathf.Sin(t1_rad);
         }
 
         private void Start()
@@ -334,8 +342,8 @@ namespace VirtualTwin
 
             // Source: https://www.youtube.com/watch?v=joiPd1lJOZs
             if (turningRadiusCoM > 0)
-                tippingSpeed = Mathf.Sqrt((9.81f * frontWheelSeparation * turningRadiusCoM) /
-                    (2 * comHeight));
+                tippingSpeed = Mathf.Sqrt(gravity * turningRadiusCoM * d /
+                    (comHeight * Mathf.Cos(velocityAngle * Mathf.Deg2Rad)));
             else tippingSpeed = Mathf.Infinity;
         }
 
@@ -351,7 +359,7 @@ namespace VirtualTwin
                 rb.AddRelativeForce(liftForce * transform.up, ForceMode.Force);
 
             if (enableReaction && rb.useGravity && grounded)
-                rb.AddRelativeForce(VehicleMass * 9.81f * transform.up, ForceMode.Force);
+                rb.AddRelativeForce(VehicleMass * gravity * transform.up, ForceMode.Force);
         }
 
         //Vector3 GetRelCentreOfMass()
