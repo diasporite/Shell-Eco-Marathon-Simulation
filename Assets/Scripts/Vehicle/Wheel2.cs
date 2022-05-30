@@ -188,22 +188,20 @@ namespace VirtualTwin
 
         float NormalForce()
         {
-            var f1 = 0.5f * mass * 9.81f * vehicle.RearToCoM / (2 * vehicle.ChassisLength);
+            var f1 = 0.5f * vehicle.VehicleMass * 9.81f * vehicle.RearToCoM / (2 * vehicle.ChassisLength);
             var f2 = vehicle.centripetalForce * (radius - vehicle.ComHeight) * 
                 Mathf.Cos(steerAngle * Mathf.Deg2Rad) / vehicle.FrontWheelSeparation;
 
             switch (orientation)
             {
                 case WheelOrientation.FrontLeft:
-                    if (TurningRight) return f1 - f2;
-                    else if (TurningLeft) return f1 + f2;
-                    else return 0;
+                    if (TurningLeft) return f1 - f2;
+                    else return f1 + f2;
                 case WheelOrientation.FrontRight:
-                    if (TurningRight) return f1 + f2;
-                    else if (TurningLeft) return f1 - f2;
-                    else return 0;
+                    if (TurningLeft) return f1 + f2;
+                    else return f1 - f2;
                 case WheelOrientation.Back:
-                    return mass * 9.81f * vehicle.FrontToCoM / vehicle.ChassisLength;
+                    return vehicle.VehicleMass * 9.81f * vehicle.FrontToCoM / vehicle.ChassisLength;
                 default:
                     return 0;
             }

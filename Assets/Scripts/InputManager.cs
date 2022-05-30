@@ -8,7 +8,7 @@ namespace VirtualTwin
     public class InputManager : MonoBehaviour
     {
         [SerializeField] float steer;
-
+        
         [SerializeField] float accelerate;
         [SerializeField] float brake;
 

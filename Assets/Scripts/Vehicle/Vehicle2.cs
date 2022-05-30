@@ -127,6 +127,8 @@ namespace VirtualTwin
         public float VehicleMass => bodyMass + driverMass + frontLeftWheel.mass +
             frontRightWheel.mass + backWheel.mass + fuelCell.TotalMass;
 
+        public float VehicleBodyMass => bodyMass + driverMass + fuelCell.TotalMass;
+
         public float InverseVehicleMass => 1 / VehicleMass;
 
         public float CurrentRpm => currentRpm;
