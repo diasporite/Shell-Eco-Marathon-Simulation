@@ -1150,8 +1150,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 218.99997, y: -20}
-  m_SizeDelta: {x: 840, y: 60}
+  m_AnchoredPosition: {x: 249.00003, y: -20}
+  m_SizeDelta: {x: 960, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &469679012
 MonoBehaviour:
@@ -1244,8 +1244,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 218.99997, y: -49.2}
-  m_SizeDelta: {x: 840, y: 60}
+  m_AnchoredPosition: {x: 249.00003, y: -49.2}
+  m_SizeDelta: {x: 960, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &510689512
 MonoBehaviour:
@@ -2302,8 +2302,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 218.99997, y: -108}
-  m_SizeDelta: {x: 840, y: 60}
+  m_AnchoredPosition: {x: 249, y: -108}
+  m_SizeDelta: {x: 960, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &858870245
 MonoBehaviour:
@@ -2493,8 +2493,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -160, y: 52}
-  m_SizeDelta: {x: 448, y: 144}
+  m_AnchoredPosition: {x: -192, y: 52}
+  m_SizeDelta: {x: 540, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &881900705
 MonoBehaviour:
@@ -3387,8 +3387,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 218.99997, y: -78}
-  m_SizeDelta: {x: 840, y: 60}
+  m_AnchoredPosition: {x: 249.00003, y: -78}
+  m_SizeDelta: {x: 960, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1098442336
 MonoBehaviour:
@@ -3956,6 +3956,11 @@ PrefabInstance:
         type: 3}
       propertyPath: automaticDriving
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: <Ds>k__BackingField
+      value: -11.43
       objectReference: {fileID: 0}
     - target: {fileID: 6235148256936019256, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}

@@ -85,11 +85,11 @@ namespace VirtualTwin
                 sample.transientEfficiency.ToString("0.000");
 
             vehicleMass.text = "Vehicle Mass, m = " + sample.mass.ToString("0.000") + "kg";
-            fuelMass.text = "Fuel Mass, mf = " + sample.fuelMass.ToString("0.000") + "kg";
-            fuelCellEfficiency.text = "Fuel Cell Efficiency, ηf = " +
+            fuelMass.text = "Fuel Mass, mH2 = " + sample.fuelMass.ToString("0.0000") + "kg";
+            fuelCellEfficiency.text = "Fuel Cell Efficiency, ηH2 = " +
                 sample.fuelCellEfficiency.ToString("0.000");
             vehicleFuelEfficiency.text = "Vehicle Fuel Efficiency, ηv = " +
-                sample.vehicleFuelEfficiency.ToString("0.000");
+                sample.vehicleFuelEfficiency.ToString("0.000") + "km/l";
 
             if (sample != null)
             {

@@ -16,10 +16,11 @@ namespace VirtualTwin
         public float fuelVolFlowRate;
         [Range(0f, 1f)]
         public float fuelCellEfficiency = 0.5f;
+        public float vehicleFuelEfficiency = 0.5f;
         public float power = 500;
 
         public float energyIn;
-        public float consumedH2_lpm;
+        public float deltaH2_lpm;
 
         float fuelVolRate = 0.1042f;
 
@@ -30,6 +31,7 @@ namespace VirtualTwin
         float rhoH2 = 1f;
         float consumptionPerWatt = 0.01172f;
 
+        Vehicle2 vehicle;
         Motor motor;
 
         public bool FuelEmpty => fuelMass <= 0;
@@ -46,6 +48,7 @@ namespace VirtualTwin
             currentFuelMass = fuelMass;
             currentFuelVolume = fuelVolume;
 
+            vehicle = GetComponent<Vehicle2>();
             motor = GetComponent<Motor>();
         }
 
@@ -54,14 +57,14 @@ namespace VirtualTwin
             if (accelerateInput <= 0)
             {
                 energyIn = 0f;
-                consumedH2_lpm = 0f;
+                deltaH2_lpm = 0f;
                 return;
             }
 
             //energyIn = motor.energyIn;
-            consumedH2_lpm = (consumptionPerWatt * motor.outputPower + 0.03f);
+            deltaH2_lpm = (consumptionPerWatt * motor.outputPower + 0.03f);
 
-            fuelVolFlowRate = consumedH2_lpm / 60000f;
+            fuelVolFlowRate = deltaH2_lpm / 60000f;
             fuelMassFlowRate = fuelVolFlowRate * rhoH2;
 
             currentFuelMass -= fuelMassFlowRate * dt;
@@ -69,6 +72,7 @@ namespace VirtualTwin
 
             //fuelCellEfficiency = motor.outputPower / (fuelVolFlowRate * lowerHeatingValueH2);
             fuelCellEfficiency = 0.01f * (-0.0023f * motor.outputPower + 50.514f);    // From 2021 report
+            vehicleFuelEfficiency = 0.001f * vehicle.Ds / fuelMassFlowRate;
         }
 
         public float GetPower(float dt)

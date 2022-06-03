@@ -196,6 +196,17 @@
                     "isOR": false
                 }
             ]
+        },
+        {
+            "name": "Steering Wheel",
+            "bindingGroup": "Steering Wheel",
+            "devices": [
+                {
+                    "devicePath": "<Joystick>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
         }
     ]
 }

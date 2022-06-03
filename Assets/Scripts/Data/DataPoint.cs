@@ -129,7 +129,8 @@ namespace VirtualTwin
             mass = subject.VehicleMass;
             fuelMass = subject.fuelCell.currentFuelMass;
             fuelCellEfficiency = subject.fuelCell.fuelCellEfficiency;
-            h2Consumption = subject.fuelCell.consumedH2_lpm;
+            vehicleFuelEfficiency = subject.fuelCell.vehicleFuelEfficiency;
+            h2Consumption = subject.fuelCell.deltaH2_lpm;
         }
     }
 }

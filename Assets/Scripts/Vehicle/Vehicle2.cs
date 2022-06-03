@@ -70,6 +70,7 @@ namespace VirtualTwin
         public float distanceTravelled;
         public float turningRadius;
         public float turningRadiusCoM;
+        [field: SerializeField] public float Ds { get; private set; }
 
         [Header("Variables - Rotation")]
         public float rearAngularVelocity;   // Speed at which back wheel rotates wheen steered
@@ -307,7 +308,8 @@ namespace VirtualTwin
             liftAcceleration = liftForce * InverseVehicleMass;
 
             speed += resultantDriveForce * InverseVehicleMass * Time.fixedDeltaTime;
-            distanceTravelled += speed * Time.fixedDeltaTime;
+            Ds = speed * Time.deltaTime;
+            distanceTravelled += Ds;
 
             // ================ CIRCULAR MOTION ================ 
             var zeta = frontLeftWheel.steerAngle;
