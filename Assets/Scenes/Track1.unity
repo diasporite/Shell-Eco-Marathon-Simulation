@@ -3954,13 +3954,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
+      propertyPath: steerMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
       propertyPath: automaticDriving
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
       propertyPath: <Ds>k__BackingField
-      value: -11.43
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6235148256936019256, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}

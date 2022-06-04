@@ -26,7 +26,7 @@ namespace VirtualTwin
 
         [Header("Steering")]
         public float steeringSpeed = 15f;
-        public float steeringRatio = 15f;
+        float steeringRatio = 0.16667f;
         public float wheelLock = 15f;
 
         float lowerLock;
@@ -105,7 +105,7 @@ namespace VirtualTwin
             Gizmos.DrawRay(transform.position, 10f * Mathf.Sign(steerAngle) * transform.right);
         }
 
-        public void Steer(float input, float dt)
+        public void Steer(float input, float dt, SteeringMode mode)
         {
             if (steering)
             {
@@ -113,14 +113,28 @@ namespace VirtualTwin
                 globalAngle = 360 + Vector3.SignedAngle(Vector3.forward, transform.forward, Vector3.up);
                 //globalAngle = transform.eulerAngles.y;
 
-                if (input != 0)
+                if (mode == SteeringMode.Uniform)
                 {
-                    dtheta = input * steeringSpeed * dt;
-                    steerAngle += dtheta;
+                    if (input != 0)
+                    {
+                        dtheta = input * steeringSpeed * dt;
+                        steerAngle += dtheta;
+                    }
+                    // Self correcting steering
+                    // Source: https://carfromjapan.com/article/driving-tips/steering-wheel-returns-to-center-after-turn/
+                    else steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
                 }
-                // Self correcting steering
-                // Source: https://carfromjapan.com/article/driving-tips/steering-wheel-returns-to-center-after-turn/
-                else steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
+                else
+                {
+                    if (vehicle.SteerDir != Vector2.zero)
+                    {
+                        var newAngle = steeringRatio * 
+                            Mathf.Atan2(vehicle.SteerDir.x, vehicle.SteerDir.y) * Mathf.Rad2Deg;
+                        dtheta = newAngle - steerAngle;
+                        steerAngle = newAngle;
+                    }
+                    else steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
+                }
 
                 if (Mathf.Abs(steerAngle) > wheelLock)
                     steerAngle = Mathf.Sign(steerAngle) * wheelLock;

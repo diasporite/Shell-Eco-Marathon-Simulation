@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace VirtualTwin
 {
+    public enum SteeringMode
+    {
+        Uniform = 0,
+        Angle = 1,
+    }
+
     [RequireComponent(typeof(Rigidbody))]
     public class Vehicle2 : MonoBehaviour
     {
@@ -11,6 +17,7 @@ namespace VirtualTwin
         DataManager dataManager;
 
         [Header("Settings")]
+        public SteeringMode steerMode;
         public bool enableDrag = true;
         public bool enableLift = false;
         public bool enableReaction = false;
@@ -102,6 +109,7 @@ namespace VirtualTwin
 
         [Header("Inputs")]
         [SerializeField] float steerInput = 0;
+        [SerializeField] Vector2 steerDir;
         [SerializeField] float accelerateInput = 0;
         [SerializeField] float brakeInput = 0;
 
@@ -122,6 +130,7 @@ namespace VirtualTwin
         public float ComHeight => comHeight;
 
         public float SteerInput => steerInput;
+        public Vector2 SteerDir => steerDir;
         public float AccelerateInput => accelerateInput;
         public float BrakeInput => brakeInput;
 
@@ -220,6 +229,7 @@ namespace VirtualTwin
         void GetInputs()
         {
             steerInput = inputManager.Steer;
+            steerDir = inputManager.SteerDir;
 
             accelerateInput = inputManager.Accelerate;
             brakeInput = inputManager.Brake;
@@ -278,7 +288,7 @@ namespace VirtualTwin
 
             foreach (var wheel in wheels)
             {
-                wheel.Steer(steerInput, Time.fixedDeltaTime);
+                wheel.Steer(steerInput, Time.fixedDeltaTime, steerMode);
                 wheel.Accelerate(accelerateInput, brakeInput, Time.fixedDeltaTime);
 
                 drive += wheel.drivingForce;

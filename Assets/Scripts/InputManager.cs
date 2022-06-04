@@ -12,7 +12,10 @@ namespace VirtualTwin
         [SerializeField] float accelerate;
         [SerializeField] float brake;
 
+        [SerializeField] Vector2 steerDir;
+
         public float Steer => steer;
+        public Vector2 SteerDir => steerDir;
 
         public float Accelerate => accelerate;
         public float Brake => brake;
@@ -30,6 +33,11 @@ namespace VirtualTwin
         public void OnBrake(InputValue value)
         {
             brake = value.Get<float>();
+        }
+
+        public void OnSteer2D(InputValue value)
+        {
+            steerDir = value.Get<Vector2>().normalized;
         }
 
         public void OnToggleRecording(InputValue value)
