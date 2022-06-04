@@ -39,7 +39,7 @@ namespace VirtualTwin
         {
             vehicle = GetComponentInParent<Vehicle>();
 
-            frontWheel = vehicle.frontWheel;
+            frontWheel = vehicle.frontLeftWheel;
             backWheel = vehicle.backWheel;
 
             frontWheelMax = Mathf.Abs(wheelLock);

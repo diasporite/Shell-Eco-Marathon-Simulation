@@ -126,12 +126,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 1309184171299713467}
   driving: 1
-  mass: 5
-  radius: 1
-  torque: 1
-  rollingRes: 0.5
-  toe: 0
-  camber: 0
+  mass: 0.4
+  radius: 0.254
+  contactPoint: {x: 0, y: 0, z: 0}
+  driveTorque: 8.69
+  brakeTorque: 20
+  rollingResistance: 0.00081
+  corneringResistance: 0.2
+  wheelLock: 45
+  steeringSpeed: 15
+  globalWheelTurningAngle: 0
+  wheelTurningAngle: 0
+  slipAngle: 0
+  wheelSpeedDeflectionAngle: 0
+  drivingForce: 0
+  resistanceForce: 0
+  resultantForce: 0
+  lateralForce: 0
+  wheelAcceleration: 0
+  speed: 0
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!135 &3138074266904591480
 SphereCollider:
   m_ObjectHideFlags: 0
