@@ -7,12 +7,15 @@ namespace VirtualTwin
 {
     public class InputManager : MonoBehaviour
     {
+        public float angle;
         [SerializeField] float steer;
         
         [SerializeField] float accelerate;
         [SerializeField] float brake;
 
         [SerializeField] Vector2 steerDir;
+
+        const float InversePi = 1 / Mathf.PI;
 
         public float Steer => steer;
         public Vector2 SteerDir => steerDir;
@@ -38,6 +41,7 @@ namespace VirtualTwin
         public void OnSteer2D(InputValue value)
         {
             steerDir = value.Get<Vector2>().normalized;
+            steer = Mathf.Atan2(steerDir.x, steerDir.y) * InversePi;
         }
 
         public void OnToggleRecording(InputValue value)

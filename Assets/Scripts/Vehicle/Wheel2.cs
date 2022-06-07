@@ -26,7 +26,8 @@ namespace VirtualTwin
 
         [Header("Steering")]
         public float steeringSpeed = 15f;
-        float steeringRatio = 0.16667f;
+        float steeringRatio = 0.08333f;
+        float inverseSteeringRatio = 12f;
         public float wheelLock = 15f;
 
         float lowerLock;
@@ -86,6 +87,8 @@ namespace VirtualTwin
             vehicle = GetComponentInParent<Vehicle2>();
             groundCheck = GetComponentInChildren<GroundCheck>();
 
+            inverseSteeringRatio = 1 / steeringRatio;
+
             curvature = 1 / radius;
 
             lowerLock = 360 - wheelLock;
@@ -126,10 +129,16 @@ namespace VirtualTwin
                 }
                 else
                 {
-                    if (vehicle.SteerDir != Vector2.zero)
+                    //if (vehicle.SteerDir != Vector2.zero)
+                    //{
+                    //    var newAngle = steeringRatio * 
+                    //        Mathf.Atan2(vehicle.SteerDir.x, vehicle.SteerDir.y) * Mathf.Rad2Deg;
+                    //    dtheta = newAngle - steerAngle;
+                    //    steerAngle = newAngle;
+                    //}
+                    if (input != 0)
                     {
-                        var newAngle = steeringRatio * 
-                            Mathf.Atan2(vehicle.SteerDir.x, vehicle.SteerDir.y) * Mathf.Rad2Deg;
+                        var newAngle = inverseSteeringRatio * input * Mathf.Rad2Deg;
                         dtheta = newAngle - steerAngle;
                         steerAngle = newAngle;
                     }

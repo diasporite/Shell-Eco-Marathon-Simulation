@@ -3892,6 +3892,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5372619390059789783, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 319bdb4c655b24147afb192eab9f2e4b, type: 2}
     - target: {fileID: 5867615582671435255, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
       propertyPath: m_RootOrder
@@ -3951,21 +3956,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Car2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
-        type: 3}
-      propertyPath: steerMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
-        type: 3}
-      propertyPath: automaticDriving
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6210415622088483735, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
-        type: 3}
-      propertyPath: <Ds>k__BackingField
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6235148256936019256, guid: 0a1f6340ebe8f4d4d8a55487d9ce3786,
         type: 3}
@@ -4185,12 +4175,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 319bdb4c655b24147afb192eab9f2e4b, type: 2}
+      objectReference: {fileID: 2100000, guid: b80226c6d71bae749a4664a97b12786f, type: 2}
     - target: {fileID: -1461304994638716399, guid: 4db02aa193217544b890ec787abedbf9,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 319bdb4c655b24147afb192eab9f2e4b, type: 2}
+      objectReference: {fileID: 2100000, guid: b80226c6d71bae749a4664a97b12786f, type: 2}
     - target: {fileID: -516098083770646512, guid: 4db02aa193217544b890ec787abedbf9,
         type: 3}
       propertyPath: m_Layer
@@ -4215,7 +4205,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 319bdb4c655b24147afb192eab9f2e4b, type: 2}
+      objectReference: {fileID: 2100000, guid: b80226c6d71bae749a4664a97b12786f, type: 2}
     - target: {fileID: 2800250516343163423, guid: 4db02aa193217544b890ec787abedbf9,
         type: 3}
       propertyPath: m_Layer
@@ -4235,12 +4225,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 319bdb4c655b24147afb192eab9f2e4b, type: 2}
+      objectReference: {fileID: 2100000, guid: b80226c6d71bae749a4664a97b12786f, type: 2}
     - target: {fileID: 8089062573417005363, guid: 4db02aa193217544b890ec787abedbf9,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 319bdb4c655b24147afb192eab9f2e4b, type: 2}
+      objectReference: {fileID: 2100000, guid: b80226c6d71bae749a4664a97b12786f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4db02aa193217544b890ec787abedbf9, type: 3}
 --- !u!4 &1320631944 stripped

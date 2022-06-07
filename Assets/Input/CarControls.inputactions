@@ -14,6 +14,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Steer2D",
+                    "type": "Value",
+                    "id": "6cee58b2-e759-488f-b452-c74ffef6e367",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Accelerate",
                     "type": "Value",
                     "id": "62d9d965-df43-4ca5-8163-fb6dcb1c5636",
@@ -34,14 +42,6 @@
                     "type": "Button",
                     "id": "6ad88d5f-4b08-4a5f-8379-e1ef8ff6dcfa",
                     "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Steer2D",
-                    "type": "Value",
-                    "id": "6cee58b2-e759-488f-b452-c74ffef6e367",
-                    "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
                 }
@@ -158,6 +158,39 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "1D Axis",
+                    "id": "dd0ce292-800c-4150-81df-c7c1c384278d",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steer",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "249a8215-963c-4c26-a7e1-b5969ad9ab00",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "Steer",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "8aaeb086-92e3-439e-a554-c7c7bf6b1633",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "Steer",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "fec3ff0a-b0f0-443e-9560-035b5036f5f7",
                     "path": "<Keyboard>/space",
@@ -196,7 +229,7 @@
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -207,7 +240,7 @@
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -218,7 +251,7 @@
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -229,7 +262,7 @@
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -251,7 +284,7 @@
                     "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -262,7 +295,7 @@
                     "path": "<Gamepad>/leftStick/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -273,7 +306,7 @@
                     "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -284,7 +317,62 @@
                     "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
                     "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Steer2D",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "0d30f41a-c8f8-4ad0-bcf4-d0f6bda24005",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
                     "groups": "",
+                    "action": "Steer2D",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "a222e0f7-8b14-450b-a10c-32541acf1b2f",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "Steer2D",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "841ee49a-3370-4c51-9f3f-ffcf8b101cca",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "Steer2D",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "9ec30eab-84b8-47ba-96dd-0b929e1512a4",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "Steer2D",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "8b1df74a-9e3d-4e4e-a3b6-1010c8d2c61f",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true

@@ -176,6 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4717ca7e899ea10418b85236a14fd570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  steerMode: 1
   enableDrag: 1
   enableLift: 1
   enableReaction: 1
@@ -199,7 +200,7 @@ MonoBehaviour:
   frontLeftWheel: {fileID: 7313909037310758995}
   frontRightWheel: {fileID: 3328075529439417962}
   backWheel: {fileID: 6934445419253835882}
-  vehicleBody: {fileID: 0}
+  vehicleBody: {fileID: 686604083114653962}
   motor: {fileID: 1592102444065339924}
   fuelCell: {fileID: 4095274241458493725}
   autopilot: {fileID: 0}
@@ -213,6 +214,7 @@ MonoBehaviour:
   distanceTravelled: 0
   turningRadius: 0
   turningRadiusCoM: 0
+  <Ds>k__BackingField: 0
   rearAngularVelocity: 0
   angularVelocity: 0
   velocityAngle: 0
@@ -232,6 +234,7 @@ MonoBehaviour:
   currentRpm: 0
   currentTorque: 0
   steerInput: 0
+  steerDir: {x: 0, y: 0}
   accelerateInput: 0
   brakeInput: 0
 --- !u!114 &1592102444065339924
@@ -304,9 +307,10 @@ MonoBehaviour:
   fuelMassFlowRate: 0.001
   fuelVolFlowRate: 0
   fuelCellEfficiency: 0.5
+  vehicleFuelEfficiency: 0.5
   power: 500
   energyIn: 0
-  consumedH2_lpm: 0
+  deltaH2_lpm: 0
 --- !u!114 &1579564602533293076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +326,7 @@ MonoBehaviour:
   steer: 0
   accelerate: 0
   brake: 0
+  steerDir: {x: 0, y: 0}
 --- !u!114 &3180697447440632564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -590,12 +595,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee4674a4d61c3c944a3e8ad883081e93, type: 3}
---- !u!1 &1403659590819115278 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
-    type: 3}
-  m_PrefabInstance: {fileID: 622865256939438075}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1147404627898056054 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
@@ -614,6 +613,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be73a23ee3efbbd499d784a20d4c304d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1403659590819115278 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 622865256939438075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4831049779835042242
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -734,12 +739,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee4674a4d61c3c944a3e8ad883081e93, type: 3}
---- !u!4 &4919035688022047567 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
-    type: 3}
-  m_PrefabInstance: {fileID: 4831049779835042242}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6401099949904410423 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2008060422566530805, guid: ee4674a4d61c3c944a3e8ad883081e93,
@@ -758,6 +757,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be73a23ee3efbbd499d784a20d4c304d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &4919035688022047567 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 524874727518241421, guid: ee4674a4d61c3c944a3e8ad883081e93,
+    type: 3}
+  m_PrefabInstance: {fileID: 4831049779835042242}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5095672308028342779
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -976,6 +981,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8176650aed502d44488ee21c289e4b77, type: 3}
+--- !u!1 &686604083114653962 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7204924685013890617, guid: 8176650aed502d44488ee21c289e4b77,
+    type: 3}
+  m_PrefabInstance: {fileID: 7672521973214449459}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6166132370205203732 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4605149069156667943, guid: 8176650aed502d44488ee21c289e4b77,
