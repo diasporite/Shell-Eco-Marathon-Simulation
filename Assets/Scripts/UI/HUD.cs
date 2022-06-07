@@ -39,6 +39,7 @@ namespace VirtualTwin
         public Text fuelMass;
         public Text fuelCellEfficiency;
         public Text vehicleFuelEfficiency;
+        public Text h2Consumption;
 
         public void UpdateUI(int numSample, DataPoint sample)
         {
@@ -78,7 +79,7 @@ namespace VirtualTwin
             currentRpm.text = "Current Rpm, N = " +
                 sample.currentRpm.ToString("0.00") + "rpm";
             energyConsumed.text = "Energy Consumed, E = " +
-                sample.energyConsumed.ToString("0.0") + "J";
+                (0.001f * sample.energyConsumed).ToString("0.000") + "kJ";
             powerOutput.text = "Power Output, Pout = " +
                 sample.powerOutput.ToString("0.0") + "W";
             transientEfficiency.text = "Transient Efficiency, ηt = " +
@@ -90,6 +91,8 @@ namespace VirtualTwin
                 sample.fuelCellEfficiency.ToString("0.000");
             vehicleFuelEfficiency.text = "Vehicle Fuel Efficiency, ηv = " +
                 sample.vehicleFuelEfficiency.ToString("0.000") + "km/l";
+            h2Consumption.text = "H2 Consumption Rate, VH2 = " + 
+                sample.h2Consumption.ToString("0.000") + "l/min";
 
             if (sample != null)
             {
