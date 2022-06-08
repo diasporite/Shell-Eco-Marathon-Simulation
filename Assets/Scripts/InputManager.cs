@@ -13,6 +13,8 @@ namespace VirtualTwin
 
     public class InputManager : MonoBehaviour
     {
+        PlayerInput carControls;
+
         public SteerInput input;
 
         public float angle;
@@ -31,6 +33,11 @@ namespace VirtualTwin
         public float Accelerate => accelerate;
         public float Brake => brake;
 
+        private void Awake()
+        {
+            carControls = GetComponent<PlayerInput>();
+        }
+
         public void OnSteer(InputValue value)
         {
             if (input == SteerInput._1D) steer = value.Get<float>();
@@ -38,12 +45,21 @@ namespace VirtualTwin
 
         public void OnAccelerate(InputValue value)
         {
-            accelerate = value.Get<float>();
+            //accelerate = value.Get<float>();
+            accelerate = Mathf.Clamp(value.Get<float>(), 0f, 1f);
         }
 
         public void OnBrake(InputValue value)
         {
-            brake = value.Get<float>();
+            //brake = value.Get<float>();
+            //brake = Mathf.Clamp(value.Get<float>(), 0f, 1f);
+
+            if (carControls.currentControlScheme == "Steering Wheel")
+            {
+                // Inverting the input
+                brake = 1 - Mathf.Clamp(value.Get<float>(), 0f, 1f);
+            }
+            else brake = Mathf.Clamp(value.Get<float>(), 0f, 1f);
         }
 
         public void OnSteer2D(InputValue value)
