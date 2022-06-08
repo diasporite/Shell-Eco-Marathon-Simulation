@@ -32,7 +32,7 @@ namespace VirtualTwin
 
         private void Update()
         {
-            if (!firstPersonMode) RotateCamera();
+            //if (!firstPersonMode) RotateCamera();
         }
 
         private void LateUpdate()
@@ -92,8 +92,16 @@ namespace VirtualTwin
 
             if (firstPerson)
                 vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = false;
-            else
-                vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = true;
+            else vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = true;
+        }
+
+        public void ToggleViewMode()
+        {
+            firstPersonMode = !firstPersonMode;
+
+            if (firstPersonMode)
+                vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = false;
+            else vehicle.vehicleBody.GetComponent<MeshRenderer>().enabled = true;
         }
     }
 }

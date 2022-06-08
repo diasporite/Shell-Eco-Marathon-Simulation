@@ -13,7 +13,10 @@ namespace VirtualTwin
 
     public class InputManager : MonoBehaviour
     {
+        Vehicle2 vehicle;
         PlayerInput carControls;
+        CameraController camControl;
+        DataManager data;
 
         public SteerInput input;
 
@@ -35,7 +38,10 @@ namespace VirtualTwin
 
         private void Awake()
         {
+            vehicle = GetComponent<Vehicle2>();
             carControls = GetComponent<PlayerInput>();
+            camControl = FindObjectOfType<CameraController>();
+            data = FindObjectOfType<DataManager>();
         }
 
         public void OnSteer(InputValue value)
@@ -52,7 +58,6 @@ namespace VirtualTwin
         public void OnBrake(InputValue value)
         {
             //brake = value.Get<float>();
-            //brake = Mathf.Clamp(value.Get<float>(), 0f, 1f);
 
             if (carControls.currentControlScheme == "Steering Wheel")
             {
@@ -82,6 +87,21 @@ namespace VirtualTwin
             if (Screen.fullScreen) Screen.fullScreenMode = FullScreenMode.Windowed;
             else if (Screen.fullScreenMode == FullScreenMode.Windowed)
                 Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+        }
+
+        public void OnReset(InputValue value)
+        {
+            vehicle.ResetVehicle();
+        }
+
+        public void OnToggleView(InputValue value)
+        {
+            camControl.ToggleViewMode();
+        }
+
+        public void OnExport(InputValue value)
+        {
+            data.ExportData();
         }
     }
 }

@@ -66,13 +66,13 @@ namespace VirtualTwin
             wheelRollRes.text = "Wheel Rolling Res, Fr = " +
                 sample.rollingRes.ToString("0.000") + "N";
             wheelTurnAngle.text = "Wheel Turning Angle, δ = " +
-                sample.wheelTurnAngle.ToString("0.00") + "deg";
+                sample.wheelTurnAngle.ToString("0.00") + "°";
             vehicleTurnAngle.text = "Vehicle Orientation (CoM), θ = " +
-                sample.orientation.ToString("0.00") + "deg";
+                sample.orientation.ToString("0.00") + "°";
             vehicleVelAngle.text = "Vehicle Velocity Angle (CoM), β = " +
-                sample.velAngle.ToString("0.00") + "deg";
+                sample.velAngle.ToString("0.00") + "°";
             vehicleAngVelocity.text = "Vehicle Angular Velocity (CoM), β_dot = " +
-                sample.angularVelocity.ToString("0.00") + "deg/s";
+                sample.angularVelocity.ToString("0.00") + "°/s";
 
             currentTorque.text = "Current Torque, τ = " +
                 sample.currentTorque.ToString("0.00") + "Nm";

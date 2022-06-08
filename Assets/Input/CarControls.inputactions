@@ -52,6 +52,30 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "7d5e14c6-de92-40a3-9ce3-9b64be3946b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "ToggleView",
+                    "type": "Button",
+                    "id": "3e9f371e-75a7-47fa-a754-978ff10bf688",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Export",
+                    "type": "Button",
+                    "id": "bf17a23d-2f19-4e1d-b44c-2265084ea02a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -267,10 +291,10 @@
                 {
                     "name": "",
                     "id": "9cb8a7e2-bc6e-4ceb-9db0-9d8f8e0f43cd",
-                    "path": "<Gamepad>/rightStickPress",
+                    "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Fullscreen",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -278,7 +302,7 @@
                 {
                     "name": "",
                     "id": "5a5b368f-0d64-4e52-a2d1-a285af43e762",
-                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button6",
+                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button13",
                     "interactions": "",
                     "processors": "",
                     "groups": "Steering Wheel",
@@ -340,6 +364,116 @@
                     "action": "Steer2D",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "bba67259-9e5a-43a0-96b4-0d12607fdfd4",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f53ca66a-4699-4c5f-ae97-9123dfe1a650",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d28b3eee-7cc7-4db4-b167-06e536eb443a",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9073833c-d534-47a5-bdb8-e2a6da252568",
+                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea142dc6-524a-453a-af0e-bf6276a79659",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "ToggleView",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "70f2eadf-5313-4915-b7a3-b791f73eccb1",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ToggleView",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a446a72-8172-4ebb-a4cc-423201673aa8",
+                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button10",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "ToggleView",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "63412bf6-2ae0-4c70-8400-2ccf92a48247",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Export",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57fa9a1a-6e45-4a2c-989a-b209b828bb40",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Export",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "88ba95f3-d046-4c8e-89ca-bd5192228f9a",
+                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel;Gamepad",
+                    "action": "Export",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

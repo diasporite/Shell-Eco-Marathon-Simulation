@@ -376,6 +376,13 @@ namespace VirtualTwin
                 rb.AddRelativeForce(VehicleMass * gravity * transform.up, ForceMode.Force);
         }
 
+        public void ResetVehicle()
+        {
+            rb.transform.position = Vector3.zero;
+            rb.transform.rotation = Quaternion.identity;
+            rb.velocity = Vector3.zero;
+        }
+
         //Vector3 GetRelCentreOfMass()
         //{
         //    var com = Vector3.zero;
