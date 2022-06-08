@@ -136,13 +136,13 @@ namespace VirtualTwin
                     //    dtheta = newAngle - steerAngle;
                     //    steerAngle = newAngle;
                     //}
-                    if (input != 0)
-                    {
-                        var newAngle = inverseSteeringRatio * input * Mathf.Rad2Deg;
+
+                        var newAngle = inverseSteeringRatio * input;
                         dtheta = newAngle - steerAngle;
                         steerAngle = newAngle;
-                    }
-                    else steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
+
+                    // Assume controller has self correcting torque
+                    //else steerAngle = Mathf.MoveTowardsAngle(steerAngle, 0, steeringSpeed * dt);
                 }
 
                 if (Mathf.Abs(steerAngle) > wheelLock)

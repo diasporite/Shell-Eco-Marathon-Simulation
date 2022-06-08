@@ -14,14 +14,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Steer2D",
-                    "type": "Value",
-                    "id": "6cee58b2-e759-488f-b452-c74ffef6e367",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Accelerate",
                     "type": "Value",
                     "id": "62d9d965-df43-4ca5-8163-fb6dcb1c5636",
@@ -41,6 +33,14 @@
                     "name": "ToggleRecording",
                     "type": "Button",
                     "id": "6ad88d5f-4b08-4a5f-8379-e1ef8ff6dcfa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Fullscreen",
+                    "type": "Button",
+                    "id": "f935248f-4c79-4174-869c-4ac0fa8776d8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -71,6 +71,17 @@
                 },
                 {
                     "name": "",
+                    "id": "837beec9-3fbc-442f-ac71-758a87c94d98",
+                    "path": "<Joystick>/stick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "796e6892-64d4-489f-8fa8-e248549facb5",
                     "path": "<Keyboard>/l",
                     "interactions": "",
@@ -87,6 +98,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
+                    "action": "Brake",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ae0ce136-f870-465f-9778-46f8ca6206f1",
+                    "path": "<Joystick>/stick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Steering Wheel",
                     "action": "Brake",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -171,7 +193,7 @@
                 {
                     "name": "negative",
                     "id": "249a8215-963c-4c26-a7e1-b5969ad9ab00",
-                    "path": "",
+                    "path": "<Joystick>/stick/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "Steering Wheel",
@@ -182,7 +204,7 @@
                 {
                     "name": "positive",
                     "id": "8aaeb086-92e3-439e-a554-c7c7bf6b1633",
-                    "path": "",
+                    "path": "<Joystick>/stick/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "Steering Wheel",
@@ -213,169 +235,59 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "e4e7ae9c-ada6-4337-8d8a-3b1227402d27",
-                    "path": "2DVector(mode=2)",
+                    "name": "",
+                    "id": "70f43690-7dd2-4e3c-88d4-61b5ace03438",
+                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button5",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Steer2D",
-                    "isComposite": true,
+                    "groups": "Steering Wheel",
+                    "action": "ToggleRecording",
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "4b1f9db4-07bc-4304-a7ca-51c4ec9da3b3",
-                    "path": "<Keyboard>/w",
+                    "name": "",
+                    "id": "b5b80b81-c080-4a28-acb6-281eeccafb33",
+                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button6",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Steer2D",
+                    "groups": "Steering Wheel",
+                    "action": "ToggleRecording",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "772b5832-40e7-4bf9-b126-469527eacba6",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "a6aed420-974e-47eb-8253-02ec7897e6a3",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "004ebd8a-c9d4-4663-b708-18be6b705920",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "2D Vector",
-                    "id": "ae69844b-6004-4231-9158-fec0eaf35665",
-                    "path": "2DVector(mode=2)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Steer2D",
-                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "0a0f183c-b2cf-4d80-a387-b6732c1dd6b3",
-                    "path": "<Gamepad>/leftStick/up",
+                    "name": "",
+                    "id": "a293c9f0-09a6-4a77-b47c-4b5350ad6f52",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Steer2D",
+                    "groups": "Keyboard",
+                    "action": "Fullscreen",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "2ba45a6b-aa48-4713-a451-e5b4e583bb93",
-                    "path": "<Gamepad>/leftStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "ac07401a-6c98-42ba-926b-eccdec57ab1c",
-                    "path": "<Gamepad>/leftStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "4ff4a741-f7ff-4dc3-9506-0928fc0db4f0",
-                    "path": "<Gamepad>/leftStick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "2D Vector",
-                    "id": "0d30f41a-c8f8-4ad0-bcf4-d0f6bda24005",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Steer2D",
-                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "a222e0f7-8b14-450b-a10c-32541acf1b2f",
-                    "path": "",
+                    "name": "",
+                    "id": "9cb8a7e2-bc6e-4ceb-9db0-9d8f8e0f43cd",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Steering Wheel",
-                    "action": "Steer2D",
+                    "groups": "",
+                    "action": "Fullscreen",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "down",
-                    "id": "841ee49a-3370-4c51-9f3f-ffcf8b101cca",
-                    "path": "",
+                    "name": "",
+                    "id": "5a5b368f-0d64-4e52-a2d1-a285af43e762",
+                    "path": "<HID::Thrustmaster FGT Rumble 3-in-1>/button10",
                     "interactions": "",
                     "processors": "",
                     "groups": "Steering Wheel",
-                    "action": "Steer2D",
+                    "action": "Fullscreen",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "9ec30eab-84b8-47ba-96dd-0b929e1512a4",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Steering Wheel",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "8b1df74a-9e3d-4e4e-a3b6-1010c8d2c61f",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Steering Wheel",
-                    "action": "Steer2D",
-                    "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }
@@ -408,7 +320,7 @@
             "bindingGroup": "Steering Wheel",
             "devices": [
                 {
-                    "devicePath": "<Joystick>",
+                    "devicePath": "<HID::Thrustmaster FGT Rumble 3-in-1>",
                     "isOptional": false,
                     "isOR": false
                 }

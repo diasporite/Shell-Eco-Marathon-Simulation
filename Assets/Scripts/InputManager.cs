@@ -5,8 +5,16 @@ using UnityEngine.InputSystem;
 
 namespace VirtualTwin
 {
+    public enum SteerInput
+    {
+        _1D = 0,
+        _2D = 1,
+    }
+
     public class InputManager : MonoBehaviour
     {
+        public SteerInput input;
+
         public float angle;
         [SerializeField] float steer;
         
@@ -25,7 +33,7 @@ namespace VirtualTwin
 
         public void OnSteer(InputValue value)
         {
-            steer = value.Get<float>();
+            if (input == SteerInput._1D) steer = value.Get<float>();
         }
 
         public void OnAccelerate(InputValue value)
@@ -40,14 +48,24 @@ namespace VirtualTwin
 
         public void OnSteer2D(InputValue value)
         {
-            steerDir = value.Get<Vector2>().normalized;
-            steer = Mathf.Atan2(steerDir.x, steerDir.y) * InversePi;
+            if (input == SteerInput._2D)
+            {
+                steerDir = value.Get<Vector2>().normalized;
+                steer = Mathf.Atan2(steerDir.x, steerDir.y) * InversePi;
+            }
         }
 
         public void OnToggleRecording(InputValue value)
         {
             FindObjectOfType<DataManager>().Record();
             FindObjectOfType<RecordButton>().SwitchText();
+        }
+
+        public void OnFullscreen(InputValue value)
+        {
+            if (Screen.fullScreen) Screen.fullScreenMode = FullScreenMode.Windowed;
+            else if (Screen.fullScreenMode == FullScreenMode.Windowed)
+                Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
         }
     }
 }
