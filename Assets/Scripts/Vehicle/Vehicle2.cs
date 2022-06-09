@@ -381,6 +381,8 @@ namespace VirtualTwin
             rb.transform.position = Vector3.zero;
             rb.transform.rotation = Quaternion.identity;
             rb.velocity = Vector3.zero;
+
+            distanceTravelled = 0;
         }
 
         //Vector3 GetRelCentreOfMass()
